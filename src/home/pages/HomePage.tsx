@@ -1,21 +1,28 @@
-import { AuthButton } from '@/auth/components/AuthButton';
-import { Progress, Input } from '@/global/ui';
+import React, { useState } from "react";
+import menu1 from "../../assets/menu1.png";
+import menu2 from "../../assets/menu2.png";
+import menu3 from "../../assets/menu3.png";
+import menu4 from "../../assets/menu4.png";
 
 export default function HomePage() {
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  const toggleDrawer = () => {
+    setIsDrawerOpen(!isDrawerOpen);
+  };
+
   return (
-    <div className="min-h-screen flex flex-col">
-      <h1 className="text-4xl font-bold text-center">Home Page</h1>
-      <AuthButton>다음으로</AuthButton>
-      <Progress value={33} className="mt-4 rounded-md" />
-      <div className="flex flex-col gap-[12px]">
-        <label htmlFor="birth" className="font-regular text-[14px]">
-          생년월일
-        </label>
-        <input
-          type="text"
-          className="w-full h-[46px] pl-2 border-b-[2px] border-[#DEDEDE] text-[14px] font-[#94939B] focus:outline-none focus:border-primary-1"
-          placeholder="영문, 숫자, 특수문자를 포함해 최소 8자 이상 만들어주세요."
-        />
+    <div className="h-full flex flex-col bg-[#EDEDED]">
+      <div className="w-16 h-full bg-[#FFFFFF] border-r-[#BBBBBB] border-r-[0.5px]">
+        <div className="h-full flex flex-col items-start p-2 space-y-2 gap-7 mt-3">
+          {/* <button onClick={toggleDrawer}>
+            <img src={menu1} alt="menu1" className="w-12 h-12" />
+          </button>
+
+          <img src={menu2} alt="menu2" className="w-12 h-12" />
+          <img src={menu3} alt="menu3" className="w-12 h-12" />
+          <img src={menu4} alt="menu4" className="w-12 h-12" /> */}
+        </div>
       </div>
     </div>
   );
