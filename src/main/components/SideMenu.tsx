@@ -2,33 +2,33 @@ import React from 'react';
 
 import { Search } from 'lucide-react';
 
-export default function SideMenu(props: { type: string | null }) {
+export default function SideMenu(props: { selectedType: string | null }) {
   const searchType =
-    props.type === 'text'
+    props.selectedType === 'text'
       ? '텍스트'
-      : props.type === 'image'
+      : props.selectedType === 'image'
         ? '이미지'
-        : props.type === 'video'
+        : props.selectedType === 'video'
           ? '비디오'
-          : props.type === 'audio'
+          : props.selectedType === 'audio'
             ? '오디오'
             : '';
 
   return (
     <aside
       className={`${
-        props.type === null ? '-translate-x-full' : 'translate-x-0'
-      } ease-in-out duration-500 transform z-0 delay-0
-        h-full w-[300px] flex-1 rounded-r-lg bg-[#D9D9D9] overflow-y-auto`}
+        props.selectedType === null ? '-translate-x-full' : 'translate-x-[70px]'
+      } ease-in-out duration-500 transform delay-0 z-10 fixed
+        h-full w-[300px] flex-1 rounded-r-lg bg-[#B7B7B7] bg-opacity-70 overflow-y-auto`}
     >
       <div className='flex flex-col items-center p-4 mt-1 gap-8'>
-        <div className='h-[40px] w-[240px] rounded-[8px] flex flex-row justify-center gap-2 bg-transparent border-[1px] border-[#808080]'>
-          <Search size={16} color='#808080' className='self-center' />
+        <div className='h-[40px] w-[240px] rounded-[8px] flex flex-row justify-center gap-2 bg-transparent border-[1px] border-[#444444]'>
+          <Search size={16} className='text-[#444444] self-center' />
           <input
             type='text'
-            name='searchModel'
+            name='searchAIModel'
             placeholder={`${searchType} AI 모델 검색`}
-            className='w-[180px] h-[30px] bg-transparent self-center focus-visible:outline-none font-[Noto Sans] font-medium text-left text-[16px]'
+            className='w-[180px] h-[30px] bg-transparent placeholder-[#444444] self-center focus-visible:outline-none font-[Noto Sans] font-medium text-left text-[16px]'
           />
         </div>
       </div>
