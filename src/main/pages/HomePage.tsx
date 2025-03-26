@@ -51,7 +51,7 @@ export default function HomePage() {
                     <Image
                       size='18'
                       strokeWidth='2.5'
-                      className={`self-center group-hover:bottom-0 ${selectedType == type ? 'text-[#3A7DE8]' : 'text-[#808080]'} group-hover:text-[#FFBD1E]`}
+                      className={`self-center group-hover:bottom-0 ${selectedType == type ? 'text-[#FFBD1E]' : 'text-[#808080]'} group-hover:text-[#FFBD1E]`}
                     />
                   </div>
                   <div
