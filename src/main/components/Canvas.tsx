@@ -3,12 +3,12 @@ import react, { useCallback } from 'react';
 import { UUID } from 'crypto';
 
 import { edgeTypes } from '../lib/edge.type';
-import { MyNode } from '../lib/initialElements';
+import { testNode } from '../lib/initialElements';
 import { nodeTypes } from '../lib/node.type';
 import { ReactFlow, MiniMap, Controls, useNodesState, useEdgesState, addEdge } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
-const initialNodes: MyNode[] = [
+const initialNodes: testNode[] = [
   { id: '1', type: 'text', position: { x: 0, y: 0 }, data: { text: '1' } },
   { id: '2', type: 'text', position: { x: 300, y: 300 }, data: { text: undefined } },
 ];
