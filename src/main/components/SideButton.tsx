@@ -1,6 +1,6 @@
 import { FunctionComponent } from 'react';
 
-import { Baseline, Image, Play, AudioLines } from 'lucide-react';
+import { Baseline, Image, CirclePlay, AudioLines } from 'lucide-react';
 
 import { menuType } from '../pages/HomePage';
 
@@ -66,8 +66,8 @@ export default function SideButton(props: {
             <div
               className={`w-[28px] h-[28px] rounded-sm border-2 ${props.selectedType === type ? 'border-[#EF9EE1]' : 'border-[#808080]'} self-center flex flex-col justify-center group-hover:border-[#EF9EE1]`}
             >
-              <Play
-                size='18'
+              <CirclePlay
+                size='18 '
                 strokeWidth='2.5'
                 className={`self-center group-hover:bottom-0 ${props.selectedType == type ? 'text-[#EF9EE1]' : 'text-[#808080]'} group-hover:text-[#EF9EE1]`}
               />
