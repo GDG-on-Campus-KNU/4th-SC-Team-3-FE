@@ -2,30 +2,11 @@ import react, { useCallback } from 'react';
 
 import { UUID } from 'crypto';
 
+import { edgeTypes } from '../lib/edge.type';
 import { MyNode } from '../lib/initialElements';
-import CategoryNode from './CategoryNode';
-import ImageNode from './ImageNode';
-import TextNode from './TextNode';
-import {
-  ReactFlow,
-  MiniMap,
-  Controls,
-  useNodesState,
-  useEdgesState,
-  addEdge,
-  SmoothStepEdge,
-} from '@xyflow/react';
+import { nodeTypes } from '../lib/node.type';
+import { ReactFlow, MiniMap, Controls, useNodesState, useEdgesState, addEdge } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-
-const nodeTypes = {
-  text: TextNode,
-  category: CategoryNode,
-  image: ImageNode,
-};
-
-const edgeTypes = {
-  smoothStep: SmoothStepEdge,
-};
 
 const initialNodes: MyNode[] = [
   { id: '1', type: 'text', position: { x: 0, y: 0 }, data: { text: '1' } },
