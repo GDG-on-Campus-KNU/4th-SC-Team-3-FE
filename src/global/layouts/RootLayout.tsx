@@ -1,21 +1,20 @@
-import { Outlet } from "react-router-dom";
-import { Fragment } from "react";
-import logo from "../../assets/logo.svg";
+import { Fragment } from 'react';
+import { Outlet } from 'react-router-dom';
+
+import logo from '../../assets/logo.svg';
 
 export const RootLayout = () => {
   return (
-    <Fragment>
-      <div className="w-full h-12 bg-bgCanvasWhite">
-        <div className="w-full h-full flex items-center px-4 gap-5 border-b-[#BBBBBB] border-b-[0.5px]">
-          <img src={logo} alt="logo" className="h-8" />
-          <h1 className="text-2xl font-bold text-center">PIPY</h1>
+    <div className='h-screen overflow-hidden'>
+      <div className='h-12 bg-bgCanvasWhite sticky top-0 z-50'>
+        <div className='h-full flex items-center px-4 gap-5 border-b border-b-[#BBBBBB]'>
+          <img src={logo} alt='logo' className='h-8' />
+          <h1 className='text-2xl font-bold'>PIPY</h1>
         </div>
       </div>
-      <div className="w-full h-dvh flex justify-center bg-bgCanvasWhite overflow-y-auto overflow-x-hidden">
-        <div className="w-full">
-          <Outlet />
-        </div>
+      <div className='h-[calc(100dvh-3rem)] overflow-y-auto'>
+        <Outlet />
       </div>
-    </Fragment>
+    </div>
   );
 };
