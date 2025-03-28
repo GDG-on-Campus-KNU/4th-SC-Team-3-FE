@@ -1,6 +1,6 @@
-import CategoryNode from '../components/CategoryNode';
-import ImageNode from '../components/ImageNode';
-import TextNode from '../components/TextNode';
+import CategoryNode from '../components/nodes/CategoryNode';
+import ImageNode from '../components/nodes/ImageNode';
+import TextNode from '../components/nodes/TextNode';
 
 export const nodeTypes = {
   text: TextNode,
