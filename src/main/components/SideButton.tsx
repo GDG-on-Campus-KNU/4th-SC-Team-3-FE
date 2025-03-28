@@ -1,8 +1,4 @@
-import { FunctionComponent } from 'react';
-
 import { Baseline, Image, Play, AudioLines } from 'lucide-react';
-
-import { menuType } from '../pages/HomePage';
 
 export default function SideButton(props: {
   selectedType: string | null;
