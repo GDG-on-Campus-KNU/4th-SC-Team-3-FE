@@ -1,27 +1,34 @@
 {
-  "endOfLine": "lf",
-  "tabWidth": 2,
+  "arrowParens": "always",
+  "bracketSameLine": false,
+  "bracketSpacing": true,
+  "embeddedLanguageFormatting": "auto",
+  "endOfLine": "auto",
+  "insertPragma": false,
+  "jsxSingleQuote": true,
   "printWidth": 100,
+  "proseWrap": "always",
+  "quoteProps": "as-needed",
+  "requirePragma": false,
+  "semi": true,
+  "singleAttributePerLine": false,
+  "singleQuote": true,
+  "tabWidth": 2,
+  "trailingComma": "all",
+  "useTabs": false,
+  "vueIndentScriptAndStyle": false,
 
-  "plugins": [
-    "prettier-plugin-tailwindcss",
-    "@trivago/prettier-plugin-sort-imports"
-  ],
+  "plugins": ["@trivago/prettier-plugin-sort-imports"],
 
   "importOrder": [
     "^react",
     "<THIRD_PARTY_MODULES>",
 
-    "^(@/apps)(.*)$",
-    "^(@/components)(.*)$",
-    "^(@/pages)(.*)$",
+    "^(@/app/m)(.*)$",
+    "^(@/main)(.*)$",
 
-    "^(@/hooks)(.*)$",
-    "^(@/services)(.*)$",
-    "^(@/store)(.*)$",
-
-    "^(@/assets)(.*)$",
-    "^(@/styles)(.*)$",
+    "^(@/shared)(.*)$",
+    "^(@widgets)(.*)$",
 
     "^(.*)/(.*)$"
   ],
