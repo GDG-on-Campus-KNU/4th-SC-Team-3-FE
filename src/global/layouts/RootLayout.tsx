@@ -5,7 +5,7 @@ import logo from '../../assets/logo.svg';
 
 export const RootLayout = () => {
   return (
-    <div className='h-screen overflow-hidden'>
+    <div className='h-screen w-screen overflow-hidden fixed'>
       <div className='h-12 bg-bgCanvasWhite sticky top-0 z-50'>
         <div className='h-full flex items-center px-4 gap-5 border-b border-b-[#BBBBBB]'>
           <img src={logo} alt='logo' className='h-8' />
