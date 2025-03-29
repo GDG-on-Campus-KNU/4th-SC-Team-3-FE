@@ -1,3 +1,5 @@
+import { useNavigate } from 'react-router-dom';
+
 import ImageBottomPiper from '@/assets/dashboard/img-bottom-piper.png';
 import ImagePiper from '@/assets/dashboard/img-piper.png';
 import ProfilePiper from '@/assets/dashboard/img-profile-piper.png';
@@ -5,6 +7,7 @@ import Logo from '@/assets/logo.svg';
 import { Button } from '@/global/ui';
 
 export default function DashBoardPage() {
+  const navigate = useNavigate();
   return (
     <div className='h-screen w-screen overflow-y-scroll overflow-x-hidden bg-white fixed'>
       {/* top */}
@@ -58,7 +61,7 @@ export default function DashBoardPage() {
         <div className='w-full h-full flex justify-between items-center gap-5 mt-5'>
           <button
             className='w-full h-full flex flex-col group transition-all duration-300 hover:scale-[1.02]'
-            onClick={() => console.log('프로젝트 생성')} // TODO: 핸들러 연결
+            onClick={() => navigate('/main')}
           >
             <div
               className='h-[200px] bg-[#EDEDED] rounded-lg flex justify-center items-center 
