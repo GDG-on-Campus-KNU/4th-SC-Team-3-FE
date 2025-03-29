@@ -1,3 +1,4 @@
+import ImageBottomPiper from '@/assets/dashboard/img-bottom-piper.png';
 import ImagePiper from '@/assets/dashboard/img-piper.png';
 import ProfilePiper from '@/assets/dashboard/img-profile-piper.png';
 import Logo from '@/assets/logo.svg';
@@ -193,6 +194,19 @@ export default function DashBoardPage() {
             <div className=' h-[200px] bg-[#EDEDED] rounded-lg'></div>
             <p className='text-base text-black mt-2'>Cloude</p>
           </div>
+        </div>
+      </div>
+      {/* bottom */}
+      <div className='relative w-full h-40 mt-40 overflow-visible'>
+        <img
+          src={ImageBottomPiper}
+          alt='bottom-piper'
+          className='absolute w-24 object-cover right-20 -top-36 z-10 '
+        />
+        <div className='relative w-full h-full bg-[#D9D9D9] flex flex-col items-center justify-center'>
+          <p className='absolute top-10 text-sm text-[#A0A0A0] text-center'>
+            All rights reserved © {new Date().getFullYear()}. PIPY
+          </p>
         </div>
       </div>
     </div>
