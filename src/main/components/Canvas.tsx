@@ -1,24 +1,65 @@
-import react, { useCallback } from 'react';
-
-import { UUID } from 'crypto';
+import { useCallback } from 'react';
 
 import { edgeTypes } from '../lib/edge.type';
-import { testNode } from '../lib/initialElements';
 import { nodeTypes } from '../lib/node.type';
-import { ReactFlow, MiniMap, Controls, useNodesState, useEdgesState, addEdge } from '@xyflow/react';
+import useDnDStore from '../stores/DnDStore';
+import {
+  ReactFlow,
+  MiniMap,
+  Controls,
+  useNodesState,
+  useEdgesState,
+  addEdge,
+  useReactFlow,
+  Node,
+} from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
-const initialNodes: testNode[] = [
-  { id: '1', type: 'text', position: { x: 0, y: 0 }, data: { text: '1' } },
-  { id: '2', type: 'text', position: { x: 300, y: 300 }, data: { text: undefined } },
-];
+const initialNodes: Node[] = [];
 const initialEdges = [{ id: 'e1-2', type: 'smoothstep', source: '1', target: '2' }];
 
-export default function Canvas(props: { selectedType: string | null }) {
-  const [nodes, _, onNodesChange] = useNodesState(initialNodes);
+let id = 0;
+const getId = () => `dndnode_${id++}`;
+
+export default function Canvas() {
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
+  const { type, modelName } = useDnDStore();
+  const { screenToFlowPosition } = useReactFlow();
+
   const onConnect = useCallback((params: any) => setEdges((eds) => addEdge(params, eds)), []);
+
+  const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'move';
+  }, []);
+
+  const onDrop = useCallback(
+    (event: React.DragEvent<HTMLDivElement>) => {
+      event.preventDefault();
+
+      if (!type) {
+        return;
+      }
+
+      const position = screenToFlowPosition({
+        x: event.clientX,
+        y: event.clientY,
+      });
+
+      const newNode: Node = {
+        id: getId(),
+        type: type,
+        position,
+        data: { model: modelName, data: null },
+      };
+
+      setNodes((nds) => nds.concat(newNode));
+      console.log(nodes);
+    },
+    [screenToFlowPosition, type, modelName],
+  );
 
   return (
     <div className={`w-full h-full relative`}>
@@ -30,6 +71,8 @@ export default function Canvas(props: { selectedType: string | null }) {
         onConnect={onConnect}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
+        onDrop={onDrop}
+        onDragOver={onDragOver}
         attributionPosition='bottom-left'
       >
         <Controls />
