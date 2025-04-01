@@ -72,7 +72,7 @@ export default function SideMenu(props: { selectedType: string | null }) {
         </div>
       </div>
       <div
-        className={`h-[calc(100%-130px)] scroll-smooth self-center items-center gap-4 p-4 flex flex-col overflow-y-scroll`}
+        className={`h-[calc(100%-130px)] scroll-smooth self-center items-center p-4 flex flex-col overflow-y-scroll`}
       >
         {models
           .find((model) => model.type === props.selectedType)
@@ -80,7 +80,7 @@ export default function SideMenu(props: { selectedType: string | null }) {
             <div
               key={index}
               id={modelName}
-              className='text-black h-[200px]'
+              className='text-black h-[200px] m-3'
               draggable
               onDragStart={(event) =>
                 onDragStart(event, props.selectedType ? props.selectedType : '', modelName)
