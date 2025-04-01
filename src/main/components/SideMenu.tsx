@@ -72,7 +72,7 @@ export default function SideMenu(props: { selectedType: string | null }) {
         </div>
       </div>
       <div
-        className={`h-[calc(100%-130px)] scroll-smooth self-center items-center p-4 flex flex-col overflow-y-scroll`}
+        className={`h-[calc(100%-130px)] scroll-smooth self-center items-center p-4 flex flex-col overflow-y-scroll overflow-x-hidden`}
       >
         {models
           .find((model) => model.type === props.selectedType)
