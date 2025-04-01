@@ -8,7 +8,7 @@ export function TextNodeWrapper({
   data,
   type,
   isConnectable,
-}: NodeProps<Node<{ model: string; text: string | undefined }>>) {
+}: NodeProps<Node<{ model: string; value: string | undefined }>>) {
   return (
     <div className={`w-[245px] h-[195px] rounded-md bg-[#FFFFFF] flex flex-col`}>
       <TextNodeInput id={id} data={data} />

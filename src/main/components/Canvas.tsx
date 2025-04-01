@@ -12,11 +12,12 @@ import {
   addEdge,
   useReactFlow,
   Node,
+  Edge,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
 const initialNodes: Node[] = [];
-const initialEdges = [{ id: 'e1-2', type: 'smoothstep', source: '1', target: '2' }];
+const initialEdges: Edge[] = [];
 
 let id = 0;
 const getId = () => `dndnode_${id++}`;
@@ -56,7 +57,6 @@ export default function Canvas() {
       };
 
       setNodes((nds) => nds.concat(newNode));
-      console.log(nodes);
     },
     [screenToFlowPosition, type, modelName],
   );

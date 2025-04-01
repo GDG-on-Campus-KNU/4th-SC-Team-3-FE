@@ -7,7 +7,7 @@ export function TextNodeInput({
   data,
 }: {
   id: string;
-  data: { model: string; text?: string };
+  data: { model: string; value?: string };
 }) {
   const { updateNodeData } = useReactFlow();
 
@@ -33,7 +33,7 @@ export function TextNodeInput({
           className={`w-[215px] h-[100px] resize-none bg-transparent m-[5px] focus-visible:outline-none placeholder-[#808080] `}
           onChange={(evt) => updateNodeData(id, { text: evt.target.value })}
           placeholder='텍스트를 입력해 주세요'
-          value={data.text ? data.text : undefined}
+          value={data.value ? data.value : undefined}
         />
         <button
           className={`w-[225px] h-[35px] rounded-sm flex flex-row items-center place-content-center bg-[#808080] self-end`}
