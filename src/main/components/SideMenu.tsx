@@ -1,6 +1,7 @@
 import { Search } from 'lucide-react';
 
 import useDnDStore from '../stores/DnDStore';
+import ImageNodeInput from './nodes/image/ImageNodeInput';
 import TextNodeInput from './nodes/text/TextNodeInput';
 
 export interface AIModels {
@@ -29,11 +30,11 @@ export default function SideMenu(props: { selectedType: string | null }) {
     },
     {
       type: 'image',
-      models: ['Gemi', 'Gemi', 'Gemi', 'Gemi', 'Gemi'],
+      models: ['Gemi', 'Gemi1', 'Gemi2', 'Gemi3', 'Gemi4'],
     },
     {
       type: 'audio',
-      models: ['AudioMD', 'AudioMD', 'AudioMD'],
+      models: ['AudioMD1', 'AudioMD2', 'AudioMD3'],
     },
     {
       type: 'video',
@@ -85,7 +86,12 @@ export default function SideMenu(props: { selectedType: string | null }) {
                 onDragStart(event, props.selectedType ? props.selectedType : '', modelName)
               }
             >
-              <TextNodeInput id={modelName} data={{ model: modelName }} />
+              {props.selectedType === 'text' && (
+                <TextNodeInput id={modelName} data={{ model: modelName }} />
+              )}
+              {props.selectedType === 'image' && (
+                <ImageNodeInput id={modelName} data={{ model: modelName }} />
+              )}
             </div>
           ))}
       </div>
