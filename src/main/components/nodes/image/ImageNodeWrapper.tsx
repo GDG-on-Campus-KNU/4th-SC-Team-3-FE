@@ -35,14 +35,14 @@ function ImageNode({
         </div>
       )}
       <Handle
-        className={`h-[30px] w-[8px] -translate-y-[57px] translate-x-[8px] rounded-none border-none bg-[#FFBD1E]`}
+        className={`bg-pipy-yellow h-[30px] w-[8px] -translate-y-[57px] translate-x-[8px] rounded-none border-none`}
         type='source'
         position={Position.Right}
         id='right'
         isConnectable={isConnectable}
       />
       <Handle
-        className={`h-[30px] w-[8px] -translate-x-[8px] -translate-y-[57px] rounded-none border-none bg-[#FFBD1E]`}
+        className={`bg-pipy-yellow h-[30px] w-[8px] -translate-x-[8px] -translate-y-[57px] rounded-none border-none`}
         type='target'
         position={Position.Left}
         id='left'
