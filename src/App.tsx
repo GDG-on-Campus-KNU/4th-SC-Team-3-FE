@@ -1,5 +1,6 @@
-import { BrowserRouter } from "react-router-dom";
-import { Router } from "@/app/routes/Router";
+import { BrowserRouter } from 'react-router-dom';
+
+import { Router } from '@/app/routes/Router';
 
 export default function App() {
   return (
