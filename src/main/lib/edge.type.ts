@@ -1,5 +1,5 @@
-import { SmoothStepEdge } from '@xyflow/react';
+import CustomEdge from '../components/edges/text/TextEdge';
 
 export const edgeTypes = {
-  smoothStep: SmoothStepEdge,
+  textEdge: CustomEdge,
 };

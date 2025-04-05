@@ -4,6 +4,7 @@ import { edgeTypes } from '../lib/edge.type';
 import { nodeTypes } from '../lib/node.type';
 import useDnDStore from '../stores/DnDStore';
 import useSelectedObjectStore from '../stores/selectObjectStore';
+import CustomConnectionLine from './edges/text/TextConnectionLine';
 import {
   ReactFlow,
   MiniMap,
@@ -14,6 +15,7 @@ import {
   useReactFlow,
   Node,
   Edge,
+  Connection,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
@@ -31,7 +33,10 @@ export default function Canvas() {
   const { type, modelName } = useDnDStore();
   const { screenToFlowPosition } = useReactFlow();
 
-  const onConnect = useCallback((params: any) => setEdges((eds) => addEdge(params, eds)), []);
+  const onConnect = useCallback(
+    (params: Connection) => setEdges((eds) => addEdge({ ...params, type: 'textEdge' }, eds)),
+    [],
+  );
 
   const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -73,13 +78,14 @@ export default function Canvas() {
         onConnect={onConnect}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
-        onDrop={onDrop}
         onDragOver={onDragOver}
-        attributionPosition='bottom-left'
+        onDrop={onDrop}
         minZoom={0.1}
         maxZoom={5}
         onNodeClick={(_, node) => setSelectedId(node.id)}
+        onEdgeClick={(_, edge) => setSelectedId(edge.id)}
         onPaneClick={() => setSelectedId(undefined)}
+        connectionLineComponent={CustomConnectionLine}
       >
         <Controls />
         <MiniMap />
