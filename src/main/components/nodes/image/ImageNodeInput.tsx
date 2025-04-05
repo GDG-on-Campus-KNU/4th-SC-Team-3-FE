@@ -62,7 +62,7 @@ export function ImageNodeInput({
         <Play strokeWidth='3' className={`size-15px place-self-end self-center text-[#FFDD8E]`} />
       </div>
 
-      {/* 이미지 업로드 영역 */}
+      {/* 이미지 업로드 */}
       <div
         className={`relative m-[5px] flex h-[150px] w-[235px] flex-col justify-center overflow-hidden rounded-sm bg-[#FFF1D1] p-[5px] transition-all duration-300 group-hover:shadow-inner`}
         onClick={triggerFileInput}
