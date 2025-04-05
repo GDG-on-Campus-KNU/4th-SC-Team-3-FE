@@ -1,16 +1,16 @@
 import { create } from 'zustand';
 
 interface DnDState {
-  type: string | undefined;
+  nodeType: string | undefined;
   modelName: string | undefined;
-  setType: (type: string | undefined) => void;
+  setNodeType: (type: string | undefined) => void;
   setModelName: (modelName: string | undefined) => void;
 }
 
 const useDnDStore = create<DnDState>((set) => ({
-  type: undefined,
+  nodeType: undefined,
   modelName: undefined,
-  setType: (type) => set({ type }),
+  setNodeType: (nodeType) => set({ nodeType }),
   setModelName: (modelName) => set({ modelName }),
 }));
 

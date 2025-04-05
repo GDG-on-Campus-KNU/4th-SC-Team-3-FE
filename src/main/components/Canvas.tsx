@@ -28,7 +28,7 @@ export default function Canvas() {
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const { setSelectedId } = useSelectedObjectStore();
 
-  const { type, modelName } = useDnDStore();
+  const { nodeType, modelName } = useDnDStore();
   const { screenToFlowPosition } = useReactFlow();
 
   const onConnect = useCallback((params: any) => setEdges((eds) => addEdge(params, eds)), []);
@@ -42,7 +42,7 @@ export default function Canvas() {
     (event: React.DragEvent<HTMLDivElement>) => {
       event.preventDefault();
 
-      if (!type) {
+      if (!nodeType) {
         return;
       }
 
@@ -53,18 +53,18 @@ export default function Canvas() {
 
       const newNode: Node = {
         id: getId(),
-        type: type,
+        type: nodeType,
         position,
         data: { model: modelName, data: null },
       };
 
       setNodes((nds) => nds.concat(newNode));
     },
-    [screenToFlowPosition, type, modelName],
+    [screenToFlowPosition, nodeType, modelName],
   );
 
   return (
-    <div className={`w-full h-full relative`}>
+    <div className={`relative h-full w-full`}>
       <ReactFlow
         nodes={nodes}
         edges={edges}

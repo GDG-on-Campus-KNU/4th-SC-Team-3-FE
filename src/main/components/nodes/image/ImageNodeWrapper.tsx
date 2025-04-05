@@ -1,13 +1,13 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 
 import { X } from 'lucide-react';
 
 import useSelectedObjectStore from '@/main/stores/selectObjectStore';
 
-import TextNodeInput from './TextNodeInput';
-import { Position, Handle, type NodeProps, type Node, useReactFlow } from '@xyflow/react';
+import ImageNodeInput from './ImageNodeInput';
+import { Position, Handle, useReactFlow, type NodeProps, type Node } from '@xyflow/react';
 
-export function TextNodeWrapper({
+function ImageNode({
   id,
   data,
   type,
@@ -16,10 +16,11 @@ export function TextNodeWrapper({
   const { setNodes } = useReactFlow();
   const { setEdges } = useReactFlow();
   const { selectedId } = useSelectedObjectStore();
+  const { updateNodeData } = useReactFlow();
 
   return (
     <div className={`flex h-[195px] w-[245px] flex-col rounded-md bg-[#FFFFFF]`}>
-      <TextNodeInput id={id} data={data} />
+      <ImageNodeInput id={id} data={data} />
       {selectedId === id && (
         <div className='absolute right-0 top-0 z-10 translate-x-[10px] translate-y-[-10px]'>
           <button
@@ -34,14 +35,14 @@ export function TextNodeWrapper({
         </div>
       )}
       <Handle
-        className={`h-[30px] w-[8px] -translate-y-[57px] translate-x-[8px] rounded-none border-none bg-[#3A7DE8]`}
+        className={`h-[30px] w-[8px] -translate-y-[57px] translate-x-[8px] rounded-none border-none bg-[#FFBD1E]`}
         type='source'
         position={Position.Right}
         id='right'
         isConnectable={isConnectable}
       />
       <Handle
-        className={`h-[30px] w-[8px] -translate-x-[8px] -translate-y-[57px] rounded-none border-none bg-[#3A7DE8]`}
+        className={`h-[30px] w-[8px] -translate-x-[8px] -translate-y-[57px] rounded-none border-none bg-[#FFBD1E]`}
         type='target'
         position={Position.Left}
         id='left'
@@ -51,4 +52,4 @@ export function TextNodeWrapper({
   );
 }
 
-export default memo(TextNodeWrapper);
+export default memo(ImageNode);
