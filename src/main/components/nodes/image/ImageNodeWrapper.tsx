@@ -16,7 +16,6 @@ function ImageNode({
   const { setNodes } = useReactFlow();
   const { setEdges } = useReactFlow();
   const { selectedId } = useSelectedObjectStore();
-  const { updateNodeData } = useReactFlow();
 
   return (
     <div className={`flex h-[195px] w-[245px] flex-col rounded-md bg-[#FFFFFF]`}>

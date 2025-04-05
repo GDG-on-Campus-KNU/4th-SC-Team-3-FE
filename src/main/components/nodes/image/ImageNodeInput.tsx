@@ -35,14 +35,18 @@ export function ImageNodeInput({
     [id, data, updateNodeData],
   );
 
-  const triggerFileInput = useCallback(() => {
-    const fileInput = document.createElement('input');
-    fileInput.type = 'file';
-    fileInput.accept = 'image/*';
-    fileInput.onchange = (event) =>
-      handleImageUpload(event as unknown as React.ChangeEvent<HTMLInputElement>);
-    fileInput.click();
-  }, [handleImageUpload]);
+  const triggerFileInput = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      const fileInput = document.createElement('input');
+      fileInput.type = 'file';
+      fileInput.accept = 'image/*';
+      fileInput.onchange = (event) =>
+        handleImageUpload(event as unknown as React.ChangeEvent<HTMLInputElement>);
+      fileInput.click();
+    },
+    [handleImageUpload],
+  );
 
   return (
     <div

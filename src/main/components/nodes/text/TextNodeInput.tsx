@@ -11,6 +11,19 @@ export function TextNodeInput({
 }) {
   const { updateNodeData } = useReactFlow();
 
+  const handleConvertClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
+
+  //textarea input 안이랑 전환 버튼 클릭했을 때 click event가 전파되지 않도록
+
+  const handleTextareaClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
+
+  const handleTextareaChange = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
+    updateNodeData(id, { text: evt.target.value });
+  };
   return (
     <div
       className={`group flex flex-col rounded-md border border-transparent bg-[#FFFFFF] transition-all duration-300 hover:border-[#C9DCF9]/50 hover:shadow-lg`}
@@ -34,12 +47,14 @@ export function TextNodeInput({
       >
         <textarea
           className={`m-[5px] h-[100px] w-[215px] resize-none bg-transparent placeholder-[#808080] focus-visible:outline-none group-hover:placeholder-[#666666]`}
-          onChange={(evt) => updateNodeData(id, { text: evt.target.value })}
+          onClick={handleTextareaClick}
+          onChange={handleTextareaChange}
           placeholder='텍스트를 입력해 주세요'
           value={data.value ? data.value : undefined}
         />
 
         <button
+          onClick={handleConvertClick}
           className={`group/btn flex h-[35px] w-[225px] flex-row items-center justify-center self-end rounded-sm bg-[#808080] transition-all duration-300 hover:bg-[#3A7DE8] hover:shadow-md`}
         >
           <FunnelPlus
