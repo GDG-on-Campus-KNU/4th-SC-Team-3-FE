@@ -36,7 +36,7 @@ export function TextNodeInput({
           value={data.value ? data.value : undefined}
         />
         <button
-          className={`w-[225px] h-[35px] rounded-sm flex flex-row items-center hover:bg-[#3A7DEB ] place-content-center bg-[#808080] self-end`}
+          className={`w-[225px] h-[35px] rounded-sm flex flex-row items-center hover:bg-[#3A7DEB] place-content-center bg-[#808080] self-end`}
         >
           <FunnelPlus size='20' className={`size-[20px] text-[#FFFFFF]`} />
           <div className={`text-[#FFFFFF] ml-1`}>카테고리로 변환</div>

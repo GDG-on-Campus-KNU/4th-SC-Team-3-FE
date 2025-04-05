@@ -3,6 +3,7 @@ import { useCallback } from 'react';
 import { edgeTypes } from '../lib/edge.type';
 import { nodeTypes } from '../lib/node.type';
 import useDnDStore from '../stores/DnDStore';
+import useSelectedObjectStore from '../stores/selectObjectStore';
 import {
   ReactFlow,
   MiniMap,
@@ -25,6 +26,7 @@ const getId = () => `dndnode_${id++}`;
 export default function Canvas() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const { setSelectedId } = useSelectedObjectStore();
 
   const { type, modelName } = useDnDStore();
   const { screenToFlowPosition } = useReactFlow();
@@ -74,6 +76,10 @@ export default function Canvas() {
         onDrop={onDrop}
         onDragOver={onDragOver}
         attributionPosition='bottom-left'
+        minZoom={0.1}
+        maxZoom={5}
+        onNodeClick={(_, node) => setSelectedId(node.id)}
+        onPaneClick={() => setSelectedId(undefined)}
       >
         <Controls />
         <MiniMap />

@@ -1,7 +1,7 @@
 import { Search } from 'lucide-react';
 
 import useDnDStore from '../stores/DnDStore';
-import TextNodeInput from './nodes/inputs/TextNodeInput';
+import TextNodeInput from './nodes/text/TextNodeInput';
 
 export interface AIModels {
   type: string;
