@@ -1,6 +1,8 @@
+import { useState } from 'react';
+
 import { Baseline, FunnelPlus, Play } from 'lucide-react';
 
-import { useReactFlow } from '@xyflow/react';
+import { useReactFlow, Node, Edge } from '@xyflow/react';
 
 export function TextNodeInput({
   id,
@@ -9,10 +11,46 @@ export function TextNodeInput({
   id: string;
   data: { model: string; value?: string };
 }) {
-  const { updateNodeData } = useReactFlow();
+  const { updateNodeData, getNodes, setNodes, addEdges } = useReactFlow();
+  const [isConverting, setIsConverting] = useState(false);
 
   const handleConvertClick = (e: React.MouseEvent) => {
     e.stopPropagation();
+    setIsConverting(true);
+
+    const nodes = getNodes();
+    const currentNode = nodes.find((n) => n.id === id);
+
+    if (!currentNode) return;
+
+    const categoryNode: Node = {
+      id: `category-${Date.now()}`,
+      type: 'categoryNode',
+      position: {
+        x: currentNode.position.x + 300,
+        y: currentNode.position.y,
+      },
+      data: {
+        value: data.value || '',
+        categories: [
+          { name: '카테고리 1', value: data.value || '' },
+          { name: '카테고리 2', value: '' },
+          { name: '카테고리 3', value: '' },
+          { name: '카테고리 4', value: '' },
+        ],
+      },
+    };
+
+    const newEdge: Edge = {
+      id: `edge-${id}-${categoryNode.id}`,
+      source: id,
+      target: categoryNode.id,
+    };
+
+    setNodes((nds) => [...nds, categoryNode]);
+    addEdges([newEdge]);
+
+    setIsConverting(false);
   };
 
   //textarea input 안이랑 전환 버튼 클릭했을 때 click event가 전파되지 않도록
@@ -24,6 +62,7 @@ export function TextNodeInput({
   const handleTextareaChange = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
     updateNodeData(id, { text: evt.target.value });
   };
+
   return (
     <div
       className={`group flex flex-col rounded-md border border-transparent bg-[#FFFFFF] transition-all duration-300 hover:border-[#C9DCF9]/50 hover:shadow-lg`}
