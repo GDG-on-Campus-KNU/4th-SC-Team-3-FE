@@ -14,6 +14,7 @@ import {
   useReactFlow,
   Node,
   Edge,
+  Connection,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
@@ -31,7 +32,10 @@ export default function Canvas() {
   const { nodeType, modelName } = useDnDStore();
   const { screenToFlowPosition } = useReactFlow();
 
-  const onConnect = useCallback((params: any) => setEdges((eds) => addEdge(params, eds)), []);
+  const onConnect = useCallback(
+    (params: Connection) => setEdges((eds) => addEdge({ ...params, type: 'textEdge' }, eds)),
+    [],
+  );
 
   const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();

@@ -16,40 +16,31 @@ export function TextNodeInput({
 
   const handleConvertClick = (e: React.MouseEvent) => {
     e.stopPropagation();
+    if (isConverting) return;
+
     setIsConverting(true);
 
-    const nodes = getNodes();
-    const currentNode = nodes.find((n) => n.id === id);
+    setNodes((nds) =>
+      nds.map((node) => {
+        if (node.id === id) {
+          return {
+            ...node,
+            type: 'category',
+            data: {
+              originalText: data.value || '',
+              categories: [
+                { name: '카테고리 1', value: data.value || '' },
+                { name: '카테고리 2', value: '' },
+                { name: '카테고리 3', value: '' },
+                { name: '카테고리 4', value: '' },
+              ],
+            },
+          };
+        }
 
-    if (!currentNode) return;
-
-    const categoryNode: Node = {
-      id: `category-${Date.now()}`,
-      type: 'categoryNode',
-      position: {
-        x: currentNode.position.x + 300,
-        y: currentNode.position.y,
-      },
-      data: {
-        value: data.value || '',
-        categories: [
-          { name: '카테고리 1', value: data.value || '' },
-          { name: '카테고리 2', value: '' },
-          { name: '카테고리 3', value: '' },
-          { name: '카테고리 4', value: '' },
-        ],
-      },
-    };
-
-    const newEdge: Edge = {
-      id: `edge-${id}-${categoryNode.id}`,
-      source: id,
-      target: categoryNode.id,
-    };
-
-    setNodes((nds) => [...nds, categoryNode]);
-    addEdges([newEdge]);
-
+        return node;
+      }),
+    );
     setIsConverting(false);
   };
 
