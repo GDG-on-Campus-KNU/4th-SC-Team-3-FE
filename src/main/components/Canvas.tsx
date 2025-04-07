@@ -29,7 +29,7 @@ export default function Canvas() {
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const { setSelectedId } = useSelectedObjectStore();
 
-  const { nodeType, modelName, categoryName, categoryValue } = useDnDStore();
+  const { nodeType, modelName } = useDnDStore();
   const { screenToFlowPosition } = useReactFlow();
 
   const onConnect = useCallback(
@@ -56,12 +56,17 @@ export default function Canvas() {
       });
 
       if (nodeType === 'categoryItem') {
+        const rawData = event.dataTransfer.getData('application/reactflow-item');
+        const item = JSON.parse(rawData);
         try {
           const newCategoryItemNode: Node = {
             id: getId(),
             type: 'categoryItem',
             position,
-            data: { name: categoryName, value: categoryValue },
+            data: {
+              name: item.name,
+              value: item.value,
+            },
             draggable: true,
           };
           setNodes((nds) => nds.concat(newCategoryItemNode));

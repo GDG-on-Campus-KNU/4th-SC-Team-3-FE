@@ -25,22 +25,18 @@ export function CategoryNode({
   isConnectable: boolean;
 }) {
   const { setNodes, getNodes } = useReactFlow();
-  const [draggedItem, setDraggedItem] = useState<CategoryItemData | null>(null);
-  const { setNodeType, setModelName, setCategoryName, setCategoryValue } = useDnDStore();
+  const { setNodeType } = useDnDStore();
 
   const onDragStart = (
     event: React.DragEvent<HTMLDivElement>,
     nodeType: string,
-    item?: CategoryItemData,
+    item: CategoryItemData,
   ): void => {
-    if (setNodeType) {
-      setNodeType(nodeType);
-    }
+    setNodeType?.(nodeType);
+
     event.dataTransfer.effectAllowed = 'move';
-    if (item) {
-      setCategoryName?.(item.name);
-      setCategoryValue?.(item.value);
-    }
+
+    event.dataTransfer.setData('application/reactflow-item', JSON.stringify(item));
   };
 
   const handleInputChange = useCallback(
