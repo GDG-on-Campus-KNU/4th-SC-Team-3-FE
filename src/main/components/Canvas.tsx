@@ -29,7 +29,7 @@ export default function Canvas() {
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const { setSelectedId } = useSelectedObjectStore();
 
-  const { nodeType, modelName } = useDnDStore();
+  const { nodeType, modelName, categoryName, categoryValue } = useDnDStore();
   const { screenToFlowPosition } = useReactFlow();
 
   const onConnect = useCallback(
@@ -54,6 +54,22 @@ export default function Canvas() {
         x: event.clientX,
         y: event.clientY,
       });
+
+      if (nodeType === 'categoryItem') {
+        try {
+          const newCategoryItemNode: Node = {
+            id: getId(),
+            type: 'categoryItem',
+            position,
+            data: { name: categoryName, value: categoryValue },
+            draggable: true,
+          };
+          setNodes((nds) => nds.concat(newCategoryItemNode));
+          return;
+        } catch (err) {
+          console.error('Failed to parse categoryItem data:', err);
+        }
+      }
 
       const newNode: Node = {
         id: getId(),
