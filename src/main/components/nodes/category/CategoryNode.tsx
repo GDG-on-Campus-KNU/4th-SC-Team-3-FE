@@ -4,7 +4,7 @@ import useDnDStore from '@/main/stores/DnDStore';
 
 import { useReactFlow, Handle, Position } from '@xyflow/react';
 
-interface CategoryItemData {
+export interface CategoryItemData {
   id: string;
   name: string;
   value: string;

@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 
+import { CategoryItemData } from '../components/nodes/category/CategoryNode';
 import { edgeTypes } from '../lib/edge.type';
 import { nodeTypes } from '../lib/node.type';
 import useDnDStore from '../stores/DnDStore';
@@ -45,35 +46,54 @@ export default function Canvas() {
   const onDrop = useCallback(
     (event: React.DragEvent<HTMLDivElement>) => {
       event.preventDefault();
-
-      if (!nodeType) {
-        return;
-      }
+      if (!nodeType) return;
 
       const position = screenToFlowPosition({
         x: event.clientX,
         y: event.clientY,
       });
 
-      if (nodeType === 'categoryItem') {
-        const rawData = event.dataTransfer.getData('application/reactflow-item');
-        const item = JSON.parse(rawData);
-        try {
-          const newCategoryItemNode: Node = {
-            id: getId(),
-            type: 'categoryItem',
-            position,
-            data: {
-              name: item.name,
-              value: item.value,
-            },
-            draggable: true,
-          };
-          setNodes((nds) => nds.concat(newCategoryItemNode));
-          return;
-        } catch (err) {
-          console.error('Failed to parse categoryItem data:', err);
-        }
+      // 드래그한 item 정보 dataTransfer 객체에서 꺼냄
+
+      const raw = event.dataTransfer.getData('application/reactflow-item');
+      if (nodeType === 'categoryItem' && raw) {
+        const item = JSON.parse(raw) as CategoryItemData;
+
+        // 새 CategoryItemNode 생성
+
+        const newNode: Node = {
+          id: item.id,
+          type: 'categoryItem',
+          position,
+          data: {
+            name: item.name,
+            value: item.value,
+          },
+          draggable: true,
+        };
+
+        // 기존 부모 CategoryNode에서 해당 item 제거
+
+        setNodes((nds) => {
+          const updated = nds.map((node) => {
+            if (node.id === item.parentId && Array.isArray(node.data?.categories)) {
+              return {
+                ...node,
+                data: {
+                  ...node.data,
+                  categories: (node.data.categories as CategoryItemData[]).filter(
+                    (c: CategoryItemData) => c.id !== item.id,
+                  ),
+                },
+              };
+            }
+            return node;
+          });
+
+          return [...updated, newNode];
+        });
+
+        return;
       }
 
       const newNode: Node = {
@@ -85,7 +105,7 @@ export default function Canvas() {
 
       setNodes((nds) => nds.concat(newNode));
     },
-    [screenToFlowPosition, nodeType, modelName],
+    [screenToFlowPosition, nodeType, modelName, setNodes],
   );
 
   return (
