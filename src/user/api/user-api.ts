@@ -1,5 +1,5 @@
-import { UserModel } from '@/user/api/user-response.ts';
 import { axiosClient } from '@/global/api/axios.ts';
+import { UserModel } from '@/user/api/user-response.ts';
 
 /**
  * 현재 사용자 정보 가져오기
@@ -26,10 +26,7 @@ export async function getMyInfo(): Promise<UserModel> {
     const response = await axiosClient.get<UserModel>('/api/users/me');
     return response.data; // response.data 반환
   } catch (error: any) {
-    const errorMessage =
-      error.response?.data?.message ||
-      error.message ||
-      'Unknown error occurred';
+    const errorMessage = error.response?.data?.message || error.message || 'Unknown error occurred';
     console.error('Error fetching user info:', errorMessage);
     throw new Error('Failed to fetch user info');
   }
