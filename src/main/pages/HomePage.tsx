@@ -11,10 +11,10 @@ export default function HomePage() {
   const [selectedType, setSelectedType] = useState<string | null>(null);
 
   return (
-    <div className='h-full flex flex-row bg-[#EDEDED] overflow-y-hidden'>
+    <div className='flex h-full flex-row overflow-y-hidden bg-[#EDEDED]'>
       <ReactFlowProvider>
-        <div className='w-[70px] h-full relative  bg-[#FFFFFF] border-r-[#BBBBBB] border-r-[0.5px] z-20'>
-          <div className='h-full flex flex-col items-start p-[6px] space-y-1 gap-3 mt-1'>
+        <div className='relative z-20 h-full w-[70px] border-r-[0.5px] border-r-[#BBBBBB] bg-[#FFFFFF]'>
+          <div className='mt-1 flex h-full flex-col items-start gap-3 space-y-1 p-[6px]'>
             <SideButton selectedType={selectedType} setSelectedType={setSelectedType} />
           </div>
         </div>

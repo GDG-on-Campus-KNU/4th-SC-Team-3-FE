@@ -1,6 +1,7 @@
 import { Search } from 'lucide-react';
 
 import useDnDStore from '../stores/DnDStore';
+import ImageNodeInput from './nodes/image/ImageNodeInput';
 import TextNodeInput from './nodes/text/TextNodeInput';
 
 export interface AIModels {
@@ -9,7 +10,7 @@ export interface AIModels {
 }
 
 export default function SideMenu(props: { selectedType: string | null }) {
-  const { setType, setModelName } = useDnDStore();
+  const { setNodeType, setModelName } = useDnDStore();
 
   const searchType =
     props.selectedType === 'text'
@@ -29,11 +30,11 @@ export default function SideMenu(props: { selectedType: string | null }) {
     },
     {
       type: 'image',
-      models: ['Gemi', 'Gemi', 'Gemi', 'Gemi', 'Gemi'],
+      models: ['Gemi', 'Gemi1', 'Gemi2', 'Gemi3', 'Gemi4'],
     },
     {
       type: 'audio',
-      models: ['AudioMD', 'AudioMD', 'AudioMD'],
+      models: ['AudioMD1', 'AudioMD2', 'AudioMD3'],
     },
     {
       type: 'video',
@@ -46,8 +47,8 @@ export default function SideMenu(props: { selectedType: string | null }) {
     nodeType: string,
     selectedModel: string,
   ): void => {
-    if (setType) {
-      setType(nodeType);
+    if (setNodeType) {
+      setNodeType(nodeType);
     }
     setModelName(selectedModel);
     event.dataTransfer.effectAllowed = 'move';
@@ -57,22 +58,21 @@ export default function SideMenu(props: { selectedType: string | null }) {
     <aside
       className={`${
         props.selectedType === null ? '-translate-x-full' : 'translate-x-[70px]'
-      } ease-in-out duration-500 transform delay-0 z-10 fixed
-        h-full w-[300px] flex-1 rounded-r-lg bg-[#D9D9D9] overflow-hidden`}
+      } fixed z-10 h-full w-[300px] flex-1 transform overflow-hidden rounded-r-lg bg-[#D9D9D9] delay-0 duration-500 ease-in-out`}
     >
-      <div className='h-[75px] flex flex-col p-4 mt-1 ml-2'>
-        <div className='h-[40px] w-[240px] rounded-[8px] border-[#666666] flex flex-row justify-center gap-2 bg-transparent border-[1px] '>
-          <Search size={16} className='text-[#808080] self-center' />
+      <div className='ml-2 mt-1 flex h-[75px] flex-col p-4'>
+        <div className='flex h-[40px] w-[240px] flex-row justify-center gap-2 rounded-[8px] border-[1px] border-[#666666] bg-transparent'>
+          <Search size={16} className='self-center text-[#808080]' />
           <input
             type='search'
             name='searchAIModel'
             placeholder={`${searchType} AI 모델 검색`}
-            className='w-[180px] h-[30px] bg-transparent placeholder-[#666666] self-center focus-visible:outline-none font-[Noto Sans] font-medium text-left text-[16px]'
+            className='font-[Noto Sans] h-[30px] w-[180px] self-center bg-transparent text-left text-[16px] font-medium placeholder-[#666666] focus-visible:outline-none'
           />
         </div>
       </div>
       <div
-        className={`h-[calc(100%-130px)] scroll-smooth self-center items-center p-4 flex flex-col overflow-y-scroll overflow-x-hidden`}
+        className={`flex h-[calc(100%-130px)] flex-col items-center self-center overflow-x-hidden overflow-y-scroll scroll-smooth p-4`}
       >
         {models
           .find((model) => model.type === props.selectedType)
@@ -80,13 +80,18 @@ export default function SideMenu(props: { selectedType: string | null }) {
             <div
               key={index}
               id={modelName}
-              className='text-black h-[200px] m-3'
+              className='m-3 h-[200px] text-black'
               draggable
               onDragStart={(event) =>
                 onDragStart(event, props.selectedType ? props.selectedType : '', modelName)
               }
             >
-              <TextNodeInput id={modelName} data={{ model: modelName }} />
+              {props.selectedType === 'text' && (
+                <TextNodeInput id={modelName} data={{ model: modelName }} />
+              )}
+              {props.selectedType === 'image' && (
+                <ImageNodeInput id={modelName} data={{ model: modelName }} />
+              )}
             </div>
           ))}
       </div>

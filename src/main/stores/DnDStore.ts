@@ -1,17 +1,29 @@
 import { create } from 'zustand';
 
+interface CategoryItemData {
+  id: string;
+  name: string;
+  value: string;
+  parentId: string | null;
+}
 interface DnDState {
-  type: string | undefined;
+  nodeType: string | undefined;
   modelName: string | undefined;
-  setType: (type: string | undefined) => void;
+  draggedItem: CategoryItemData | null;
+
+  setNodeType: (type: string | undefined) => void;
   setModelName: (modelName: string | undefined) => void;
+  setDraggedItem: (item: CategoryItemData | null) => void;
 }
 
 const useDnDStore = create<DnDState>((set) => ({
-  type: undefined,
+  nodeType: undefined,
   modelName: undefined,
-  setType: (type) => set({ type }),
+  draggedItem: null,
+
+  setNodeType: (nodeType) => set({ nodeType }),
   setModelName: (modelName) => set({ modelName }),
+  setDraggedItem: (item) => set({ draggedItem: item }),
 }));
 
 export default useDnDStore;

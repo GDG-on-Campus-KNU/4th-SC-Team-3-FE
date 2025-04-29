@@ -1,5 +1,6 @@
 import { useCallback, useEffect } from 'react';
 
+import { CategoryItemData } from '../components/nodes/category/CategoryNode';
 import { edgeTypes } from '../lib/edge.type';
 import { nodeTypes } from '../lib/node.type';
 import useDnDStore from '../stores/DnDStore';
@@ -30,20 +31,11 @@ export default function Canvas() {
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const { selectedId, setSelectedId } = useSelectedObjectStore();
 
-  const { type, modelName } = useDnDStore();
+  const { nodeType, modelName } = useDnDStore();
   const { screenToFlowPosition } = useReactFlow();
 
   const onConnect = useCallback(
-    (params: Connection) =>
-      setEdges((eds) =>
-        addEdge(
-          {
-            ...params,
-            type: 'textEdge',
-          },
-          eds,
-        ),
-      ),
+    (params: Connection) => setEdges((eds) => addEdge({ ...params, type: 'textEdge' }, eds)),
     [],
   );
 
@@ -55,26 +47,66 @@ export default function Canvas() {
   const onDrop = useCallback(
     (event: React.DragEvent<HTMLDivElement>) => {
       event.preventDefault();
-
-      if (!type) {
-        return;
-      }
+      if (!nodeType) return;
 
       const position = screenToFlowPosition({
         x: event.clientX,
         y: event.clientY,
       });
 
+      // 드래그한 item 정보 dataTransfer 객체에서 꺼냄
+
+      const raw = event.dataTransfer.getData('application/reactflow-item');
+      if (nodeType === 'categoryItem' && raw) {
+        const item = JSON.parse(raw) as CategoryItemData;
+
+        // 새 CategoryItemNode 생성
+
+        const newNode: Node = {
+          id: item.id,
+          type: 'categoryItem',
+          position,
+          data: {
+            name: item.name,
+            value: item.value,
+          },
+          draggable: true,
+        };
+
+        // 기존 부모 CategoryNode에서 해당 item 제거
+
+        setNodes((nds) => {
+          const updated = nds.map((node) => {
+            if (node.id === item.parentId && Array.isArray(node.data?.categories)) {
+              return {
+                ...node,
+                data: {
+                  ...node.data,
+                  categories: (node.data.categories as CategoryItemData[]).filter(
+                    (c: CategoryItemData) => c.id !== item.id,
+                  ),
+                },
+              };
+            }
+            return node;
+          });
+
+          return [...updated, newNode];
+        });
+
+        return;
+      }
+
       const newNode: Node = {
         id: getId(),
-        type: type,
+        type: nodeType,
         position,
         data: { model: modelName, data: null },
       };
 
       setNodes((nds) => nds.concat(newNode));
     },
-    [screenToFlowPosition, type, modelName],
+    [screenToFlowPosition, nodeType, modelName, setNodes],
   );
 
   useEffect(() => {
@@ -94,7 +126,7 @@ export default function Canvas() {
   }, [selectedId, setSelectedId, edges]);
 
   return (
-    <div className={`w-full h-full relative`}>
+    <div className={`relative h-full w-full`}>
       <ReactFlow
         nodes={nodes}
         edges={edges.map((edge) => ({

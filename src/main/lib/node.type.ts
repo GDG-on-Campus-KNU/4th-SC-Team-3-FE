@@ -1,9 +1,11 @@
-import CategoryNode from '../components/nodes/CategoryNode';
-import ImageNode from '../components/nodes/ImageNode';
-import { TextNodeWrapper } from '../components/nodes/text/TextNodeWrapper';
+import CategoryItemNode from '../components/nodes/category/CategoryItemNode';
+import CategoryNode from '../components/nodes/category/CategoryNode';
+import ImageNodeWrapper from '../components/nodes/image/ImageNodeWrapper';
+import TextNodeWrapper from '../components/nodes/text/TextNodeWrapper';
 
 export const nodeTypes = {
   text: TextNodeWrapper,
   category: CategoryNode,
-  image: ImageNode,
+  categoryItem: CategoryItemNode,
+  image: ImageNodeWrapper,
 };
