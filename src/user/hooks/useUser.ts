@@ -1,6 +1,6 @@
+import { getMyInfo } from '@/user/api/user-api.ts';
 import { UserModel } from '@/user/api/user-response.ts';
 import { useQuery } from '@tanstack/react-query';
-import { getMyInfo } from '@/user/api/user-api.ts';
 
 interface UserState {
   user?: UserModel;

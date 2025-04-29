@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import { edgeTypes } from '../lib/edge.type';
 import { nodeTypes } from '../lib/node.type';
@@ -28,13 +28,22 @@ const getId = () => `dndnode_${id++}`;
 export default function Canvas() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-  const { setSelectedId } = useSelectedObjectStore();
+  const { selectedId, setSelectedId } = useSelectedObjectStore();
 
   const { type, modelName } = useDnDStore();
   const { screenToFlowPosition } = useReactFlow();
 
   const onConnect = useCallback(
-    (params: Connection) => setEdges((eds) => addEdge({ ...params, type: 'textEdge' }, eds)),
+    (params: Connection) =>
+      setEdges((eds) =>
+        addEdge(
+          {
+            ...params,
+            type: 'textEdge',
+          },
+          eds,
+        ),
+      ),
     [],
   );
 
@@ -68,11 +77,30 @@ export default function Canvas() {
     [screenToFlowPosition, type, modelName],
   );
 
+  useEffect(() => {
+    edges
+      .filter((edge) => edge.id !== selectedId)
+      .map((edge) => {
+        edge.zIndex = 0;
+      });
+    edges
+      .filter((edge) => edge.id === selectedId)
+      .map((edge) => {
+        edge.zIndex = 1000;
+      });
+    setEdges((edges) => [...edges]);
+
+    console.log('selectedId', selectedId);
+  }, [selectedId, setSelectedId, edges]);
+
   return (
     <div className={`w-full h-full relative`}>
       <ReactFlow
         nodes={nodes}
-        edges={edges}
+        edges={edges.map((edge) => ({
+          ...edge,
+          style: { zIndex: selectedId === edge.id ? 1000 : 0 },
+        }))}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
@@ -83,9 +111,22 @@ export default function Canvas() {
         minZoom={0.1}
         maxZoom={5}
         onNodeClick={(_, node) => setSelectedId(node.id)}
-        onEdgeClick={(_, edge) => setSelectedId(edge.id)}
+        onEdgeClick={(_, edge) => {
+          setSelectedId(edge.id);
+          edges
+            .filter((edge) => edge.id !== selectedId)
+            .map((edge) => {
+              edge.zIndex = 0;
+            });
+          edges
+            .filter((edge) => edge.id === selectedId)
+            .map((edge) => {
+              edge.zIndex = 1000;
+            });
+        }}
         onPaneClick={() => setSelectedId(undefined)}
         connectionLineComponent={CustomConnectionLine}
+        onNodeDragStop={(_, node) => setSelectedId(node.id)}
       >
         <Controls />
         <MiniMap />

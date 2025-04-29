@@ -17,10 +17,10 @@ export function TextNodeWrapper({
   const { selectedId } = useSelectedObjectStore();
 
   return (
-    <div className={`w-[245px] h-[195px] rounded-md bg-[#FFFFFF] flex flex-col`}>
+    <div className={`w-[245px] h-[195px] rounded-md bg-[#FFFFFF] flex flex-col z-10000`}>
       <TextNodeInput id={id} data={data} />
       {selectedId === id && (
-        <div className='absolute top-0 right-0 translate-x-[10px] translate-y-[-10px] z-10'>
+        <div className='absolute top-0 right-0 translate-x-[10px] translate-y-[-10px]'>
           <button
             className='w-[26px] h-[26px] rounded-full bg-[#E65429] flex justify-center items-center'
             onClick={() => {
