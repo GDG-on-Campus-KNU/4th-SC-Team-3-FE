@@ -18,7 +18,7 @@ export function TextNodeWrapper({
   const { selectedId } = useSelectedObjectStore();
 
   return (
-    <div className={`flex h-[195px] w-[245px] flex-col rounded-md bg-[#FFFFFF]`}>
+    <div className={`z-10000 flex h-[195px] w-[245px] flex-col rounded-md bg-[#FFFFFF]`}>
       <TextNodeInput id={id} data={data} />
       {selectedId === id && (
         <div className='absolute right-0 top-0 z-10 translate-x-[10px] translate-y-[-10px]'>
@@ -34,14 +34,14 @@ export function TextNodeWrapper({
         </div>
       )}
       <Handle
-        className={`bg-pipy-blue h-[30px] w-[8px] -translate-y-[57px] translate-x-[8px] rounded-none border-none`}
+        className={`h-[30px] w-[8px] -translate-y-[57px] translate-x-[8px] rounded-none border-none bg-[#3A7DE8]`}
         type='source'
         position={Position.Right}
         id='right'
         isConnectable={isConnectable}
       />
       <Handle
-        className={`bg-pipy-blue h-[30px] w-[8px] -translate-x-[8px] -translate-y-[57px] rounded-none border-none`}
+        className={`h-[30px] w-[8px] -translate-x-[8px] -translate-y-[57px] rounded-none border-none bg-[#3A7DE8]`}
         type='target'
         position={Position.Left}
         id='left'
