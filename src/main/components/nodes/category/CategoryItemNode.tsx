@@ -7,9 +7,10 @@ import { Node } from '@xyflow/react';
 export interface CategoryNodeItemData {
   name: string;
   value: string;
+  [key: string]: unknown; // Add index signature to satisfy Record<string, unknown>
 }
 
-function CategoryItemNode({ id, data }: NodeProps<CategoryNodeItemData>) {
+function CategoryItemNode({ id, data, selected }: NodeProps<Node<CategoryNodeItemData>>) {
   const { setDraggedItem, draggedItem } = useDnDStore();
   const { setNodes, getNodes } = useReactFlow();
   const handleDragStart = (event: React.DragEvent<HTMLDivElement>) => {
