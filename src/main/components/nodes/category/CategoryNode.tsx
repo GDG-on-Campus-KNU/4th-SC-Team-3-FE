@@ -2,6 +2,7 @@ import { useCallback, useState, useEffect, useRef } from 'react';
 
 import useDnDStore from '@/main/stores/DnDStore';
 
+import Funnel from '@/assets/main/icon-funnel.svg';
 import { useReactFlow, Handle, Position } from '@xyflow/react';
 
 export interface CategoryItemData {
@@ -105,11 +106,11 @@ export function CategoryNode({
   return (
     <div
       ref={wrapperRef}
-      className={`group flex w-[245px] flex-col rounded-md border-2 ${data.isHover ? 'border-blue-500' : 'border-[#808080]'}`}
-      style={{ height: `${280 + data.categories.length * 40}px` }}
+      className={`group w-[245px] flex-col justify-start overflow-y-auto rounded-md border-2 bg-[#E3E3E3] shadow-md transition-all duration-300 hover:shadow-lg ${data.isHover ? 'border-blue-500' : 'border-[#808080]'}`}
+      style={{ height: `${80 + data.categories.length * 80}px` }}
       data-id={id}
     >
-      <div className='m-[5px] mb-0 flex h-[30px] w-[235px] flex-row place-items-end rounded-t-sm'>
+      <div className='m-[5px] mb-0 flex h-[30px] w-[235px] flex-row rounded-t-sm'>
         <div className='font-[Noto Sans] ml-2 h-[28px] w-[180px] pt-0.5 text-left text-[16px] font-semibold text-[#000000]'></div>
         <Handle
           className='h-[30px] w-[8px] -translate-y-[57px] translate-x-[8px] rounded-none border-none bg-pipy-blue'
@@ -120,25 +121,32 @@ export function CategoryNode({
         />
       </div>
 
-      <div className='overflow-y-auto p-2'>
+      <div className='p-2'>
         {data.categories.map((item) => (
           <div
             key={item.id}
-            className='nodrag mb-2 flex w-full cursor-move flex-col rounded border border-gray-300 bg-white p-3 shadow-sm hover:border-gray-500 hover:bg-gray-100'
             draggable
             onDragStart={(e) => onDragStart(e, 'categoryItem', item)}
+            className='nodrag relative mb-4 flex w-[220px] flex-col rounded border border-transparent bg-white p-1 shadow-md transition-all duration-300 hover:border-[#C9DCF9]/50 hover:shadow-lg'
           >
+            <div className='absolute -top-2 left-0 h-3 w-[110px] rounded-sm bg-white'></div>
+            <div className='mb-[6px] flex items-center gap-1'>
+              <div className='flex h-7 w-7 shrink-0 items-center justify-center rounded-md border-2 border-[#3A7DE8]'>
+                <img src={Funnel} alt='funnel' className='nodrag h-4 w-4 object-contain' />
+              </div>
+              <input
+                type='text'
+                value={item.name}
+                onChange={(e) => handleCategoryChange(item.id, 'name', e.target.value)}
+                className='w-full rounded pl-1 font-medium text-gray-700'
+              />
+            </div>
             <input
               type='text'
-              value={item.name}
-              onChange={(e) => handleCategoryChange(item.id, 'name', e.target.value)}
-              className='mb-2 w-full rounded border border-gray-300 p-1 font-medium text-gray-700'
-            />
-            <input
-              className='nodrag w-full rounded border border-gray-300 p-1 text-sm'
               value={item.value}
               onChange={(e) => handleCategoryChange(item.id, 'value', e.target.value)}
-            ></input>
+              className='w-full rounded border border-gray-300 bg-[#C9DCF9] p-1 text-sm text-[#5B5B5B]'
+            />
           </div>
         ))}
       </div>

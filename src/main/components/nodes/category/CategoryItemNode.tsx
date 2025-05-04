@@ -1,6 +1,6 @@
 import { memo, useCallback, useRef, useEffect } from 'react';
 
-import useDnDStore from '../../../stores/DnDStore';
+import Funnel from '@/assets/main/icon-funnel.svg';
 import { Handle, Position, NodeProps, useReactFlow } from '@xyflow/react';
 import { Node } from '@xyflow/react';
 
@@ -14,8 +14,7 @@ export interface CategoryNodeItemData {
 
 function CategoryItemNode({ id, data, selected }: NodeProps<Node<CategoryNodeItemData>>) {
   const ref = useRef<HTMLDivElement>(null);
-  const { setDraggedItem, draggedItem } = useDnDStore();
-  const { setNodes, getNodes } = useReactFlow();
+  const { setNodes } = useReactFlow();
 
   const handleFieldChange = useCallback(
     (field: 'name' | 'value', e: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,20 +47,25 @@ function CategoryItemNode({ id, data, selected }: NodeProps<Node<CategoryNodeIte
   return (
     <div
       ref={ref}
-      className='flex w-[220px] flex-col rounded border border-gray-300 bg-white p-3 shadow-sm'
+      className='relative flex w-[220px] flex-col rounded border border-transparent bg-white p-1 shadow-md transition-all duration-300 hover:border-[#C9DCF9]/50 hover:shadow-lg'
     >
-      {draggedItem && <p>{draggedItem.name} is being dragged</p>}
-      <input
-        type='text'
-        value={data.name}
-        onChange={(e) => handleFieldChange('name', e)}
-        className='mb-2 w-full rounded border border-gray-300 p-1 font-medium text-gray-700'
-      />
+      <div className='absolute -top-2 left-0 h-3 w-[110px] rounded-sm bg-white'></div>
+      <div className='mb-[6px] flex items-center gap-1'>
+        <div className='flex h-7 w-7 shrink-0 items-center justify-center rounded-md border-2 border-[#3A7DE8]'>
+          <img src={Funnel} alt='funnel' className='h-4 w-4 object-contain' />
+        </div>
+        <input
+          type='text'
+          value={data.name}
+          onChange={(e) => handleFieldChange('name', e)}
+          className='w-full rounded pl-1 font-medium text-gray-700'
+        />
+      </div>
       <input
         type='text'
         value={data.value}
         onChange={(e) => handleFieldChange('value', e)}
-        className='w-full rounded border border-gray-300 p-1 text-sm'
+        className='w-full rounded border border-gray-300 bg-[#C9DCF9] p-1 text-sm text-[#5B5B5B]'
       />
     </div>
   );
