@@ -80,24 +80,26 @@ export function CategoryNode({
     }
   }, [data.categories, id, setNodes]);
 
-  const handleInputChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>, itemId: string) => {
-      const updatedCategories = data.categories.map((cat) =>
-        cat.id === itemId ? { ...cat, value: e.target.value } : cat,
-      );
-      setNodes((nds) =>
-        nds.map((node) => {
-          if (node.id === id) {
-            return {
-              ...node,
-              data: { categories: updatedCategories },
-            };
-          }
-          return node;
+  const handleCategoryChange = useCallback(
+    (itemId: string, field: 'name' | 'value', newValue: string) => {
+      setNodes((nodes) =>
+        nodes.map((node) => {
+          if (node.id !== id) return node;
+          // 이 노드 안의 categories 배열만 업데이트
+          const newCategories = (node.data as unknown as CategoryNodeData).categories.map((cat) =>
+            cat.id === itemId ? { ...cat, [field]: newValue } : cat,
+          );
+          return {
+            ...node,
+            data: {
+              ...node.data,
+              categories: newCategories,
+            },
+          };
         }),
       );
     },
-    [data.categories, id, setNodes],
+    [setNodes, id],
   );
 
   return (
@@ -126,11 +128,16 @@ export function CategoryNode({
             draggable
             onDragStart={(e) => onDragStart(e, 'categoryItem', item)}
           >
-            <div className='mb-2 font-medium text-gray-700'>{item.name}</div>
+            <input
+              type='text'
+              value={item.name}
+              onChange={(e) => handleCategoryChange(item.id, 'name', e.target.value)}
+              className='mb-2 w-full rounded border border-gray-300 p-1 font-medium text-gray-700'
+            />
             <input
               className='nodrag w-full rounded border border-gray-300 p-1 text-sm'
               value={item.value}
-              onChange={(e) => handleInputChange(e, item.id)}
+              onChange={(e) => handleCategoryChange(item.id, 'value', e.target.value)}
             ></input>
           </div>
         ))}
