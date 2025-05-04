@@ -67,6 +67,13 @@ function CategoryItemNode({ id, data, selected }: NodeProps<Node<CategoryNodeIte
         onChange={(e) => handleFieldChange('value', e)}
         className='w-full rounded border border-gray-300 bg-[#C9DCF9] p-1 text-sm text-[#5B5B5B]'
       />
+
+      <Handle
+        className='h-[30px] w-[8px] -translate-y-[10px] translate-x-[8px] rounded-none border-none bg-pipy-blue'
+        type='source'
+        position={Position.Right}
+        id='right'
+      />
     </div>
   );
 }
