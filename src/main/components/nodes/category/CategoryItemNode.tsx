@@ -1,4 +1,4 @@
-import { memo, useCallback } from 'react';
+import { memo, useCallback, useRef, useEffect } from 'react';
 
 import useDnDStore from '../../../stores/DnDStore';
 import { Handle, Position, NodeProps, useReactFlow } from '@xyflow/react';
@@ -8,21 +8,14 @@ export interface CategoryNodeItemData {
   name: string;
   value: string;
   [key: string]: unknown; // Add index signature to satisfy Record<string, unknown>
+  width?: number;
+  height?: number;
 }
 
 function CategoryItemNode({ id, data, selected }: NodeProps<Node<CategoryNodeItemData>>) {
+  const ref = useRef<HTMLDivElement>(null);
   const { setDraggedItem, draggedItem } = useDnDStore();
   const { setNodes, getNodes } = useReactFlow();
-  const handleDragStart = (event: React.DragEvent<HTMLDivElement>) => {
-    const item = {
-      id,
-      name: data.name,
-      value: data.value,
-      parentId: null,
-    };
-    setDraggedItem(item);
-    event.dataTransfer.effectAllowed = 'move';
-  };
 
   const handleFieldChange = useCallback(
     (field: 'name' | 'value', e: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,11 +37,18 @@ function CategoryItemNode({ id, data, selected }: NodeProps<Node<CategoryNodeIte
     [id],
   );
 
+  useEffect(() => {
+    if (!ref.current) return;
+    const { width, height } = ref.current.getBoundingClientRect();
+    setNodes((nds) =>
+      nds.map((n) => (n.id === id ? { ...n, data: { ...n.data, width, height } } : n)),
+    );
+  }, [id, setNodes]);
+
   return (
     <div
-      className='nodrag flex w-[220px] flex-col rounded border border-gray-300 bg-white p-3 shadow-sm'
-      draggable
-      onDragStart={handleDragStart}
+      ref={ref}
+      className='flex w-[220px] flex-col rounded border border-gray-300 bg-white p-3 shadow-sm'
     >
       {draggedItem && <p>{draggedItem.name} is being dragged</p>}
       <input
