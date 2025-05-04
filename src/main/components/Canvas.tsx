@@ -38,13 +38,11 @@ export default function Canvas() {
 
   const handleDropIntoCategory = (itemId: string, categoryId: string) => {
     setNodes((nds) => {
-      // 1) 드롭된 노드 원본 데이터 추출
       const itemNode = nds.find((n) => n.id === itemId);
       if (!itemNode) return nds;
 
-      // 2) nodes 배열에서 해당 노드를 제거한 뒤, 카테고리 노드에 편입
       return nds
-        .filter((n) => n.id !== itemId) // 드래그된 노드 제거
+        .filter((n) => n.id !== itemId)
         .map((n) => {
           if (n.id === categoryId && Array.isArray(n.data.categories)) {
             return {
@@ -55,7 +53,6 @@ export default function Canvas() {
                   ...n.data.categories,
                   {
                     id: itemId,
-                    // 원본 아이템 데이터 그대로 가져오기
                     name: (itemNode.data as unknown as CategoryItemData).name,
                     value: (itemNode.data as unknown as CategoryItemData).value,
                     parentId: categoryId,
@@ -68,7 +65,6 @@ export default function Canvas() {
         });
     });
 
-    // 3) 관련 엣지도 같이 제거
     setEdges((eds) => eds.filter((e) => e.source !== itemId && e.target !== itemId));
   };
 

@@ -69,7 +69,7 @@ export function useNodeDragStopHandler(
         }
 
         return nds.map((n) =>
-          n.type === 'categoryNode' ? { ...n, data: { ...n.data, isHover: false } } : n,
+          n.type === 'category' ? { ...n, data: { ...n.data, isHover: false } } : n,
         );
       });
     },
