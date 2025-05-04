@@ -120,7 +120,11 @@ export function CategoryNode({
   return (
     <div
       ref={wrapperRef}
-      className={`group w-[245px] flex-col justify-start overflow-y-auto rounded-md border-2 bg-[#E3E3E3] shadow-md transition-all duration-300 hover:shadow-lg ${data.isHover ? 'border-2 border-blue-500' : 'border-[#808080]'}`}
+      className={`group w-[245px] flex-col justify-start overflow-y-auto rounded-md border-2 bg-[#E3E3E3] transition-all duration-200 ease-in-out ${
+        data.isHover
+          ? 'border-blue-500 shadow-[0_0_0_2px_rgba(59,130,246,0.5)]'
+          : 'border-[#808080] shadow-md'
+      }`}
       style={{ height: `${80 + data.categories.length * 80}px` }}
       data-id={id}
     >
