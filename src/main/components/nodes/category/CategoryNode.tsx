@@ -1,6 +1,9 @@
 import { useCallback, useState, useEffect, useRef } from 'react';
 
+import { X } from 'lucide-react';
+
 import useDnDStore from '@/main/stores/DnDStore';
+import useSelectedObjectStore from '@/main/stores/selectObjectStore';
 
 import Funnel from '@/assets/main/icon-funnel.svg';
 import { useReactFlow, Handle, Position } from '@xyflow/react';
@@ -31,6 +34,8 @@ export function CategoryNode({
 
   const { setNodes, getNodes } = useReactFlow();
   const { setNodeType, draggedItem } = useDnDStore();
+  const { selectedId } = useSelectedObjectStore();
+  const { setEdges } = useReactFlow();
 
   const [isDraggingOver, setIsDraggingOver] = useState(false);
 
@@ -119,6 +124,19 @@ export function CategoryNode({
       style={{ height: `${80 + data.categories.length * 80}px` }}
       data-id={id}
     >
+      {selectedId === id && (
+        <div className='absolute right-0 top-0 z-10 translate-x-[10px] translate-y-[-10px]'>
+          <button
+            className='flex h-[26px] w-[26px] items-center justify-center rounded-full bg-[#E65429]'
+            onClick={() => {
+              setNodes((nds) => nds.filter((node) => node.id !== id));
+              setEdges((eds) => eds.filter((edge) => edge.source !== id && edge.target !== id));
+            }}
+          >
+            <X className='text-white' size={20} />
+          </button>
+        </div>
+      )}
       <div className='m-[5px] mb-0 flex h-[30px] w-[235px] flex-row rounded-t-sm'>
         <div className='font-[Noto Sans] ml-2 h-[28px] w-[180px] pt-0.5 text-left text-[16px] font-semibold text-[#000000]'></div>
         <Handle

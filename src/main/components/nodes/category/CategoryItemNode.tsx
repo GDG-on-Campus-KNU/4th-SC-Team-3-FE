@@ -1,5 +1,9 @@
 import { memo, useCallback, useRef, useEffect } from 'react';
 
+import { X } from 'lucide-react';
+
+import useSelectedObjectStore from '@/main/stores/selectObjectStore';
+
 import Funnel from '@/assets/main/icon-funnel.svg';
 import { Handle, Position, NodeProps, useReactFlow } from '@xyflow/react';
 import { Node } from '@xyflow/react';
@@ -14,7 +18,8 @@ export interface CategoryNodeItemData {
 
 function CategoryItemNode({ id, data, selected }: NodeProps<Node<CategoryNodeItemData>>) {
   const ref = useRef<HTMLDivElement>(null);
-  const { setNodes } = useReactFlow();
+  const { setNodes, setEdges } = useReactFlow();
+  const { selectedId } = useSelectedObjectStore();
 
   const handleFieldChange = useCallback(
     (field: 'name' | 'value', e: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,6 +54,19 @@ function CategoryItemNode({ id, data, selected }: NodeProps<Node<CategoryNodeIte
       ref={ref}
       className='relative flex w-[220px] flex-col rounded border border-transparent bg-white p-1 shadow-md transition-all duration-300 hover:border-[#C9DCF9]/50 hover:shadow-lg'
     >
+      {selectedId === id && (
+        <div className='absolute right-0 top-0 z-10 translate-x-[10px] translate-y-[-10px]'>
+          <button
+            className='flex h-[26px] w-[26px] items-center justify-center rounded-full bg-[#E65429]'
+            onClick={() => {
+              setNodes((nds) => nds.filter((node) => node.id !== id));
+              setEdges((eds) => eds.filter((edge) => edge.source !== id && edge.target !== id));
+            }}
+          >
+            <X className='text-white' size={20} />
+          </button>
+        </div>
+      )}
       <div className='absolute -top-2 left-0 h-3 w-[110px] rounded-sm bg-white'></div>
       <div className='mb-[6px] flex items-center gap-1'>
         <div className='flex h-7 w-7 shrink-0 items-center justify-center rounded-md border-2 border-[#3A7DE8]'>
