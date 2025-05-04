@@ -35,27 +35,36 @@ export function CategoryNode({
   const [isDraggingOver, setIsDraggingOver] = useState(false);
 
   useEffect(() => {
-    if (!wrapperRef.current) return;
-    const r = wrapperRef.current.getBoundingClientRect();
-    setNodes((nds) =>
-      nds.map((n) =>
-        n.id === id
-          ? {
-              ...n,
-              data: {
-                ...n.data,
-                bounds: {
-                  left: r.left,
-                  top: r.top,
-                  right: r.right,
-                  bottom: r.bottom,
+    const updateBounds = () => {
+      if (!wrapperRef.current) return;
+      const r = wrapperRef.current.getBoundingClientRect();
+      setNodes((nds) =>
+        nds.map((n) =>
+          n.id === id
+            ? {
+                ...n,
+                data: {
+                  ...n.data,
+                  bounds: {
+                    left: r.left,
+                    top: r.top,
+                    right: r.right,
+                    bottom: r.bottom,
+                  },
                 },
-              },
-            }
-          : n,
-      ),
-    );
-  }, [data.categories.length, setNodes, id]);
+              }
+            : n,
+        ),
+      );
+    };
+
+    updateBounds();
+    // ResizeObserver를 사용하여 크기 변화 감지
+    const observer = new ResizeObserver(updateBounds);
+    if (wrapperRef.current) observer.observe(wrapperRef.current);
+
+    return () => observer.disconnect();
+  }, [setNodes, id]);
 
   const handleDragLeave = (e: React.DragEvent) => {
     e.preventDefault();
@@ -106,7 +115,7 @@ export function CategoryNode({
   return (
     <div
       ref={wrapperRef}
-      className={`group w-[245px] flex-col justify-start overflow-y-auto rounded-md border-2 bg-[#E3E3E3] shadow-md transition-all duration-300 hover:shadow-lg ${data.isHover ? 'border-blue-500' : 'border-[#808080]'}`}
+      className={`group w-[245px] flex-col justify-start overflow-y-auto rounded-md border-2 bg-[#E3E3E3] shadow-md transition-all duration-300 hover:shadow-lg ${data.isHover ? 'border-2 border-blue-500' : 'border-[#808080]'}`}
       style={{ height: `${80 + data.categories.length * 80}px` }}
       data-id={id}
     >
