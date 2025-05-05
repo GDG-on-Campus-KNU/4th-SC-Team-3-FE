@@ -53,21 +53,7 @@ export const useUpdateFlow = (reactFlowWrapperRef: React.RefObject<HTMLDivElemen
 
             // 썸네일 캡처 & 업로드
             if (reactFlowWrapperRef.current) {
-              const png = await toPng(reactFlowWrapperRef.current, {
-                cacheBust: true,
-                backgroundColor: '#ffffff',
-                // width: 540,
-                // height: 540,
-              });
-              // .then(downloadImage);
-              console.log('🖼️ 썸네일 캡처 성공');
-
-              if (png) {
-                const file = new File([png], 'thumbnail.png', { type: 'image/png' });
-                try {
-                  await uploadProjectThumbnail(localData.pid, file); // 썸네일 업로드
-                } catch (err) {}
-              }
+              await uploadProjectThumbnail(localData.pid, reactFlowWrapperRef); // 썸네일 캡처 후 업로드
             }
 
             // 로컬 스토리지 업데이트

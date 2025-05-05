@@ -11,7 +11,7 @@ export async function createProject(navigate: ReturnType<typeof useNavigate>, na
     snapshot: {
       nodes: [],
       edges: [],
-      viewport: { x: 0, y: 0, zoom: 0.75 },
+      viewport: { x: 0, y: 0, zoom: 1 },
     },
   };
 
