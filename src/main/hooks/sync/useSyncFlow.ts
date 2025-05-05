@@ -1,42 +1,29 @@
 import { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+
+import { time } from 'console';
 
 import { axiosClient } from '../../../global/api/axios';
-import { Edge, Node, ReactFlowInstance, Viewport } from '@xyflow/react';
+import { DEFAULT_FLOW_SNAPSHOT, FlowSnapshot } from '@/global/api/snapshot';
+import { LOCAL_STORAGE_KEY } from '@/global/constant/localStorage';
+import { Edge, Node, ReactFlowInstance } from '@xyflow/react';
 
-export interface FlowSnapshot {
-  timestamp: string; // ISO string
-  snapshot: {
-    nodes: Node[];
-    edges: Edge[];
-    viewport: Viewport;
-  };
-}
-
-const DEFAULT_FLOW_SNAPSHOT: FlowSnapshot = {
-  timestamp: new Date().toISOString(),
-  snapshot: {
-    nodes: [],
-    edges: [],
-    viewport: { x: 0, y: 0, zoom: 0.75 },
-  },
-};
-
-export const fetchFlowFromServer = async (): Promise<FlowSnapshot> => {
-  const res = await axiosClient.get<FlowSnapshot>('/projects');
+export const fetchFlowFromServer = async (pid: number): Promise<any> => {
+  const res = await axiosClient.get<FlowSnapshot>(`/projects/${pid}`);
   return res.data;
 };
 
 export const uploadFlowToServer = async (data: FlowSnapshot): Promise<void> => {
-  await axiosClient.post('/projects', data);
+  await axiosClient.post(`/projects/${data.pid}`, data);
 };
-
-const LOCAL_STORAGE_KEY = 'flow_latest';
 
 export const useSyncFlow = (
   reactFlowInstance: ReactFlowInstance | null,
   setNodes: (nodes: Node[]) => void,
   setEdges: (edges: Edge[]) => void,
 ) => {
+  const { pid } = useParams<{ pid: string }>();
+
   const applySnapshot = (data: FlowSnapshot) => {
     setNodes(data.snapshot.nodes || []);
     setEdges(data.snapshot.edges || []);
@@ -52,7 +39,7 @@ export const useSyncFlow = (
 
       try {
         // 로컬 먼저 시도
-        const localRaw = localStorage.getItem(LOCAL_STORAGE_KEY);
+        const localRaw = localStorage.getItem(LOCAL_STORAGE_KEY + pid);
         if (localRaw) {
           localSnapshot = JSON.parse(localRaw);
         }
@@ -62,7 +49,16 @@ export const useSyncFlow = (
 
       try {
         // 서버에서 가져오기
-        serverSnapshot = await fetchFlowFromServer();
+        const serverData = await fetchFlowFromServer(Number(pid));
+
+        // serverData.canvas가 JSON 문자열이라면 이 부분만 파싱해야 함
+        serverSnapshot = {
+          pid: serverData.projectId,
+          name: serverData.name,
+          timestamp: serverData.updatedAt,
+          snapshot: JSON.parse(serverData.canvas),
+        } as FlowSnapshot;
+        console.log('server:', serverSnapshot);
       } catch (e) {
         console.warn('서버 로딩 실패:', e);
       }
@@ -82,7 +78,7 @@ export const useSyncFlow = (
         (localSnapshot && new Date(localSnapshot.timestamp) > new Date(serverSnapshot.timestamp))
           ? localSnapshot!
           : serverSnapshot;
-
+      console.log(latestSnapshot);
       applySnapshot(latestSnapshot);
 
       // 오래된 쪽 덮어쓰기

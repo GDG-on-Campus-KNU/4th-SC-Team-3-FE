@@ -11,7 +11,7 @@ export const Router = () => {
     <Routes>
       <Route path='/' element={<RootLayout />}>
         <Route path='' element={<DashBoardPage />} />
-        <Route path='main' element={<HomePage />} />
+        <Route path='main/:pid' element={<HomePage />} />
         <Route path='signin' element={<SignInPage />} />
       </Route>
     </Routes>

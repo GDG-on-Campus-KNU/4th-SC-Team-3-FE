@@ -50,7 +50,7 @@ export default function CustomEdge({
             attributeName='stdDeviation'
             dur={'3s ease-in-out'}
             keyTimes='0; 0.5; 1'
-            keySplines='0.1 0.5 0.9'
+            keySplines='0.1 0.5 0.9 0.8'
             repeatCount='1'
           />
         </filter>
