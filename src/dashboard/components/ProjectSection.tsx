@@ -42,6 +42,8 @@ function formatCreatedAt(isoString: string): string {
     const day = date.getDate();
     return `${dateYear}년 ${month}월 ${day}일`;
   }
+
+  return '알 수 없음';
 }
 
 export const ProjectSection = () => {
