@@ -54,9 +54,9 @@ export function ImageNodeInput({
     >
       <div className={`m-[5px] mb-0 flex h-[30px] w-[235px] flex-row place-items-end rounded-t-sm`}>
         <div
-          className={`border-pipy-yellow flex h-[28px] w-[28px] flex-col justify-center self-center rounded-sm border-2`}
+          className={`flex h-[28px] w-[28px] flex-col justify-center self-center rounded-sm border-2 border-pipy-yellow`}
         >
-          <Image size='18' strokeWidth='2.5' className={`text-pipy-yellow self-center`} />
+          <Image size='18' strokeWidth='2.5' className={`self-center text-pipy-yellow`} />
         </div>
         <div
           className={`font-[Noto Sans] ml-2 h-[28px] w-[180px] pt-0.5 text-left text-[16px] font-semibold text-[#000000]`}
@@ -69,42 +69,8 @@ export function ImageNodeInput({
       {/* 이미지 업로드 */}
       <div
         className={`relative m-[5px] flex h-[150px] w-[235px] flex-col justify-center overflow-hidden rounded-sm bg-[#FFF1D1] p-[5px] transition-all duration-300 group-hover:shadow-inner`}
-        onClick={triggerFileInput}
         style={{ cursor: 'pointer' }}
-      >
-        {imageUrl ? (
-          <>
-            <img
-              src={imageUrl}
-              alt='Uploaded preview'
-              className='h-full w-full object-contain transition-transform duration-700 group-hover:scale-105'
-            />
-            <div className='absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100'>
-              <FilePlus
-                size='44'
-                className={`text-white/90 transition-all duration-300 hover:scale-110 hover:text-white`}
-              />
-            </div>
-          </>
-        ) : (
-          <div className='relative h-full w-full'>
-            <div className='absolute inset-0 flex flex-col items-center justify-center'>
-              <FilePlus
-                size='44'
-                className={`mb-1 self-center text-[#FFDD8E] transition-all duration-500 group-hover:rotate-6 group-hover:scale-110 group-hover:text-[#FFC845]`}
-              />
-              <span
-                className={`self-center text-[#808080] transition-all duration-300 group-hover:font-medium group-hover:text-[#666666]`}
-              >
-                파일 가져오기
-              </span>
-            </div>
-            <div
-              className={`absolute left-1/2 top-1/2 h-0 w-0 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#FFDD8E]/20 transition-all duration-700 group-hover:h-[200px] group-hover:w-[200px]`}
-            />
-          </div>
-        )}
-      </div>
+      ></div>
     </div>
   );
 }

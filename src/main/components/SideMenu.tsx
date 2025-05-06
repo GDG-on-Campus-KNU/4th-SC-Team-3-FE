@@ -2,6 +2,7 @@ import { Search } from 'lucide-react';
 
 import useDnDStore from '../stores/DnDStore';
 import ImageNodeInput from './nodes/image/ImageNodeInput';
+import ImageUploadNodeInput from './nodes/image/ImageUploadNodeInput';
 import TextNodeInput from './nodes/text/TextNodeInput';
 
 export interface AIModels {
@@ -74,6 +75,17 @@ export default function SideMenu(props: { selectedType: string | null }) {
       <div
         className={`flex h-[calc(100%-130px)] flex-col items-center self-center overflow-x-hidden overflow-y-scroll scroll-smooth p-4`}
       >
+        {props.selectedType === 'image' && (
+          <div
+            key='special-image-node'
+            className='m-3 h-[200px] text-black'
+            draggable
+            onDragStart={(e) => onDragStart(e, 'imageUpload', 'SPECIAL_MODEL')}
+          >
+            {/* 이 컴포넌트를 원하는 대로 구현하세요 */}
+            <ImageUploadNodeInput id='imageUpload' data={{ value: 'default' }} />
+          </div>
+        )}
         {models
           .find((model) => model.type === props.selectedType)
           ?.models.map((modelName, index) => (
