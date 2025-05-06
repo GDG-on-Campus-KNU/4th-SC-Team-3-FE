@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import { X } from 'lucide-react';
 
 import useSelectedObjectStore from '@/main/stores/selectObjectStore';
@@ -14,6 +16,7 @@ export default function CustomEdge({
   targetPosition,
 }: EdgeProps) {
   const { setEdges } = useReactFlow();
+  const [hovered, setHovered] = useState(false);
   const [edgePath, labelX, labelY] = getSmoothStepPath({
     sourceX,
     sourceY,
@@ -32,14 +35,33 @@ export default function CustomEdge({
 
   return (
     <>
-      <g style={{ zIndex: selectedId === id ? 1000 : 0 }}>
-        <path
-          style={{ zIndex: selectedId === id ? 1000 : 0 }}
-          d={edgePath}
-          fill='none'
-          stroke='#3A7DE8'
-          strokeWidth={16}
-        />
+      <defs>
+        <filter id='edge-shadow' x='-50%' y='-50%' width='200%' height='200%'>
+          <feDropShadow
+            dx='0'
+            dy='0'
+            dur={'3s'}
+            stdDeviation='3'
+            floodColor='#333333'
+            floodOpacity='0.4'
+          />
+          <animate
+            xlinkHref='#shadow feDropShadow'
+            attributeName='stdDeviation'
+            dur={'3s ease-in-out'}
+            keyTimes='0; 0.5; 1'
+            keySplines='0.1 0.5 0.9 0.8'
+            repeatCount='1'
+          />
+        </filter>
+      </defs>
+      <g
+        filter={hovered ? 'url(#edge-shadow)' : 'none'}
+        style={{ transition: 'filter 3s ease-in-out' }}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+      >
+        <path d={edgePath} fill='none' stroke='#3A7DE8' strokeWidth={16} />
         <EdgeLabelRenderer>
           {labelX - sourceX > 56 &&
             ((sourceY > targetY && sourceY - targetY > 28) ||
@@ -49,7 +71,7 @@ export default function CustomEdge({
                   transform: `translate(${labelX - 28}px,${sourceY - 13}px)`,
                   zIndex: selectedId === id ? 1000 : 0,
                 }}
-                className='w-[8px] h-[30px] bg-[#3A7DE8] absolute nodrag nopan'
+                className='nodrag nopan absolute h-[30px] w-[8px] bg-[#3A7DE8]'
               />
             )}
           {targetX - labelX > 56 &&
@@ -60,7 +82,7 @@ export default function CustomEdge({
                   zIndex: selectedId === id ? 1000 : 0,
                   transform: `translate(${labelX + 28}px,${targetY - 15}px)`,
                 }}
-                className='w-[8px] h-[30px] bg-[#3A7DE8] absolute nodrag nopan'
+                className='nodrag nopan absolute h-[30px] w-[8px] bg-[#3A7DE8]'
               />
             )}
           {labelY - sourceY > 56 &&
@@ -73,14 +95,14 @@ export default function CustomEdge({
                     zIndex: selectedId === id ? 1000 : 0,
                     transform: `translate(${labelX - 15}px,${sourceY + 28}px)`,
                   }}
-                  className='w-[30px] h-[8px] bg-[#3A7DE8] absolute nodrag nopan'
+                  className='nodrag nopan absolute h-[8px] w-[30px] bg-[#3A7DE8]'
                 />
                 <div
                   style={{
                     zIndex: selectedId === id ? 1000 : 0,
                     transform: `translate(${labelX - 15}px,${targetY - 28}px)`,
                   }}
-                  className='w-[30px] h-[8px] bg-[#3A7DE8] absolute nodrag nopan'
+                  className='nodrag nopan absolute h-[8px] w-[30px] bg-[#3A7DE8]'
                 />
               </>
             )}
@@ -94,14 +116,14 @@ export default function CustomEdge({
                     zIndex: selectedId === id ? 1000 : 0,
                     transform: `translate(${labelX - 15}px,${sourceY - 28}px)`,
                   }}
-                  className='w-[30px] h-[8px] bg-[#3A7DE8] absolute nodrag nopan'
+                  className='nodrag nopan absolute h-[8px] w-[30px] bg-[#3A7DE8]'
                 />
                 <div
                   style={{
                     zIndex: selectedId === id ? 1000 : 0,
                     transform: `translate(${labelX - 15}px,${targetY + 28}px)`,
                   }}
-                  className='w-[30px] h-[8px] bg-[#3A7DE8] absolute nodrag nopan'
+                  className='nodrag nopan absolute h-[8px] w-[30px] bg-[#3A7DE8]'
                 />
               </>
             )}
@@ -112,14 +134,14 @@ export default function CustomEdge({
                   zIndex: selectedId === id ? 1000 : 0,
                   transform: `translate(${sourceX - 14}px,${labelY - 15}px)`,
                 }}
-                className='w-[8px] h-[30px] bg-[#3A7DE8] absolute nodrag nopan'
+                className='nodrag nopan absolute h-[30px] w-[8px] bg-[#3A7DE8]'
               />
               <div
                 style={{
                   zIndex: selectedId === id ? 1000 : 0,
                   transform: `translate(${targetX + 8}px,${labelY - 15}px)`,
                 }}
-                className='w-[8px] h-[30px] bg-[#3A7DE8] absolute nodrag nopan'
+                className='nodrag nopan absolute h-[30px] w-[8px] bg-[#3A7DE8]'
               />
             </>
           )}
@@ -133,14 +155,14 @@ export default function CustomEdge({
                     zIndex: selectedId === id ? 1000 : 0,
                     transform: `translate(${sourceX + 5}px,${labelY + 28}px)`,
                   }}
-                  className='w-[30px] h-[8px] bg-[#3A7DE8] absolute nodrag nopan'
+                  className='nodrag nopan absolute h-[8px] w-[30px] bg-[#3A7DE8]'
                 />
                 <div
                   style={{
                     zIndex: selectedId === id ? 1000 : 0,
                     transform: `translate(${targetX - 35}px,${labelY - 34}px)`,
                   }}
-                  className='w-[30px] h-[8px] bg-[#3A7DE8] absolute nodrag nopan'
+                  className='nodrag nopan absolute h-[8px] w-[30px] bg-[#3A7DE8]'
                 />
               </>
             )}
@@ -155,21 +177,21 @@ export default function CustomEdge({
                     zIndex: selectedId === id ? 1000 : 0,
                     transform: `translate(${sourceX + 5}px,${labelY - 28}px)`,
                   }}
-                  className='w-[30px] h-[8px] bg-[#3A7DE8] absolute nodrag nopan'
+                  className='nodrag nopan absolute h-[8px] w-[30px] bg-[#3A7DE8]'
                 />
                 <div
                   style={{
                     zIndex: selectedId === id ? 1000 : 0,
                     transform: `translate(${targetX - 35}px,${labelY + 28}px)`,
                   }}
-                  className='w-[30px] h-[8px] bg-[#3A7DE8] absolute nodrag nopan'
+                  className='nodrag nopan absolute h-[8px] w-[30px] bg-[#3A7DE8]'
                 />
               </>
             )}
 
           {selectedId === id && (
             <button
-              className='w-[26px] h-[26px] cursor-pointer rounded-full bg-[#E65429] flex justify-center items-center'
+              className='flex h-[26px] w-[26px] cursor-pointer items-center justify-center rounded-full bg-[#E65429]'
               style={{
                 position: 'absolute',
                 zIndex: 1000,

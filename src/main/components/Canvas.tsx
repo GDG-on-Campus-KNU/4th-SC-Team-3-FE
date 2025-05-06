@@ -1,8 +1,19 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { CategoryItemData } from '../components/nodes/category/CategoryNode';
+
+import { useConnectHandler } from '../hooks/handle/useConnectHandler';
+import { useEdgeClickHandler } from '../hooks/handle/useEdgeClickHandler';
+import { useFlowDragOverHandler } from '../hooks/handle/useFlowDragOverHandler';
+import { useFlowDropHandler } from '../hooks/handle/useFlowDropHandler';
+import { useSyncFlow } from '../hooks/sync/useSyncFlow';
+import { useTimeStampToLocalStorage } from '../hooks/sync/useTimeStampToLocalStorage';
+import { useUpdateFlow } from '../hooks/sync/useUpdateFlow';
+import { useHighlightSelectedEdge } from '../hooks/useHighlightSelectedEdge';
+
 import { useNodeDragHandler } from '../hooks/useNodeDragHandler';
 import { useNodeDragStopHandler } from '../hooks/useNodeDragStopHandler';
+
 import { edgeTypes } from '../lib/edge.type';
 import { nodeTypes } from '../lib/node.type';
 import useDnDStore from '../stores/DnDStore';
@@ -14,26 +25,20 @@ import {
   Controls,
   useNodesState,
   useEdgesState,
-  addEdge,
   useReactFlow,
   Node,
   Edge,
-  Connection,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
 const initialNodes: Node[] = [];
 const initialEdges: Edge[] = [];
 
-let id = 0;
-const getId = () => `dndnode_${id++}`;
-
 export default function Canvas() {
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-  const { selectedId, setSelectedId } = useSelectedObjectStore();
+  const reactFlowInstance = useReactFlow();
 
   const { nodeType, modelName } = useDnDStore();
+  
   const { screenToFlowPosition } = useReactFlow();
 
   const handleDropIntoCategory = (itemId: string, categoryId: string) => {
@@ -69,102 +74,31 @@ export default function Canvas() {
   };
 
   const onNodeDrag = useNodeDragHandler(setNodes);
-  // const onNodeDragStop = useNodeDragStopHandler(setNodes, handleDropIntoCategory, setSelectedId);
   const onNodeDragStop = useNodeDragStopHandler(setNodes, handleDropIntoCategory);
 
-  const onConnect = useCallback(
-    (params: Connection) => setEdges((eds) => addEdge({ ...params, type: 'textEdge' }, eds)),
-    [],
-  );
 
-  const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    event.dataTransfer.dropEffect = 'move';
-  }, []);
+  const { selectedId, setSelectedId } = useSelectedObjectStore();
 
-  const onDrop = useCallback(
-    (event: React.DragEvent<HTMLDivElement>) => {
-      event.preventDefault();
-      if (!nodeType) return;
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
-      const position = screenToFlowPosition({
-        x: event.clientX,
-        y: event.clientY,
-      });
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
-      // 드래그한 item 정보 dataTransfer 객체에서 꺼냄
+  // 서버&로컬스토리지 로드 -> 최신값 선택 -> 상호 동기화 커스텀 훅
+  useSyncFlow(reactFlowInstance, setNodes, setEdges);
 
-      const raw = event.dataTransfer.getData('application/reactflow-item');
-      if (nodeType === 'categoryItem' && raw) {
-        const item = JSON.parse(raw) as CategoryItemData;
+  // 로컬 스토리지에 마지막 변경 시각을 기록하는 커스텀 훅
+  useTimeStampToLocalStorage(reactFlowInstance, nodes, edges);
 
-        // 새 CategoryItemNode 생성
+  // 10초마다 timestamp 비교 및 썸네일 서버 전송 커스텀 훅
+  useUpdateFlow(wrapperRef);
 
-        const newNode: Node = {
-          id: item.id,
-          type: 'categoryItem',
-          position,
-          data: {
-            name: item.name,
-            value: item.value,
-          },
-          draggable: true,
-        };
+  // 노드가 선택되었을 때 해당 노드의 zIndex를 조정하는 커스텀 훅
+  useHighlightSelectedEdge(selectedId, edges, setEdges);
 
-        // 기존 부모 CategoryNode에서 해당 item 제거
-
-        setNodes((nds) => {
-          const updated = nds.map((node) => {
-            if (node.id === item.parentId && Array.isArray(node.data?.categories)) {
-              return {
-                ...node,
-                data: {
-                  ...node.data,
-                  categories: (node.data.categories as CategoryItemData[]).filter(
-                    (c: CategoryItemData) => c.id !== item.id,
-                  ),
-                },
-              };
-            }
-            return node;
-          });
-
-          return [...updated, newNode];
-        });
-
-        return;
-      }
-
-      const newNode: Node = {
-        id: getId(),
-        type: nodeType,
-        position,
-        data: { model: modelName, data: null },
-      };
-
-      setNodes((nds) => nds.concat(newNode));
-    },
-    [screenToFlowPosition, nodeType, modelName, setNodes],
-  );
-
-  useEffect(() => {
-    edges
-      .filter((edge) => edge.id !== selectedId)
-      .map((edge) => {
-        edge.zIndex = 0;
-      });
-    edges
-      .filter((edge) => edge.id === selectedId)
-      .map((edge) => {
-        edge.zIndex = 1000;
-      });
-    setEdges((edges) => [...edges]);
-
-    // console.log('selectedId', selectedId);
-  }, [selectedId, setSelectedId, edges]);
 
   return (
-    <div className={`relative h-full w-full`}>
+    <div className={`relative h-full w-full`} ref={wrapperRef}>
       <ReactFlow
         nodes={nodes}
         edges={edges.map((edge) => ({
@@ -173,29 +107,17 @@ export default function Canvas() {
         }))}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
+        onConnect={useConnectHandler(setEdges)}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
+        onDragOver={useFlowDragOverHandler()}
+        onDrop={useFlowDropHandler(reactFlowInstance, nodeType, modelName, setNodes)}
         onNodeDrag={(e, node) => onNodeDrag(e as any, node)}
         onNodeDragStop={(e, node) => onNodeDragStop(e as any, node)}
-        onDragOver={onDragOver}
-        onDrop={onDrop}
         minZoom={0.1}
         maxZoom={5}
         onNodeClick={(_, node) => setSelectedId(node.id)}
-        onEdgeClick={(_, edge) => {
-          setSelectedId(edge.id);
-          edges
-            .filter((edge) => edge.id !== selectedId)
-            .map((edge) => {
-              edge.zIndex = 0;
-            });
-          edges
-            .filter((edge) => edge.id === selectedId)
-            .map((edge) => {
-              edge.zIndex = 1000;
-            });
-        }}
+        onEdgeClick={useEdgeClickHandler(edges, setEdges, setSelectedId)}
         onPaneClick={() => setSelectedId(undefined)}
         connectionLineComponent={CustomConnectionLine}
       >
