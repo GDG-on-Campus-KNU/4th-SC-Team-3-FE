@@ -17,7 +17,9 @@ export const uploadProjectThumbnail = async (
       console.log('🖼️ 썸네일 캡처 성공');
 
       if (png) {
-        const file = new File([png], 'thumbnail.png', { type: 'image/png' });
+        const res = await fetch(png);
+        const blob = await res.blob(); // base64 -> Blob 변환
+        const file = new File([blob], 'thumbnail.png', { type: 'image/png' });
 
         // FormData 생성 및 이미지 파일 추가
         const formData = new FormData();
