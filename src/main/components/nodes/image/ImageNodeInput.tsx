@@ -2,6 +2,8 @@ import { useCallback, useState } from 'react';
 
 import { Image, Play, FilePlus, Expand } from 'lucide-react';
 
+import ImageExpandModal from '@/main/components/ImageExpandModal';
+
 import testImg from '@/assets/main/img-test.png';
 import { useReactFlow } from '@xyflow/react';
 
@@ -55,6 +57,9 @@ export function ImageNodeInput({
           <Expand size={16} />
         </button>
       </div>
+      {isModalOpen && (imageUrl || testImg) && (
+        <ImageExpandModal url={imageUrl || testImg} onClose={() => setModalOpen(false)} />
+      )}
     </div>
   );
 }
