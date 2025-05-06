@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 
 import { compare } from 'fast-json-patch';
-import { toPng } from 'html-to-image';
 
 import { updateProjectCanvas } from '@/main/api/updateProjectCanvas';
 import { uploadProjectThumbnail } from '@/main/api/updateProjectThumbnail';
@@ -11,14 +10,6 @@ import {
   LOCAL_STORAGE_KEY,
 } from '../../../global/constant/localStorage';
 import { useReactFlow } from '@xyflow/react';
-
-function downloadImage(dataUrl: string) {
-  const a = document.createElement('a');
-
-  a.setAttribute('download', 'reactflow.png');
-  a.setAttribute('href', dataUrl);
-  a.click();
-}
 
 export const useUpdateFlow = (reactFlowWrapperRef: React.RefObject<HTMLDivElement>) => {
   const reactFlowInstance = useReactFlow();
@@ -53,7 +44,7 @@ export const useUpdateFlow = (reactFlowWrapperRef: React.RefObject<HTMLDivElemen
 
             // 썸네일 캡처 & 업로드
             if (reactFlowWrapperRef.current) {
-              await uploadProjectThumbnail(localData.pid, reactFlowWrapperRef); // 썸네일 캡처 후 업로드
+              await uploadProjectThumbnail(localData.pid, reactFlowWrapperRef, reactFlowInstance); // 썸네일 캡처 후 업로드
             }
 
             // 로컬 스토리지 업데이트
