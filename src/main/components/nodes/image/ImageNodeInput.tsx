@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { Fragment } from 'react';
 import { ScaleLoader } from 'react-spinners';
 
 import { Image, Play, FilePlus, Expand } from 'lucide-react';
@@ -6,6 +7,8 @@ import { Image, Play, FilePlus, Expand } from 'lucide-react';
 import ImageExpandModal from '@/main/components/ImageExpandModal';
 
 import testImg from '@/assets/main/img-test.png';
+import pipeSpinner from '@/assets/main/spinner-pipe.gif';
+import { Dialog, Transition } from '@headlessui/react';
 import { useStore, useReactFlow } from '@xyflow/react';
 
 export function ImageNodeInput({
@@ -17,6 +20,7 @@ export function ImageNodeInput({
 }) {
   const [imageUrl, setImageUrl] = useState<string | null>(data.value || null);
   const [isModalOpen, setModalOpen] = useState(false);
+  const [isResultOpen, setResultOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [hasLeftConnection, setHasLeftConnection] = useState(false);
 
@@ -41,6 +45,7 @@ export function ImageNodeInput({
     setIsLoading(true);
     setTimeout(() => {
       setImageUrl('https://example.com/new-image.png'); // 예시 URL
+      setResultOpen(true);
       setIsLoading(false);
     }, 2000); // 2초 후에 이미지 URL 변경
   }, [hasLeftConnection]);
@@ -96,6 +101,11 @@ export function ImageNodeInput({
             (e.target as HTMLImageElement).src = testImg;
           }}
         />
+        {isLoading && (
+          <div className='absolute inset-0 flex items-center justify-center bg-black/50'>
+            <img src={pipeSpinner} alt='로딩중...' className='h-24 w-24' />
+          </div>
+        )}
         <button
           className='absolute right-2 top-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/50 text-white opacity-0 transition-opacity duration-200 hover:bg-black/70 group-hover:opacity-100'
           title='원본 크기로 보기'
@@ -105,8 +115,30 @@ export function ImageNodeInput({
         </button>
       </div>
       {isModalOpen && (imageUrl || testImg) && (
-        <ImageExpandModal url={imageUrl || testImg} onClose={() => setModalOpen(false)} />
+        <ImageExpandModal url={testImg} onClose={() => setModalOpen(false)} />
       )}
+      <Transition appear show={isResultOpen} as={Fragment}>
+        <Dialog as='div' className='fixed inset-0 z-50' onClose={() => setResultOpen(false)}>
+          {/* 백드롭 */}
+          <div className='fixed inset-0 bg-black/50' />
+
+          <div className='fixed inset-0 flex items-center justify-center p-4'>
+            <Transition.Child
+              as={Fragment}
+              enter='transition ease-out duration-200 transform'
+              enterFrom='scale-75 opacity-0'
+              enterTo='scale-100 opacity-100'
+              leave='transition ease-in duration-150 transform'
+              leaveFrom='scale-100 opacity-100'
+              leaveTo='scale-75 opacity-0'
+            >
+              <Dialog.Panel className='overflow-hidden rounded-lg bg-white'>
+                <img src={testImg} className='max-h-[80vh] max-w-full' />
+              </Dialog.Panel>
+            </Transition.Child>
+          </div>
+        </Dialog>
+      </Transition>
     </div>
   );
 }
