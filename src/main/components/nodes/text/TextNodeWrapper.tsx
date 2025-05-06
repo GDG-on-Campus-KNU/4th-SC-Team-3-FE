@@ -11,7 +11,6 @@ export function TextNodeWrapper({
   id,
   data,
   type,
-  isConnectable,
 }: NodeProps<Node<{ model: string; value: string | undefined }>>) {
   const { setNodes } = useReactFlow();
   const { setEdges } = useReactFlow();
@@ -34,20 +33,48 @@ export function TextNodeWrapper({
         </div>
       )}
       <Handle
-        className={`h-[30px] w-[8px] -translate-y-[57px] translate-x-[8px] rounded-none border-none bg-[#3A7DE8]`}
+        className={`h-[30px] w-[8px] -translate-y-[57px] translate-x-[8px] rounded-none border-none bg-pipy-blue opacity-100`}
         type='source'
         position={Position.Right}
-        id='right'
-        isConnectable={isConnectable}
+        id='text-right'
+        isConnectable={true}
         isConnectableStart={true}
         isConnectableEnd={false}
       />
+
       <Handle
-        className={`h-[30px] w-[8px] -translate-x-[8px] -translate-y-[57px] rounded-none border-none bg-[#3A7DE8]`}
+        className={`h-[30px] w-[8px] -translate-x-[8px] -translate-y-[57px] rounded-none border-none bg-pipy-blue opacity-30`}
         type='target'
         position={Position.Left}
-        id='left'
-        isConnectable={isConnectable}
+        id='text-left'
+        isConnectable={false}
+        isConnectableStart={false}
+        isConnectableEnd={true}
+      />
+      <Handle
+        className={`h-[30px] w-[8px] -translate-x-[8px] -translate-y-[19px] rounded-none border-none bg-pipy-yellow opacity-30`}
+        type='target'
+        position={Position.Left}
+        id='image-left'
+        isConnectable={false}
+        isConnectableStart={false}
+        isConnectableEnd={true}
+      />
+      <Handle
+        className={`h-[30px] w-[8px] -translate-x-[8px] translate-y-[19px] rounded-none border-none bg-pipy-pink opacity-30`}
+        type='target'
+        position={Position.Left}
+        id='video-left'
+        isConnectable={false}
+        isConnectableStart={false}
+        isConnectableEnd={true}
+      />
+      <Handle
+        className={`h-[30px] w-[8px] -translate-x-[8px] translate-y-[57px] rounded-none border-none bg-pipy-green opacity-30`}
+        type='target'
+        position={Position.Left}
+        id='audio-left'
+        isConnectable={false}
         isConnectableStart={false}
         isConnectableEnd={true}
       />

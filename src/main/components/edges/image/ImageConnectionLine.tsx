@@ -1,7 +1,7 @@
 import { getSmoothStepPath, Position } from '@xyflow/react';
 import { ConnectionLineComponentProps, EdgeLabelRenderer } from '@xyflow/react';
 
-export default function TextConnectionLine({
+export default function ImageConnectionLine({
   fromX,
   fromY,
   toX,
@@ -20,7 +20,7 @@ export default function TextConnectionLine({
 
   return (
     <g>
-      <path d={edgePath} fill='none' stroke='#3A7DE8' strokeWidth={16} />
+      <path d={edgePath} className='stroke-pipy-yellow' fill='none' strokeWidth={16} />
       <EdgeLabelRenderer>
         {labelX - fromX > 56 &&
           ((fromY > toY && fromY - toY > 28) || (fromY < toY && toY - fromY > 28)) && (
@@ -28,7 +28,7 @@ export default function TextConnectionLine({
               style={{
                 transform: `translate(${labelX - 28}px,${fromY - 13}px)`,
               }}
-              className='nodrag nopan absolute z-10 h-[30px] w-[8px] bg-[#3A7DE8]'
+              className='nodrag nopan absolute z-10 h-[30px] w-[8px] bg-pipy-yellow'
             />
           )}
         {toX - labelX > 56 &&
@@ -37,7 +37,7 @@ export default function TextConnectionLine({
               style={{
                 transform: `translate(${labelX + 28}px,${toY - 15}px)`,
               }}
-              className='nodrag nopan absolute z-10 h-[30px] w-[8px] bg-[#3A7DE8]'
+              className='nodrag nopan absolute z-10 h-[30px] w-[8px] bg-pipy-yellow'
             />
           )}
         {labelY - fromY > 56 &&
@@ -48,13 +48,13 @@ export default function TextConnectionLine({
                 style={{
                   transform: `translate(${labelX - 15}px,${fromY + 28}px)`,
                 }}
-                className='nodrag nopan absolute z-10 h-[8px] w-[30px] bg-[#3A7DE8]'
+                className='nodrag nopan absolute z-10 h-[8px] w-[30px] bg-pipy-yellow'
               />
               <div
                 style={{
                   transform: `translate(${labelX - 15}px,${toY - 28}px)`,
                 }}
-                className='nodrag nopan absolute z-10 h-[8px] w-[30px] bg-[#3A7DE8]'
+                className='nodrag nopan absolute z-10 h-[8px] w-[30px] bg-pipy-yellow'
               />
             </>
           )}
@@ -66,13 +66,13 @@ export default function TextConnectionLine({
                 style={{
                   transform: `translate(${labelX - 15}px,${fromY - 28}px)`,
                 }}
-                className='nodrag nopan absolute z-10 h-[8px] w-[30px] bg-[#3A7DE8]'
+                className='nodrag nopan absolute z-10 h-[8px] w-[30px] bg-pipy-yellow'
               />
               <div
                 style={{
                   transform: `translate(${labelX - 15}px,${toY + 28}px)`,
                 }}
-                className='nodrag nopan absolute z-10 h-[8px] w-[30px] bg-[#3A7DE8]'
+                className='nodrag nopan absolute z-10 h-[8px] w-[30px] bg-pipy-yellow'
               />
             </>
           )}
@@ -82,13 +82,13 @@ export default function TextConnectionLine({
               style={{
                 transform: `translate(${fromX - 14}px,${labelY - 15}px)`,
               }}
-              className='nodrag nopan absolute z-10 h-[30px] w-[8px] bg-[#3A7DE8]'
+              className='nodrag nopan absolute z-10 h-[30px] w-[8px] bg-pipy-yellow'
             />
             <div
               style={{
                 transform: `translate(${toX + 8}px,${labelY - 15}px)`,
               }}
-              className='nodrag nopan absolute z-10 h-[30px] w-[8px] bg-[#3A7DE8]'
+              className='nodrag nopan absolute z-10 h-[30px] w-[8px] bg-pipy-yellow'
             />
           </>
         )}
@@ -98,13 +98,13 @@ export default function TextConnectionLine({
               style={{
                 transform: `translate(${fromX + 5}px,${labelY + 28}px)`,
               }}
-              className='nodrag nopan absolute z-10 h-[8px] w-[30px] bg-[#3A7DE8]'
+              className='nodrag nopan absolute z-10 h-[8px] w-[30px] bg-pipy-yellow'
             />
             <div
               style={{
                 transform: `translate(${toX - 35}px,${labelY - 34}px)`,
               }}
-              className='nodrag nopan absolute z-10 h-[8px] w-[30px] bg-[#3A7DE8]'
+              className='nodrag nopan absolute z-10 h-[8px] w-[30px] bg-pipy-yellow'
             />
           </>
         )}
@@ -115,13 +115,13 @@ export default function TextConnectionLine({
               style={{
                 transform: `translate(${fromX + 5}px,${labelY - 28}px)`,
               }}
-              className='nodrag nopan absolute z-10 h-[8px] w-[30px] bg-[#3A7DE8]'
+              className='nodrag nopan absolute z-10 h-[8px] w-[30px] bg-pipy-yellow'
             />
             <div
               style={{
                 transform: `translate(${toX - 35}px,${labelY + 28}px)`,
               }}
-              className='nodrag nopan absolute z-10 h-[8px] w-[30px] bg-[#3A7DE8]'
+              className='nodrag nopan absolute z-10 h-[8px] w-[30px] bg-pipy-yellow'
             />
           </>
         )}

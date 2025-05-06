@@ -16,7 +16,7 @@ export interface CategoryNodeItemData {
   height?: number;
 }
 
-function CategoryItemNode({ id, data, selected }: NodeProps<Node<CategoryNodeItemData>>) {
+function CategoryItemNode({ id, data }: NodeProps<Node<CategoryNodeItemData>>) {
   const ref = useRef<HTMLDivElement>(null);
   const { setNodes, setEdges } = useReactFlow();
   const { selectedId } = useSelectedObjectStore();
@@ -90,7 +90,10 @@ function CategoryItemNode({ id, data, selected }: NodeProps<Node<CategoryNodeIte
         className='h-[30px] w-[8px] -translate-y-[10px] translate-x-[8px] rounded-none border-none bg-pipy-blue'
         type='source'
         position={Position.Right}
-        id='right'
+        isConnectable={true}
+        isConnectableStart={true}
+        isConnectableEnd={false}
+        id='text-right'
       />
     </div>
   );
