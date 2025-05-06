@@ -1,6 +1,8 @@
 import { useCallback, useEffect } from 'react';
 
 import { CategoryItemData } from '../components/nodes/category/CategoryNode';
+import { useNodeDragHandler } from '../hooks/useNodeDragHandler';
+import { useNodeDragStopHandler } from '../hooks/useNodeDragStopHandler';
 import { edgeTypes } from '../lib/edge.type';
 import { nodeTypes } from '../lib/node.type';
 import useDnDStore from '../stores/DnDStore';
@@ -33,6 +35,42 @@ export default function Canvas() {
 
   const { nodeType, modelName } = useDnDStore();
   const { screenToFlowPosition } = useReactFlow();
+
+  const handleDropIntoCategory = (itemId: string, categoryId: string) => {
+    setNodes((nds) => {
+      const itemNode = nds.find((n) => n.id === itemId);
+      if (!itemNode) return nds;
+
+      return nds
+        .filter((n) => n.id !== itemId)
+        .map((n) => {
+          if (n.id === categoryId && Array.isArray(n.data.categories)) {
+            return {
+              ...n,
+              data: {
+                ...n.data,
+                categories: [
+                  ...n.data.categories,
+                  {
+                    id: itemId,
+                    name: (itemNode.data as unknown as CategoryItemData).name,
+                    value: (itemNode.data as unknown as CategoryItemData).value,
+                    parentId: categoryId,
+                  },
+                ],
+              },
+            };
+          }
+          return n;
+        });
+    });
+
+    setEdges((eds) => eds.filter((e) => e.source !== itemId && e.target !== itemId));
+  };
+
+  const onNodeDrag = useNodeDragHandler(setNodes);
+  // const onNodeDragStop = useNodeDragStopHandler(setNodes, handleDropIntoCategory, setSelectedId);
+  const onNodeDragStop = useNodeDragStopHandler(setNodes, handleDropIntoCategory);
 
   const onConnect = useCallback(
     (params: Connection) => setEdges((eds) => addEdge({ ...params, type: 'textEdge' }, eds)),
@@ -122,7 +160,7 @@ export default function Canvas() {
       });
     setEdges((edges) => [...edges]);
 
-    console.log('selectedId', selectedId);
+    // console.log('selectedId', selectedId);
   }, [selectedId, setSelectedId, edges]);
 
   return (
@@ -138,6 +176,8 @@ export default function Canvas() {
         onConnect={onConnect}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
+        onNodeDrag={(e, node) => onNodeDrag(e as any, node)}
+        onNodeDragStop={(e, node) => onNodeDragStop(e as any, node)}
         onDragOver={onDragOver}
         onDrop={onDrop}
         minZoom={0.1}
@@ -158,7 +198,6 @@ export default function Canvas() {
         }}
         onPaneClick={() => setSelectedId(undefined)}
         connectionLineComponent={CustomConnectionLine}
-        onNodeDragStop={(_, node) => setSelectedId(node.id)}
       >
         <Controls />
         <MiniMap />

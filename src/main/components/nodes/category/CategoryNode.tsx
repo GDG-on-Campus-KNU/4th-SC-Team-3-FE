@@ -1,7 +1,11 @@
-import { useCallback, useState, useEffect } from 'react';
+import { useCallback, useState, useEffect, useRef } from 'react';
+
+import { X } from 'lucide-react';
 
 import useDnDStore from '@/main/stores/DnDStore';
+import useSelectedObjectStore from '@/main/stores/selectObjectStore';
 
+import Funnel from '@/assets/main/icon-funnel.svg';
 import { useReactFlow, Handle, Position } from '@xyflow/react';
 
 export interface CategoryItemData {
@@ -13,6 +17,8 @@ export interface CategoryItemData {
 
 interface CategoryNodeData {
   categories: CategoryItemData[];
+  isHover: boolean;
+  bounds?: { left: number; top: number; right: number; bottom: number };
 }
 
 export function CategoryNode({
@@ -24,15 +30,46 @@ export function CategoryNode({
   data: CategoryNodeData;
   isConnectable: boolean;
 }) {
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
   const { setNodes, getNodes } = useReactFlow();
   const { setNodeType, draggedItem } = useDnDStore();
+  const { selectedId } = useSelectedObjectStore();
+  const { setEdges } = useReactFlow();
 
   const [isDraggingOver, setIsDraggingOver] = useState(false);
 
-  const handleDragEnter = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDraggingOver(true);
-  };
+  useEffect(() => {
+    const updateBounds = () => {
+      if (!wrapperRef.current) return;
+      const r = wrapperRef.current.getBoundingClientRect();
+      setNodes((nds) =>
+        nds.map((n) =>
+          n.id === id
+            ? {
+                ...n,
+                data: {
+                  ...n.data,
+                  bounds: {
+                    left: r.left,
+                    top: r.top,
+                    right: r.right,
+                    bottom: r.bottom,
+                  },
+                },
+              }
+            : n,
+        ),
+      );
+    };
+
+    updateBounds();
+    // ResizeObserver를 사용하여 크기 변화 감지
+    const observer = new ResizeObserver(updateBounds);
+    if (wrapperRef.current) observer.observe(wrapperRef.current);
+
+    return () => observer.disconnect();
+  }, [setNodes, id]);
 
   const handleDragLeave = (e: React.DragEvent) => {
     e.preventDefault();
@@ -58,95 +95,53 @@ export function CategoryNode({
     }
   }, [data.categories, id, setNodes]);
 
-  const handleInputChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>, itemId: string) => {
-      const updatedCategories = data.categories.map((cat) =>
-        cat.id === itemId ? { ...cat, value: e.target.value } : cat,
-      );
-      setNodes((nds) =>
-        nds.map((node) => {
-          if (node.id === id) {
-            return {
-              ...node,
-              data: { categories: updatedCategories },
-            };
-          }
-          return node;
+  const handleCategoryChange = useCallback(
+    (itemId: string, field: 'name' | 'value', newValue: string) => {
+      setNodes((nodes) =>
+        nodes.map((node) => {
+          if (node.id !== id) return node;
+          // 이 노드 안의 categories 배열만 업데이트
+          const newCategories = (node.data as unknown as CategoryNodeData).categories.map((cat) =>
+            cat.id === itemId ? { ...cat, [field]: newValue } : cat,
+          );
+          return {
+            ...node,
+            data: {
+              ...node.data,
+              categories: newCategories,
+            },
+          };
         }),
       );
     },
-    [data.categories, id, setNodes],
+    [setNodes, id],
   );
-
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setIsDraggingOver(false);
-
-    let droppedItem: CategoryItemData | null = null;
-    const raw = e.dataTransfer.getData('application/reactflow-item');
-
-    if (raw) {
-      try {
-        droppedItem = JSON.parse(raw) as CategoryItemData;
-      } catch (err) {
-        console.warn('Failed to parse drop dataTransfer:', err);
-      }
-    }
-
-    if (!droppedItem) {
-      droppedItem = useDnDStore.getState().draggedItem;
-    }
-
-    if (!droppedItem || !droppedItem.id) return;
-
-    setNodes((nodes) => {
-      const cleaned = nodes.map((node) => {
-        if (Array.isArray(node.data?.categories)) {
-          return {
-            ...node,
-            data: {
-              ...node.data,
-              categories: node.data.categories.filter(
-                (cat: CategoryItemData) => cat.id !== droppedItem!.id,
-              ),
-            },
-          };
-        }
-        return node;
-      });
-
-      const withoutDetachedNode = cleaned.filter((node) => node.id !== droppedItem!.id);
-
-      const updated = withoutDetachedNode.map((node) => {
-        if (node.id === id && Array.isArray(node.data?.categories)) {
-          return {
-            ...node,
-            data: {
-              ...node.data,
-              categories: [...node.data.categories, { ...droppedItem!, parentId: id }],
-            },
-          };
-        }
-        return node;
-      });
-
-      return updated;
-    });
-
-    useDnDStore.getState().setDraggedItem(null);
-  };
 
   return (
     <div
-      className={`bg-[#E3E3E3]' } group flex w-[245px] flex-col rounded-md border-2 border-[#808080]`}
-      style={{ height: `${280 + data.categories.length * 40}px` }}
+      ref={wrapperRef}
+      className={`group w-[245px] flex-col justify-start overflow-y-auto rounded-md border-2 bg-[#E3E3E3] transition-all duration-200 ease-in-out ${
+        data.isHover
+          ? 'border-blue-500 shadow-[0_0_0_2px_rgba(59,130,246,0.5)]'
+          : 'border-[#808080] shadow-md'
+      }`}
+      style={{ height: `${80 + data.categories.length * 80}px` }}
       data-id={id}
-      onDragOver={(e) => e.preventDefault()}
-      onDragEnter={handleDragEnter}
-      onDragLeave={handleDragLeave}
-      onDrop={handleDrop}
     >
-      <div className='m-[5px] mb-0 flex h-[30px] w-[235px] flex-row place-items-end rounded-t-sm'>
+      {selectedId === id && (
+        <div className='absolute right-0 top-0 z-10 translate-x-[10px] translate-y-[-10px]'>
+          <button
+            className='flex h-[26px] w-[26px] items-center justify-center rounded-full bg-[#E65429]'
+            onClick={() => {
+              setNodes((nds) => nds.filter((node) => node.id !== id));
+              setEdges((eds) => eds.filter((edge) => edge.source !== id && edge.target !== id));
+            }}
+          >
+            <X className='text-white' size={20} />
+          </button>
+        </div>
+      )}
+      <div className='m-[5px] mb-0 flex h-[30px] w-[235px] flex-row rounded-t-sm'>
         <div className='font-[Noto Sans] ml-2 h-[28px] w-[180px] pt-0.5 text-left text-[16px] font-semibold text-[#000000]'></div>
         <Handle
           className='h-[30px] w-[8px] -translate-y-[57px] translate-x-[8px] rounded-none border-none bg-pipy-blue'
@@ -157,20 +152,32 @@ export function CategoryNode({
         />
       </div>
 
-      <div className='overflow-y-auto p-2'>
+      <div className='p-2'>
         {data.categories.map((item) => (
           <div
             key={item.id}
-            className='nodrag mb-2 flex w-full cursor-move flex-col rounded border border-gray-300 bg-white p-3 shadow-sm hover:border-gray-500 hover:bg-gray-100'
             draggable
             onDragStart={(e) => onDragStart(e, 'categoryItem', item)}
+            className='nodrag relative mb-4 flex w-[220px] flex-col rounded border border-transparent bg-white p-1 shadow-md transition-all duration-300 hover:border-[#C9DCF9]/50 hover:shadow-lg'
           >
-            <div className='mb-2 font-medium text-gray-700'>{item.name}</div>
+            <div className='absolute -top-2 left-0 h-3 w-[110px] rounded-sm bg-white'></div>
+            <div className='mb-[6px] flex items-center gap-1'>
+              <div className='flex h-7 w-7 shrink-0 items-center justify-center rounded-md border-2 border-[#3A7DE8]'>
+                <img src={Funnel} alt='funnel' className='nodrag h-4 w-4 object-contain' />
+              </div>
+              <input
+                type='text'
+                value={item.name}
+                onChange={(e) => handleCategoryChange(item.id, 'name', e.target.value)}
+                className='w-full rounded pl-1 font-medium text-gray-700'
+              />
+            </div>
             <input
-              className='nodrag w-full rounded border border-gray-300 p-1 text-sm'
+              type='text'
               value={item.value}
-              onChange={(e) => handleInputChange(e, item.id)}
-            ></input>
+              onChange={(e) => handleCategoryChange(item.id, 'value', e.target.value)}
+              className='w-full rounded border border-gray-300 bg-[#C9DCF9] p-1 text-sm text-[#5B5B5B]'
+            />
           </div>
         ))}
       </div>
