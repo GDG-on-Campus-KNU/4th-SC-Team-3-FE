@@ -1,7 +1,10 @@
 import { useCallback, useState } from 'react';
 
-import { Image, Play, FilePlus } from 'lucide-react';
+import { Image, Play, FilePlus, Expand } from 'lucide-react';
 
+import ImageExpandModal from '@/main/components/ImageExpandModal';
+
+import testImg from '@/assets/main/img-test.png';
 import { useReactFlow } from '@xyflow/react';
 
 export function ImageNodeInput({
@@ -13,40 +16,7 @@ export function ImageNodeInput({
 }) {
   const { updateNodeData } = useReactFlow();
   const [imageUrl, setImageUrl] = useState<string | null>(data.value || null);
-
-  const handleImageUpload = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const file = event.target.files?.[0];
-      if (!file) return;
-
-      if (!file.type.match('image.*')) {
-        alert('이미지 파일만 업로드 가능합니다.');
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const result = e.target?.result as string;
-        setImageUrl(result);
-        updateNodeData(id, { ...data, value: result });
-      };
-      reader.readAsDataURL(file);
-    },
-    [id, data, updateNodeData],
-  );
-
-  const triggerFileInput = useCallback(
-    (e: React.MouseEvent) => {
-      e.stopPropagation();
-      const fileInput = document.createElement('input');
-      fileInput.type = 'file';
-      fileInput.accept = 'image/*';
-      fileInput.onchange = (event) =>
-        handleImageUpload(event as unknown as React.ChangeEvent<HTMLInputElement>);
-      fileInput.click();
-    },
-    [handleImageUpload],
-  );
+  const [isModalOpen, setModalOpen] = useState(false);
 
   return (
     <div
@@ -54,9 +24,9 @@ export function ImageNodeInput({
     >
       <div className={`m-[5px] mb-0 flex h-[30px] w-[235px] flex-row place-items-end rounded-t-sm`}>
         <div
-          className={`border-pipy-yellow flex h-[28px] w-[28px] flex-col justify-center self-center rounded-sm border-2`}
+          className={`flex h-[28px] w-[28px] flex-col justify-center self-center rounded-sm border-2 border-pipy-yellow`}
         >
-          <Image size='18' strokeWidth='2.5' className={`text-pipy-yellow self-center`} />
+          <Image size='18' strokeWidth='2.5' className={`self-center text-pipy-yellow`} />
         </div>
         <div
           className={`font-[Noto Sans] ml-2 h-[28px] w-[180px] pt-0.5 text-left text-[16px] font-semibold text-[#000000]`}
@@ -69,42 +39,27 @@ export function ImageNodeInput({
       {/* 이미지 업로드 */}
       <div
         className={`relative m-[5px] flex h-[150px] w-[235px] flex-col justify-center overflow-hidden rounded-sm bg-[#FFF1D1] p-[5px] transition-all duration-300 group-hover:shadow-inner`}
-        onClick={triggerFileInput}
         style={{ cursor: 'pointer' }}
       >
-        {imageUrl ? (
-          <>
-            <img
-              src={imageUrl}
-              alt='Uploaded preview'
-              className='h-full w-full object-contain transition-transform duration-700 group-hover:scale-105'
-            />
-            <div className='absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100'>
-              <FilePlus
-                size='44'
-                className={`text-white/90 transition-all duration-300 hover:scale-110 hover:text-white`}
-              />
-            </div>
-          </>
-        ) : (
-          <div className='relative h-full w-full'>
-            <div className='absolute inset-0 flex flex-col items-center justify-center'>
-              <FilePlus
-                size='44'
-                className={`mb-1 self-center text-[#FFDD8E] transition-all duration-500 group-hover:rotate-6 group-hover:scale-110 group-hover:text-[#FFC845]`}
-              />
-              <span
-                className={`self-center text-[#808080] transition-all duration-300 group-hover:font-medium group-hover:text-[#666666]`}
-              >
-                파일 가져오기
-              </span>
-            </div>
-            <div
-              className={`absolute left-1/2 top-1/2 h-0 w-0 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#FFDD8E]/20 transition-all duration-700 group-hover:h-[200px] group-hover:w-[200px]`}
-            />
-          </div>
-        )}
+        <img
+          src={imageUrl || testImg}
+          alt='업로드된 이미지'
+          className={`h-[150px] w-[235px] rounded-sm object-cover transition-all duration-300 group-hover:shadow-inner`}
+          onError={(e) => {
+            (e.target as HTMLImageElement).src = testImg;
+          }}
+        />
+        <button
+          className='absolute right-2 top-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/50 text-white opacity-0 transition-opacity duration-200 hover:bg-black/70 group-hover:opacity-100'
+          title='원본 크기로 보기'
+          onClick={() => setModalOpen(true)}
+        >
+          <Expand size={16} />
+        </button>
       </div>
+      {isModalOpen && (imageUrl || testImg) && (
+        <ImageExpandModal url={imageUrl || testImg} onClose={() => setModalOpen(false)} />
+      )}
     </div>
   );
 }
