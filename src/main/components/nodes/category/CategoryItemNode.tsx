@@ -93,7 +93,7 @@ function CategoryItemNode({ id, data, selected }: NodeProps<Node<CategoryNodeIte
         isConnectable={true}
         isConnectableStart={true}
         isConnectableEnd={false}
-        id='right'
+        id='text-right'
       />
     </div>
   );

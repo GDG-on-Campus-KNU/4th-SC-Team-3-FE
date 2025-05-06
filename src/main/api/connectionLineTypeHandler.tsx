@@ -5,7 +5,7 @@ import { ConnectionLineComponentProps } from '@xyflow/react';
 export default function connectionLineTypeHandler(props: ConnectionLineComponentProps) {
   const sourceHandleId = props.fromNode.type;
 
-  if (sourceHandleId === 'text') {
+  if (sourceHandleId === 'text' || sourceHandleId === 'category') {
     return <TextConnectionLine {...props} />;
   }
 
