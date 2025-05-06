@@ -79,6 +79,7 @@ export default function Canvas() {
   const onNodeDrag = useNodeDragHandler(setNodes);
   const onNodeDragStop = useNodeDragStopHandler(setNodes, handleDropIntoCategory);
 
+
   // 서버&로컬스토리지 로드 -> 최신값 선택 -> 상호 동기화 커스텀 훅
   useSyncFlow(reactFlowInstance, setNodes, setEdges);
 
@@ -86,7 +87,9 @@ export default function Canvas() {
   useTimeStampToLocalStorage(reactFlowInstance, nodes, edges);
 
   // 10초마다 timestamp 비교 및 썸네일 서버 전송 커스텀 훅
+
   const latestPngRef = useThumbnailCache(wrapperRef);
+
 
   useUpdateFlow(wrapperRef, latestPngRef);
 

@@ -1,8 +1,7 @@
 import { useState } from 'react';
-
 import { Baseline, FunnelPlus, Play } from 'lucide-react';
-
 import { useReactFlow } from '@xyflow/react';
+import { analyzeTextNode } from '@/main/api/analyzeTextNode';
 
 export function TextNodeInput({
   id,
@@ -21,10 +20,21 @@ export function TextNodeInput({
   const { setNodes, updateNodeData } = useReactFlow();
   const [isConverting, setIsConverting] = useState(false);
 
-  const handleConvertClick = (e: React.MouseEvent) => {
+  const handleConvertClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsConverting(true);
+    
+    const categories = (await analyzeTextNode(data.value!)).map((category: any, index: number) => {
+      return {
+        id: `${id}-item-${index + 1}`,
+        name: category.key,
+        value: category.value,
+        parentId: id,
+      }
+    });
 
+    console.log('Converted categories:', categories);
+    
     setNodes((nds) =>
       nds.map((node) => {
         if (node.id === id) {
@@ -32,7 +42,7 @@ export function TextNodeInput({
             ...node,
             type: 'category',
             data: {
-              categories: mockCategories,
+              categories: categories,
             },
             position: node.position,
           };
