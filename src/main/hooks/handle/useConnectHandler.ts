@@ -19,7 +19,8 @@ export const useConnectHandler = (setEdges: React.Dispatch<React.SetStateAction<
       (sourceHandle === 'text-right' && targetHandle !== 'text-left') ||
       (sourceHandle === 'image-right' && targetHandle !== 'image-left')
     ) {
-      return; // 연결을 막고 종료
+      console.warn('Invalid connection:', connection);
+      return; // Prevent connection
     }
 
     // edges에 새로운 edge 추가

@@ -16,7 +16,7 @@ export interface CategoryNodeItemData {
   height?: number;
 }
 
-function CategoryItemNode({ id, data, selected }: NodeProps<Node<CategoryNodeItemData>>) {
+function CategoryItemNode({ id, data }: NodeProps<Node<CategoryNodeItemData>>) {
   const ref = useRef<HTMLDivElement>(null);
   const { setNodes, setEdges } = useReactFlow();
   const { selectedId } = useSelectedObjectStore();

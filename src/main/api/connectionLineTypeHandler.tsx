@@ -5,13 +5,13 @@ import { ConnectionLineComponentProps } from '@xyflow/react';
 export default function connectionLineTypeHandler(props: ConnectionLineComponentProps) {
   const sourceHandleId = props.fromNode.type;
 
-  if (sourceHandleId === 'text' || sourceHandleId === 'category') {
-    return <TextConnectionLine {...props} />;
+  switch (sourceHandleId) {
+    case 'text':
+    case 'category':
+      return <TextConnectionLine {...props} />;
+    case 'image':
+      return <ImageConnectionLine {...props} />;
+    default:
+      return <TextConnectionLine {...props} />;
   }
-
-  if (sourceHandleId === 'image') {
-    return <ImageConnectionLine {...props} />;
-  }
-
-  return <TextConnectionLine {...props} />;
 }
