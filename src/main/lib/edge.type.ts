@@ -1,5 +1,7 @@
-import CustomEdge from '../components/edges/text/TextEdge';
+import ImageEdge from '../components/edges/image/ImageEdge';
+import TextEdge from '../components/edges/text/TextEdge';
 
 export const edgeTypes = {
-  textEdge: CustomEdge,
+  text: TextEdge,
+  image: ImageEdge,
 };

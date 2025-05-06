@@ -90,6 +90,9 @@ function CategoryItemNode({ id, data, selected }: NodeProps<Node<CategoryNodeIte
         className='h-[30px] w-[8px] -translate-y-[10px] translate-x-[8px] rounded-none border-none bg-pipy-blue'
         type='source'
         position={Position.Right}
+        isConnectable={true}
+        isConnectableStart={true}
+        isConnectableEnd={false}
         id='right'
       />
     </div>

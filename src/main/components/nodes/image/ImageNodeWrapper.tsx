@@ -11,7 +11,6 @@ function ImageNode({
   id,
   data,
   type,
-  isConnectable,
 }: NodeProps<Node<{ model: string; value: string | undefined }>>) {
   const { setNodes } = useReactFlow();
   const { setEdges } = useReactFlow();
@@ -33,21 +32,50 @@ function ImageNode({
           </button>
         </div>
       )}
+
       <Handle
-        className={`h-[30px] w-[8px] -translate-y-[57px] translate-x-[8px] rounded-none border-none bg-pipy-yellow`}
+        className={`h-[30px] w-[8px] -translate-y-[57px] translate-x-[8px] rounded-none border-none bg-pipy-yellow opacity-100`}
         type='source'
         position={Position.Right}
-        id='right'
-        isConnectable={isConnectable}
+        id='image-right'
+        isConnectable={true}
         isConnectableStart={true}
         isConnectableEnd={false}
       />
+
       <Handle
-        className={`h-[30px] w-[8px] -translate-x-[8px] -translate-y-[57px] rounded-none border-none bg-pipy-yellow`}
+        className={`h-[30px] w-[8px] -translate-x-[8px] -translate-y-[57px] rounded-none border-none bg-pipy-blue opacity-100`}
         type='target'
         position={Position.Left}
-        id='left'
-        isConnectable={isConnectable}
+        id='text-left'
+        isConnectable={true}
+        isConnectableStart={false}
+        isConnectableEnd={true}
+      />
+      <Handle
+        className={`h-[30px] w-[8px] -translate-x-[8px] -translate-y-[19px] rounded-none border-none bg-pipy-yellow opacity-30`}
+        type='target'
+        position={Position.Left}
+        id='image-left'
+        isConnectable={true}
+        isConnectableStart={false}
+        isConnectableEnd={true}
+      />
+      <Handle
+        className={`h-[30px] w-[8px] -translate-x-[8px] translate-y-[19px] rounded-none border-none bg-pipy-pink opacity-30`}
+        type='target'
+        position={Position.Left}
+        id='video-left'
+        isConnectable={false}
+        isConnectableStart={false}
+        isConnectableEnd={true}
+      />
+      <Handle
+        className={`h-[30px] w-[8px] -translate-x-[8px] translate-y-[57px] rounded-none border-none bg-pipy-green opacity-30`}
+        type='target'
+        position={Position.Left}
+        id='audio-left'
+        isConnectable={false}
         isConnectableStart={false}
         isConnectableEnd={true}
       />
