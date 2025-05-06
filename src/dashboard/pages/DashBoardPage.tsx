@@ -18,7 +18,7 @@ export default function DashBoardPage() {
     if (!member) {
       fetchData();
     }
-  }, []);
+  }, [member]);
   
   return (
     <div className='fixed h-screen w-screen overflow-x-hidden overflow-y-scroll bg-white'>
