@@ -116,9 +116,9 @@ export function TextNodeInput({
 
         <button
           onClick={handleConvertClick}
-          disabled={isConverting || !mockCategories}
+          disabled={isConverting || !mockCategories || hasRightConnection}
           className={`group/btn flex h-[35px] w-[225px] flex-row items-center justify-center self-end rounded-sm transition-all duration-300 ${
-            isConverting || !mockCategories
+            isConverting || !mockCategories || hasRightConnection
               ? 'cursor-not-allowed bg-gray-400'
               : 'bg-[#808080] hover:bg-[#3A7DE8] hover:shadow-md'
           }`}
