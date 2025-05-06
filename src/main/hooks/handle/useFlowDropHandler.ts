@@ -9,13 +9,11 @@ export interface CategoryItemData {
   parentId: string;
 }
 
-let id = 0;
-const getId = () => `node_${id++}`;
-
 export const useFlowDropHandler = (
   reactFlowInstance: ReactFlowInstance | null,
   nodeType: string | undefined,
   modelName: string | undefined,
+  nodeLength: number,
   setNodes: (updater: (nodes: Node[]) => Node[]) => void,
 ) => {
   const onDrop = useCallback(
@@ -67,7 +65,7 @@ export const useFlowDropHandler = (
       }
 
       const newNode: Node = {
-        id: getId(),
+        id: `${nodeType}_node_${1 + nodeLength++}`,
         type: nodeType,
         position,
         data: { model: modelName, data: null },

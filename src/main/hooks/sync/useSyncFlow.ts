@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { time } from 'console';
@@ -88,7 +88,6 @@ export const useSyncFlow = (
         await uploadFlowToServer(latestSnapshot!);
       }
     };
-
     sync();
   }, []);
 };
