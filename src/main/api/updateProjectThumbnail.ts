@@ -12,6 +12,8 @@ export const uploadProjectThumbnail = async (
       const png = await toPng(reactFlowWrapperRef.current, {
         cacheBust: true,
         backgroundColor: '#ffffff',
+        // width: 1280,
+        // height: 720,
       });
 
       console.log('🖼️ 썸네일 캡처 성공');
