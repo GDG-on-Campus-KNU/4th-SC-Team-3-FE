@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { ScaleLoader } from 'react-spinners';
 
 import { Image, Play, FilePlus, Expand } from 'lucide-react';
 
@@ -16,6 +17,7 @@ export function ImageNodeInput({
 }) {
   const [imageUrl, setImageUrl] = useState<string | null>(data.value || null);
   const [isModalOpen, setModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [hasLeftConnection, setHasLeftConnection] = useState(false);
 
   // 왼쪽 handle (targetHandle === 'left')에 연결된 엣지가 있는지 확인
@@ -33,8 +35,14 @@ export function ImageNodeInput({
 
   const onPlayClick = useCallback(() => {
     if (!hasLeftConnection) return;
+
     // TODO: 실행 로직
     console.log('▶ play!');
+    setIsLoading(true);
+    setTimeout(() => {
+      setImageUrl('https://example.com/new-image.png'); // 예시 URL
+      setIsLoading(false);
+    }, 2000); // 2초 후에 이미지 URL 변경
   }, [hasLeftConnection]);
 
   return (
@@ -58,10 +66,20 @@ export function ImageNodeInput({
               : 'pointer-events-none cursor-not-allowed text-gray-300'
           } `}
         >
-          <Play
-            strokeWidth='3'
-            className={`size-15px place-self-end self-center text-[#FFDD8E] ${hasLeftConnection ? 'hover:text-pipy-yellow' : 'hover:text-[#FFDD8E]'} `}
-          />
+          {isLoading ? (
+            <ScaleLoader
+              color='#FFC845'
+              className='absolute mr-4'
+              loading={isLoading}
+              height={16}
+              width={2}
+            />
+          ) : (
+            <Play
+              strokeWidth='3'
+              className={`size-15px place-self-end self-center text-[#FFDD8E] ${hasLeftConnection ? 'hover:text-pipy-yellow' : 'hover:text-[#FFDD8E]'} `}
+            />
+          )}
         </button>
       </div>
 

@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { ScaleLoader } from 'react-spinners';
 
 import { Baseline, FunnelPlus, Play } from 'lucide-react';
 
@@ -22,6 +23,8 @@ export function TextNodeInput({
 
   const { setNodes, updateNodeData } = useReactFlow();
   const [isConverting, setIsConverting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [imageUrl, setImageUrl] = useState<string | null>(data.value || null);
 
   const edges = useStore((state) => state.edges);
   const [hasRightConnection, setHasRightConnection] = useState(false);
@@ -32,9 +35,14 @@ export function TextNodeInput({
   }, [edges, id]);
 
   const onPlayClick = useCallback(() => {
-    if (!hasRightConnection) return;
+    if (hasRightConnection) return;
     // TODO: 실행 로직
     console.log('▶ play!');
+    setIsLoading(true);
+    setTimeout(() => {
+      setImageUrl('https://example.com/new-image.png'); // 예시 URL
+      setIsLoading(false);
+    }, 2000); // 2초 후에 이미지 URL 변경
   }, [hasRightConnection]);
 
   const handleConvertClick = async (e: React.MouseEvent) => {
@@ -98,10 +106,20 @@ export function TextNodeInput({
               : 'pointer-events-none cursor-not-allowed text-gray-300'
           } `}
         >
-          <Play
-            strokeWidth='3'
-            className={`size-15px place-self-end self-center text-[#C9DCF9] ${hasRightConnection ? 'hover:text-[#C9DCF9]' : 'hover:text-pipy-blue'}`}
-          />
+          {isLoading ? (
+            <ScaleLoader
+              color='#3A7DE8'
+              className='absolute mr-4'
+              loading={isLoading}
+              height={16}
+              width={2}
+            />
+          ) : (
+            <Play
+              strokeWidth='3'
+              className={`size-15px place-self-end self-center text-[#C9DCF9] ${hasRightConnection ? 'hover:text-[#C9DCF9]' : 'hover:text-pipy-blue'}`}
+            />
+          )}
         </button>
       </div>
 
