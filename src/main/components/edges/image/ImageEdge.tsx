@@ -6,7 +6,7 @@ import useSelectedObjectStore from '@/main/stores/selectObjectStore';
 
 import { EdgeLabelRenderer, getSmoothStepPath, useReactFlow, type EdgeProps } from '@xyflow/react';
 
-export default function TextEdge({
+export default function ImageEdge({
   id,
   sourceX,
   sourceY,
@@ -60,7 +60,7 @@ export default function TextEdge({
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
       >
-        <path d={edgePath} fill='none' stroke='#3A7DE8' strokeWidth={16} />
+        <path d={edgePath} fill='none' className='stroke-pipy-yellow' strokeWidth={16} />
         <EdgeLabelRenderer>
           {labelX - sourceX > 56 &&
             ((sourceY > targetY && sourceY - targetY > 28) ||
@@ -70,7 +70,7 @@ export default function TextEdge({
                   transform: `translate(${labelX - 28}px,${sourceY - 13}px)`,
                   zIndex: selectedId === id ? 1000 : 0,
                 }}
-                className='nodrag nopan absolute h-[30px] w-[8px] bg-[#3A7DE8]'
+                className='nodrag nopan absolute h-[30px] w-[8px] bg-pipy-yellow'
               />
             )}
           {targetX - labelX > 56 &&
@@ -81,7 +81,7 @@ export default function TextEdge({
                   zIndex: selectedId === id ? 1000 : 0,
                   transform: `translate(${labelX + 28}px,${targetY - 15}px)`,
                 }}
-                className='nodrag nopan absolute h-[30px] w-[8px] bg-[#3A7DE8]'
+                className='nodrag nopan absolute h-[30px] w-[8px] bg-pipy-yellow'
               />
             )}
           {labelY - sourceY > 56 &&
@@ -94,14 +94,14 @@ export default function TextEdge({
                     zIndex: selectedId === id ? 1000 : 0,
                     transform: `translate(${labelX - 15}px,${sourceY + 28}px)`,
                   }}
-                  className='nodrag nopan absolute h-[8px] w-[30px] bg-[#3A7DE8]'
+                  className='nodrag nopan absolute h-[8px] w-[30px] bg-pipy-yellow'
                 />
                 <div
                   style={{
                     zIndex: selectedId === id ? 1000 : 0,
                     transform: `translate(${labelX - 15}px,${targetY - 28}px)`,
                   }}
-                  className='nodrag nopan absolute h-[8px] w-[30px] bg-[#3A7DE8]'
+                  className='nodrag nopan absolute h-[8px] w-[30px] bg-pipy-yellow'
                 />
               </>
             )}
@@ -115,14 +115,14 @@ export default function TextEdge({
                     zIndex: selectedId === id ? 1000 : 0,
                     transform: `translate(${labelX - 15}px,${sourceY - 28}px)`,
                   }}
-                  className='nodrag nopan absolute h-[8px] w-[30px] bg-[#3A7DE8]'
+                  className='nodrag nopan absolute h-[8px] w-[30px] bg-pipy-yellow'
                 />
                 <div
                   style={{
                     zIndex: selectedId === id ? 1000 : 0,
                     transform: `translate(${labelX - 15}px,${targetY + 28}px)`,
                   }}
-                  className='nodrag nopan absolute h-[8px] w-[30px] bg-[#3A7DE8]'
+                  className='nodrag nopan absolute h-[8px] w-[30px] bg-pipy-yellow'
                 />
               </>
             )}
@@ -133,14 +133,14 @@ export default function TextEdge({
                   zIndex: selectedId === id ? 1000 : 0,
                   transform: `translate(${sourceX - 14}px,${labelY - 15}px)`,
                 }}
-                className='nodrag nopan absolute h-[30px] w-[8px] bg-[#3A7DE8]'
+                className='nodrag nopan absolute h-[30px] w-[8px] bg-pipy-yellow'
               />
               <div
                 style={{
                   zIndex: selectedId === id ? 1000 : 0,
                   transform: `translate(${targetX + 8}px,${labelY - 15}px)`,
                 }}
-                className='nodrag nopan absolute h-[30px] w-[8px] bg-[#3A7DE8]'
+                className='nodrag nopan absolute h-[30px] w-[8px] bg-pipy-yellow'
               />
             </>
           )}
@@ -154,14 +154,14 @@ export default function TextEdge({
                     zIndex: selectedId === id ? 1000 : 0,
                     transform: `translate(${sourceX + 5}px,${labelY + 28}px)`,
                   }}
-                  className='nodrag nopan absolute h-[8px] w-[30px] bg-[#3A7DE8]'
+                  className='nodrag nopan absolute h-[8px] w-[30px] bg-pipy-yellow'
                 />
                 <div
                   style={{
                     zIndex: selectedId === id ? 1000 : 0,
                     transform: `translate(${targetX - 35}px,${labelY - 34}px)`,
                   }}
-                  className='nodrag nopan absolute h-[8px] w-[30px] bg-[#3A7DE8]'
+                  className='nodrag nopan absolute h-[8px] w-[30px] bg-pipy-yellow'
                 />
               </>
             )}
@@ -176,14 +176,14 @@ export default function TextEdge({
                     zIndex: selectedId === id ? 1000 : 0,
                     transform: `translate(${sourceX + 5}px,${labelY - 28}px)`,
                   }}
-                  className='nodrag nopan absolute h-[8px] w-[30px] bg-[#3A7DE8]'
+                  className='nodrag nopan absolute h-[8px] w-[30px] bg-pipy-yellow'
                 />
                 <div
                   style={{
                     zIndex: selectedId === id ? 1000 : 0,
                     transform: `translate(${targetX - 35}px,${labelY + 28}px)`,
                   }}
-                  className='nodrag nopan absolute h-[8px] w-[30px] bg-[#3A7DE8]'
+                  className='nodrag nopan absolute h-[8px] w-[30px] bg-pipy-yellow'
                 />
               </>
             )}

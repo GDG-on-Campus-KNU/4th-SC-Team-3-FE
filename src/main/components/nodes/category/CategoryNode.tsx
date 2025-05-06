@@ -120,7 +120,7 @@ export function CategoryNode({
   return (
     <div
       ref={wrapperRef}
-      className={`group w-[245px] flex-col justify-start overflow-y-auto rounded-md border-2 bg-[#E3E3E3] transition-all duration-200 ease-in-out ${
+      className={`group w-[245px] flex-col justify-start overflow-y-auto overflow-x-hidden rounded-md border-2 bg-[#E3E3E3] transition-all duration-200 ease-in-out ${
         data.isHover
           ? 'border-blue-500 shadow-[0_0_0_2px_rgba(59,130,246,0.5)]'
           : 'border-[#808080] shadow-md'
@@ -144,11 +144,14 @@ export function CategoryNode({
       <div className='m-[5px] mb-0 flex h-[30px] w-[235px] flex-row rounded-t-sm'>
         <div className='font-[Noto Sans] ml-2 h-[28px] w-[180px] pt-0.5 text-left text-[16px] font-semibold text-[#000000]'></div>
         <Handle
-          className='h-[30px] w-[8px] -translate-y-[57px] translate-x-[8px] rounded-none border-none bg-pipy-blue'
+          className={`top-0 h-[30px] w-[8px] translate-x-[8px] translate-y-[45px] rounded-none border-none bg-pipy-blue opacity-100`}
           type='source'
           position={Position.Right}
-          id='right'
-          isConnectable={isConnectable}
+          id='text-right'
+          style={{ translate: '0px 0px' }}
+          isConnectable={true}
+          isConnectableStart={true}
+          isConnectableEnd={false}
         />
       </div>
 
