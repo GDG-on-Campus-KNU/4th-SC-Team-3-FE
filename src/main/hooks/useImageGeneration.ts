@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 
+import { useToast } from '@/global/hooks/use-toast';
 import { useQueryClient } from '@tanstack/react-query';
-import { useReactFlow, useStore } from '@xyflow/react';
+import { useReactFlow, useStore, Position } from '@xyflow/react';
 
 export const useImageGeneration = (id: string) => {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
@@ -14,6 +15,7 @@ export const useImageGeneration = (id: string) => {
   const { getEdges, getNodes, setNodes } = useReactFlow();
   const { pid } = useParams<{ pid: string }>();
 
+  const { toast } = useToast(); // useToast 훅 사용
   const edges = useStore((state) => state.edges);
   const nodes = useStore((state) => state.nodes);
   // 왼쪽 연결 확인
@@ -95,7 +97,13 @@ export const useImageGeneration = (id: string) => {
         body: JSON.stringify({ projectId: Number(pid), nodes: getConnectedNodesData() }),
         signal: controller.signal,
       });
-      if (!res.ok || !res.body) throw new Error(res.statusText);
+      // 상태 코드가 200이 아닌 경우 오류 처리
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.message || `서버 오류 발생 (${res.status} ${res.statusText})`);
+      }
+
+      if (!res.body) throw new Error('응답 데이터가 없습니다');
 
       reader = res.body.getReader();
       const decoder = new TextDecoder();
@@ -142,7 +150,15 @@ export const useImageGeneration = (id: string) => {
         }
       }
     } catch (err: any) {
-      if (err.name !== 'AbortError') console.error(err);
+      if (err.name !== 'AbortError') {
+        console.error(err);
+        toast({
+          title: '이미지 생성 실패',
+          description: err.message || '이미지 생성 중 오류가 발생했습니다',
+          variant: 'destructive',
+          duration: 3000,
+        });
+      }
     } finally {
       // 최소 로딩 시간 계산 (2초)
       const elapsed = Date.now() - startTime;
@@ -154,7 +170,7 @@ export const useImageGeneration = (id: string) => {
       reader?.cancel();
       setIsLoading(false);
     }
-  }, [hasLeftConnection, id, pid, queryClient, setNodes, getConnectedNodesData]);
+  }, [hasLeftConnection, id, pid, queryClient, setNodes, getConnectedNodesData, toast]);
 
   return {
     imageUrl,
