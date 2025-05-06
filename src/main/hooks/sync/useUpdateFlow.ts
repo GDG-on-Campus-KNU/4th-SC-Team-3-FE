@@ -4,8 +4,6 @@ import { useLocation } from 'react-router-dom';
 import { compare } from 'fast-json-patch';
 
 import { updateProjectCanvas } from '@/main/api/updateProjectCanvas';
-import { uploadProjectThumbnail } from '@/main/api/updateProjectThumbnail';
-import { useThumbnailCache } from '@/main/hooks/sync/useThumbnailCache';
 
 import {
   LOCAL_CHANGE_TIMESTAMP_KEY,
