@@ -1,7 +1,8 @@
 import { useCallback, useState } from 'react';
 
-import { Image, Play, FilePlus } from 'lucide-react';
+import { Image, Play, FilePlus, Expand } from 'lucide-react';
 
+import attentionImg from '@/assets/signin/img-attention.png';
 import { useReactFlow } from '@xyflow/react';
 
 export function ImageNodeInput({
@@ -13,40 +14,6 @@ export function ImageNodeInput({
 }) {
   const { updateNodeData } = useReactFlow();
   const [imageUrl, setImageUrl] = useState<string | null>(data.value || null);
-
-  const handleImageUpload = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const file = event.target.files?.[0];
-      if (!file) return;
-
-      if (!file.type.match('image.*')) {
-        alert('이미지 파일만 업로드 가능합니다.');
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const result = e.target?.result as string;
-        setImageUrl(result);
-        updateNodeData(id, { ...data, value: result });
-      };
-      reader.readAsDataURL(file);
-    },
-    [id, data, updateNodeData],
-  );
-
-  const triggerFileInput = useCallback(
-    (e: React.MouseEvent) => {
-      e.stopPropagation();
-      const fileInput = document.createElement('input');
-      fileInput.type = 'file';
-      fileInput.accept = 'image/*';
-      fileInput.onchange = (event) =>
-        handleImageUpload(event as unknown as React.ChangeEvent<HTMLInputElement>);
-      fileInput.click();
-    },
-    [handleImageUpload],
-  );
 
   return (
     <div
@@ -70,7 +37,22 @@ export function ImageNodeInput({
       <div
         className={`relative m-[5px] flex h-[150px] w-[235px] flex-col justify-center overflow-hidden rounded-sm bg-[#FFF1D1] p-[5px] transition-all duration-300 group-hover:shadow-inner`}
         style={{ cursor: 'pointer' }}
-      ></div>
+      >
+        <img
+          src={imageUrl || attentionImg}
+          alt='업로드된 이미지'
+          className={`h-[150px] w-[235px] rounded-sm object-cover transition-all duration-300 group-hover:shadow-inner`}
+          onError={(e) => {
+            (e.target as HTMLImageElement).src = attentionImg;
+          }}
+        />
+        <button
+          className='absolute right-2 top-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/50 text-white opacity-0 transition-opacity duration-200 hover:bg-black/70 group-hover:opacity-100'
+          title='원본 크기로 보기'
+        >
+          <Expand size={16} />
+        </button>
+      </div>
     </div>
   );
 }

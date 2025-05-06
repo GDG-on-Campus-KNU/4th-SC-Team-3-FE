@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 
-import { FilePlus, Image } from 'lucide-react';
+import { FilePlus, Image, Expand } from 'lucide-react';
 
 import { NodeProps, useReactFlow } from '@xyflow/react';
 
@@ -68,6 +68,16 @@ export function ImageUploadNodeInput({ id, data }: { id: string; data: { value?:
               alt='Uploaded preview'
               className='h-full w-full object-contain transition-transform duration-700 group-hover:scale-105'
             />
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                window.open(imageUrl, '_blank');
+              }}
+              className='absolute right-2 top-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/50 text-white opacity-0 transition-opacity duration-200 hover:bg-black/70 group-hover:opacity-100'
+              title='원본 크기로 보기'
+            >
+              <Expand size={16} />
+            </button>
             <div className='absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100'>
               <FilePlus
                 size='44'

@@ -41,15 +41,6 @@ function ImageUploadNode({
         isConnectableStart={true}
         isConnectableEnd={false}
       />
-      <Handle
-        className={`h-[30px] w-[8px] -translate-x-[8px] -translate-y-[57px] rounded-none border-none bg-pipy-yellow`}
-        type='target'
-        position={Position.Left}
-        id='left'
-        isConnectable={isConnectable}
-        isConnectableStart={false}
-        isConnectableEnd={true}
-      />
     </div>
   );
 }
