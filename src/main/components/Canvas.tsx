@@ -93,11 +93,6 @@ export default function Canvas() {
   // 노드가 선택되었을 때 해당 노드의 zIndex를 조정하는 커스텀 훅
   useHighlightSelectedEdge(selectedId, edges, setEdges);
 
-  useEffect(() => {
-    console.log('node:', nodes);
-    console.log('edge:', edges);
-  }, [nodes, edges]);
-
   return (
     <div className={`relative h-full w-full`} ref={wrapperRef}>
       <ReactFlow
