@@ -1,7 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+
 import { Baseline, FunnelPlus, Play } from 'lucide-react';
-import { useReactFlow } from '@xyflow/react';
+
 import { analyzeTextNode } from '@/main/api/analyzeTextNode';
+
+import { useReactFlow, useStore } from '@xyflow/react';
 
 export function TextNodeInput({
   id,
@@ -20,21 +23,35 @@ export function TextNodeInput({
   const { setNodes, updateNodeData } = useReactFlow();
   const [isConverting, setIsConverting] = useState(false);
 
+  const edges = useStore((state) => state.edges);
+  const [hasRightConnection, setHasRightConnection] = useState(false);
+
+  useEffect(() => {
+    const hasRight = edges.some((edge) => edge.source === id && edge.sourceHandle === 'text-right');
+    setHasRightConnection(hasRight);
+  }, [edges, id]);
+
+  const onPlayClick = useCallback(() => {
+    if (!hasRightConnection) return;
+    // TODO: 실행 로직
+    console.log('▶ play!');
+  }, [hasRightConnection]);
+
   const handleConvertClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsConverting(true);
-    
+
     const categories = (await analyzeTextNode(data.value!)).map((category: any, index: number) => {
       return {
         id: `${id}-item-${index + 1}`,
         name: category.key,
         value: category.value,
         parentId: id,
-      }
+      };
     });
 
     console.log('Converted categories:', categories);
-    
+
     setNodes((nds) =>
       nds.map((node) => {
         if (node.id === id) {
@@ -65,13 +82,27 @@ export function TextNodeInput({
   return (
     <div className='group flex flex-col rounded-md border border-transparent bg-white transition-all duration-300 hover:border-[#C9DCF9]/50 hover:shadow-lg'>
       <div className='m-[5px] mb-0 flex h-[30px] w-[235px] flex-row place-items-end rounded-t-sm'>
-        <div className='border-pipy-blue flex h-[28px] w-[28px] flex-col justify-center self-center rounded-sm border-2'>
-          <Baseline size='18' strokeWidth='2.5' className='text-pipy-blue self-center' />
+        <div className='flex h-[28px] w-[28px] flex-col justify-center self-center rounded-sm border-2 border-pipy-blue'>
+          <Baseline size='18' strokeWidth='2.5' className='self-center text-pipy-blue' />
         </div>
         <div className='font-[Noto Sans] ml-2 h-[28px] w-[180px] pt-0.5 text-left text-[16px] font-semibold text-[#000000]'>
           {data.model}
         </div>
-        <Play strokeWidth='3' className='size-15px place-self-end self-center text-[#C9DCF9]' />
+        <button
+          onClick={onPlayClick}
+          disabled={hasRightConnection}
+          title={!hasRightConnection ? '실행' : '왼쪽 노드가 연결되어야 실행할 수 있습니다'}
+          className={`flex h-6 w-6 items-center justify-center rounded-full transition-all duration-200 ${
+            !hasRightConnection
+              ? 'cursor-pointer text-[#0a0702] hover:scale-125'
+              : 'pointer-events-none cursor-not-allowed text-gray-300'
+          } `}
+        >
+          <Play
+            strokeWidth='3'
+            className={`size-15px place-self-end self-center text-[#C9DCF9] ${hasRightConnection ? 'hover:text-[#C9DCF9]' : 'hover:text-pipy-blue'}`}
+          />
+        </button>
       </div>
 
       <div className='m-[5px] flex h-[150px] w-[235px] flex-col items-stretch rounded-sm bg-[#C9DCF9] p-[5px] transition-all duration-300'>

@@ -79,19 +79,17 @@ export default function Canvas() {
   const onNodeDrag = useNodeDragHandler(setNodes);
   const onNodeDragStop = useNodeDragStopHandler(setNodes, handleDropIntoCategory);
 
+  // // 서버&로컬스토리지 로드 -> 최신값 선택 -> 상호 동기화 커스텀 훅
+  // useSyncFlow(reactFlowInstance, setNodes, setEdges);
 
-  // 서버&로컬스토리지 로드 -> 최신값 선택 -> 상호 동기화 커스텀 훅
-  useSyncFlow(reactFlowInstance, setNodes, setEdges);
+  // // 로컬 스토리지에 마지막 변경 시각을 기록하는 커스텀 훅
+  // useTimeStampToLocalStorage(reactFlowInstance, nodes, edges);
 
-  // 로컬 스토리지에 마지막 변경 시각을 기록하는 커스텀 훅
-  useTimeStampToLocalStorage(reactFlowInstance, nodes, edges);
+  // // 10초마다 timestamp 비교 및 썸네일 서버 전송 커스텀 훅
 
-  // 10초마다 timestamp 비교 및 썸네일 서버 전송 커스텀 훅
+  // const latestPngRef = useThumbnailCache(wrapperRef);
 
-  const latestPngRef = useThumbnailCache(wrapperRef);
-
-
-  useUpdateFlow(wrapperRef, latestPngRef);
+  // useUpdateFlow(wrapperRef, latestPngRef);
 
   // 노드가 선택되었을 때 해당 노드의 zIndex를 조정하는 커스텀 훅
   useHighlightSelectedEdge(selectedId, edges, setEdges);
