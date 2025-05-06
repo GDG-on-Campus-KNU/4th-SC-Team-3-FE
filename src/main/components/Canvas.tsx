@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { CategoryItemData } from '../components/nodes/category/CategoryNode';
+
 import { useConnectHandler } from '../hooks/handle/useConnectHandler';
 import { useEdgeClickHandler } from '../hooks/handle/useEdgeClickHandler';
 import { useFlowDragOverHandler } from '../hooks/handle/useFlowDragOverHandler';
@@ -9,6 +10,10 @@ import { useSyncFlow } from '../hooks/sync/useSyncFlow';
 import { useTimeStampToLocalStorage } from '../hooks/sync/useTimeStampToLocalStorage';
 import { useUpdateFlow } from '../hooks/sync/useUpdateFlow';
 import { useHighlightSelectedEdge } from '../hooks/useHighlightSelectedEdge';
+
+import { useNodeDragHandler } from '../hooks/useNodeDragHandler';
+import { useNodeDragStopHandler } from '../hooks/useNodeDragStopHandler';
+
 import { edgeTypes } from '../lib/edge.type';
 import { nodeTypes } from '../lib/node.type';
 import useDnDStore from '../stores/DnDStore';
@@ -33,6 +38,44 @@ export default function Canvas() {
   const reactFlowInstance = useReactFlow();
 
   const { nodeType, modelName } = useDnDStore();
+  
+  const { screenToFlowPosition } = useReactFlow();
+
+  const handleDropIntoCategory = (itemId: string, categoryId: string) => {
+    setNodes((nds) => {
+      const itemNode = nds.find((n) => n.id === itemId);
+      if (!itemNode) return nds;
+
+      return nds
+        .filter((n) => n.id !== itemId)
+        .map((n) => {
+          if (n.id === categoryId && Array.isArray(n.data.categories)) {
+            return {
+              ...n,
+              data: {
+                ...n.data,
+                categories: [
+                  ...n.data.categories,
+                  {
+                    id: itemId,
+                    name: (itemNode.data as unknown as CategoryItemData).name,
+                    value: (itemNode.data as unknown as CategoryItemData).value,
+                    parentId: categoryId,
+                  },
+                ],
+              },
+            };
+          }
+          return n;
+        });
+    });
+
+    setEdges((eds) => eds.filter((e) => e.source !== itemId && e.target !== itemId));
+  };
+
+  const onNodeDrag = useNodeDragHandler(setNodes);
+  const onNodeDragStop = useNodeDragStopHandler(setNodes, handleDropIntoCategory);
+
 
   const { selectedId, setSelectedId } = useSelectedObjectStore();
 
@@ -53,6 +96,7 @@ export default function Canvas() {
   // 노드가 선택되었을 때 해당 노드의 zIndex를 조정하는 커스텀 훅
   useHighlightSelectedEdge(selectedId, edges, setEdges);
 
+
   return (
     <div className={`relative h-full w-full`} ref={wrapperRef}>
       <ReactFlow
@@ -68,13 +112,14 @@ export default function Canvas() {
         edgeTypes={edgeTypes}
         onDragOver={useFlowDragOverHandler()}
         onDrop={useFlowDropHandler(reactFlowInstance, nodeType, modelName, setNodes)}
+        onNodeDrag={(e, node) => onNodeDrag(e as any, node)}
+        onNodeDragStop={(e, node) => onNodeDragStop(e as any, node)}
         minZoom={0.1}
         maxZoom={5}
         onNodeClick={(_, node) => setSelectedId(node.id)}
         onEdgeClick={useEdgeClickHandler(edges, setEdges, setSelectedId)}
         onPaneClick={() => setSelectedId(undefined)}
         connectionLineComponent={CustomConnectionLine}
-        onNodeDragStop={(_, node) => setSelectedId(node.id)}
       >
         <Controls />
         <MiniMap />
