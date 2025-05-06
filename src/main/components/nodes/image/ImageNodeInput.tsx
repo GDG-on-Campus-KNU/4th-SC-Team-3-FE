@@ -1,15 +1,15 @@
-import { useCallback, useEffect, useState } from 'react';
 import { Fragment } from 'react';
+import { useState, useEffect } from 'react';
 import { ScaleLoader } from 'react-spinners';
 
-import { Image, Play, FilePlus, Expand } from 'lucide-react';
+import { Image, Play, Expand } from 'lucide-react';
 
 import ImageExpandModal from '@/main/components/ImageExpandModal';
 
+import { useImageGeneration } from '../../../hooks/useImageGeneration';
 import testImg from '@/assets/main/img-test.png';
 import pipeSpinner from '@/assets/main/spinner-pipe.gif';
 import { Dialog, Transition } from '@headlessui/react';
-import { useStore, useReactFlow } from '@xyflow/react';
 
 export function ImageNodeInput({
   id,
@@ -18,37 +18,18 @@ export function ImageNodeInput({
   id: string;
   data: { model: string; value?: string };
 }) {
-  const [imageUrl, setImageUrl] = useState<string | null>(data.value || null);
+  const { imageUrl, isLoading, hasLeftConnection, generateImage, setImageUrl } =
+    useImageGeneration(id);
+
   const [isModalOpen, setModalOpen] = useState(false);
   const [isResultOpen, setResultOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [hasLeftConnection, setHasLeftConnection] = useState(false);
 
-  // 왼쪽 handle (targetHandle === 'left')에 연결된 엣지가 있는지 확인
-
-  const edges = useStore((state) => state.edges);
-
+  // 초기 이미지 URL 설정
   useEffect(() => {
-    const hasLeft = edges.some(
-      (edge) =>
-        edge.target === id &&
-        (edge.targetHandle === 'text-left' || edge.targetHandle === 'image-left'),
-    );
-    setHasLeftConnection(hasLeft);
-  }, [edges, id]);
-
-  const onPlayClick = useCallback(() => {
-    if (!hasLeftConnection) return;
-
-    // TODO: 실행 로직
-    console.log('▶ play!');
-    setIsLoading(true);
-    setTimeout(() => {
-      setImageUrl('https://example.com/new-image.png'); // 예시 URL
-      setResultOpen(true);
-      setIsLoading(false);
-    }, 2000); // 2초 후에 이미지 URL 변경
-  }, [hasLeftConnection]);
+    if (data.value) {
+      setImageUrl(data.value);
+    }
+  }, [data.value, setImageUrl]);
 
   return (
     <div
@@ -62,7 +43,10 @@ export function ImageNodeInput({
           {data.model}
         </div>
         <button
-          onClick={onPlayClick}
+          onClick={() => {
+            generateImage();
+            setResultOpen(true);
+          }}
           disabled={!hasLeftConnection}
           title={hasLeftConnection ? '실행' : '왼쪽 노드가 연결되어야 실행할 수 있습니다'}
           className={`flex h-6 w-6 items-center justify-center rounded-full transition-all duration-200 ${
@@ -88,7 +72,6 @@ export function ImageNodeInput({
         </button>
       </div>
 
-      {/* 이미지 업로드 */}
       <div
         className='relative m-[5px] flex h-[150px] w-[235px] flex-col justify-center overflow-hidden rounded-sm bg-[#FFF1D1] p-[5px] transition-all duration-300 group-hover:shadow-inner'
         style={{ cursor: 'pointer' }}
@@ -115,14 +98,14 @@ export function ImageNodeInput({
           <Expand size={16} />
         </button>
       </div>
+
       {isModalOpen && (imageUrl || testImg) && (
-        <ImageExpandModal url={testImg} onClose={() => setModalOpen(false)} />
+        <ImageExpandModal url={imageUrl || testImg} onClose={() => setModalOpen(false)} />
       )}
+
       <Transition appear show={isResultOpen} as={Fragment}>
         <Dialog as='div' className='fixed inset-0 z-50' onClose={() => setResultOpen(false)}>
-          {/* 백드롭 */}
           <div className='fixed inset-0 bg-black/50' />
-
           <div className='fixed inset-0 flex items-center justify-center p-4'>
             <Transition.Child
               as={Fragment}
@@ -134,7 +117,7 @@ export function ImageNodeInput({
               leaveTo='scale-75 opacity-0'
             >
               <Dialog.Panel className='overflow-hidden rounded-lg border-8 border-white bg-white shadow-lg'>
-                <img src={testImg} className='max-h-[80vh] max-w-full' />
+                <img src={imageUrl || testImg} className='max-h-[80vh] max-w-full' />
               </Dialog.Panel>
             </Transition.Child>
           </div>
