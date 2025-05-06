@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { time } from 'console';
+import useProjectStore from '@/main/stores/projectStore';
 
 import { axiosClient } from '../../../global/api/axios';
 import { DEFAULT_FLOW_SNAPSHOT, FlowSnapshot } from '@/global/api/snapshot';
@@ -23,6 +23,7 @@ export const useSyncFlow = (
   setEdges: (edges: Edge[]) => void,
 ) => {
   const { pid } = useParams<{ pid: string }>();
+  const { setProjectName, setPid } = useProjectStore();
 
   const applySnapshot = (data: FlowSnapshot) => {
     setNodes(data.snapshot.nodes || []);
@@ -87,6 +88,9 @@ export const useSyncFlow = (
       } else if (latestSnapshot === localSnapshot && serverSnapshot) {
         await uploadFlowToServer(latestSnapshot!);
       }
+
+      setProjectName(latestSnapshot?.name || null);
+      setPid(latestSnapshot?.pid || null);
     };
     sync();
   }, []);
