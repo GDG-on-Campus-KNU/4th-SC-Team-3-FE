@@ -18,18 +18,10 @@ export function ImageNodeInput({
   id: string;
   data: { model: string; value?: string };
 }) {
-  const { imageUrl, isLoading, hasLeftConnection, generateImage, setImageUrl } =
-    useImageGeneration(id);
+  const { imageUrl, isLoading, hasLeftConnection, generateImage } = useImageGeneration(id);
 
   const [isModalOpen, setModalOpen] = useState(false);
   const [isResultOpen, setResultOpen] = useState(false);
-
-  // 초기 이미지 URL 설정
-  useEffect(() => {
-    if (data.value) {
-      setImageUrl(data.value);
-    }
-  }, [data.value, setImageUrl]);
 
   return (
     <div
@@ -45,7 +37,6 @@ export function ImageNodeInput({
         <button
           onClick={() => {
             generateImage();
-            setResultOpen(true);
           }}
           disabled={!hasLeftConnection}
           title={hasLeftConnection ? '실행' : '왼쪽 노드가 연결되어야 실행할 수 있습니다'}
@@ -77,7 +68,7 @@ export function ImageNodeInput({
         style={{ cursor: 'pointer' }}
       >
         <img
-          src={imageUrl || testImg}
+          src={imageUrl ?? undefined}
           alt='업로드된 이미지'
           className='h-[150px] w-[235px] rounded-sm object-cover transition-all duration-300 group-hover:shadow-inner'
           onError={(e) => {
@@ -99,8 +90,8 @@ export function ImageNodeInput({
         </button>
       </div>
 
-      {isModalOpen && (imageUrl || testImg) && (
-        <ImageExpandModal url={imageUrl || testImg} onClose={() => setModalOpen(false)} />
+      {isModalOpen && imageUrl && (
+        <ImageExpandModal url={imageUrl} onClose={() => setModalOpen(false)} />
       )}
 
       <Transition appear show={isResultOpen} as={Fragment}>
@@ -117,7 +108,7 @@ export function ImageNodeInput({
               leaveTo='scale-75 opacity-0'
             >
               <Dialog.Panel className='overflow-hidden rounded-lg border-8 border-white bg-white shadow-lg'>
-                <img src={imageUrl || testImg} className='max-h-[80vh] max-w-full' />
+                <img src={imageUrl ?? undefined} className='max-h-[80vh] max-w-full' />
               </Dialog.Panel>
             </Transition.Child>
           </div>

@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { useParams } from 'react-router-dom';
 
 import { useQueryClient } from '@tanstack/react-query';
 import { useReactFlow, useStore } from '@xyflow/react';
@@ -7,9 +8,11 @@ export const useImageGeneration = (id: string) => {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [hasLeftConnection, setHasLeftConnection] = useState(false);
-  const [eventSource, setEventSource] = useState<EventSource | null>(null);
+
+  const abortCtrlRef = useRef<AbortController>();
   const queryClient = useQueryClient();
   const { getEdges, getNodes, setNodes } = useReactFlow();
+  const { pid } = useParams<{ pid: string }>();
 
   const edges = useStore((state) => state.edges);
   const nodes = useStore((state) => state.nodes);
@@ -68,68 +71,95 @@ export const useImageGeneration = (id: string) => {
         return null;
       })
       .filter(Boolean);
-  }, [id, getEdges, getNodes]);
+  }, [id, edges, nodes]);
 
-  // 이미지 생성 요청
+  // 이미지 생성 요청 (POST + 스트리밍 응답)
+
   const generateImage = useCallback(async () => {
     if (!hasLeftConnection) return;
 
+    // 로딩 시작 시간 기록
+    const startTime = Date.now();
     setIsLoading(true);
 
+    const controller = new AbortController();
+    abortCtrlRef.current = controller;
+
+    let reader: ReadableStreamDefaultReader<Uint8Array> | null = null;
+    let buffer = '';
+
     try {
-      const connectedNodes = getConnectedNodesData();
-      const requestData = {
-        projectId: 1,
-        nodes: connectedNodes,
-      };
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/nodes/generate/image`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ projectId: Number(pid), nodes: getConnectedNodesData() }),
+        signal: controller.signal,
+      });
+      if (!res.ok || !res.body) throw new Error(res.statusText);
 
-      const es = new EventSource(`${import.meta.env.VITE_API_URL}/nodes/generate/image`);
-      setEventSource(es);
+      reader = res.body.getReader();
+      const decoder = new TextDecoder();
 
-      es.onmessage = (event) => {
-        const eventData = JSON.parse(event.data);
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
 
-        if (eventData.event === 'generated_image') {
-          const newImageUrl = eventData.data.url;
-          setImageUrl(newImageUrl);
-          queryClient.setQueryData(['image', id], newImageUrl);
+        buffer += decoder.decode(value, { stream: true });
+        const parts = buffer.split('\n\n');
+        buffer = parts.pop()!;
 
-          // 노드 데이터 업데이트
-          setNodes((nds) =>
-            nds.map((node) =>
-              node.id === id ? { ...node, data: { ...node.data, value: newImageUrl } } : node,
-            ),
-          );
+        for (const part of parts) {
+          const text = part.replace(/^data:\s*/, '').trim();
+          if (!text) continue;
+
+          let evt: { event: string; data?: { url: string } };
+          try {
+            evt = JSON.parse(text);
+          } catch {
+            console.warn('불완전한 JSON, 다음 청크 대기…');
+            continue;
+          }
+
+          if (evt.event === 'generated_image' && evt.data) {
+            setImageUrl(evt.data.url);
+            queryClient.setQueryData(['image', id], evt.data.url);
+            setNodes((nds) =>
+              nds.map((n) =>
+                n.id === id ? { ...n, data: { ...n.data, value: evt.data!.url } } : n,
+              ),
+            );
+          }
+          if (evt.event === 'generate_image_end') {
+            // 최소 로딩 시간 계산 (2초)
+            const elapsed = Date.now() - startTime;
+            const remaining = Math.max(0, 2000 - elapsed);
+
+            if (remaining > 0) {
+              await new Promise((resolve) => setTimeout(resolve, remaining));
+            }
+            return;
+          }
         }
+      }
+    } catch (err: any) {
+      if (err.name !== 'AbortError') console.error(err);
+    } finally {
+      // 최소 로딩 시간 계산 (2초)
+      const elapsed = Date.now() - startTime;
+      const remaining = Math.max(0, 2000 - elapsed);
 
-        if (eventData.event === 'generate_image_end') {
-          es.close();
-          setIsLoading(false);
-        }
-      };
-
-      es.onerror = () => {
-        es.close();
-        setIsLoading(false);
-      };
-    } catch (error) {
-      console.error('Error generating image:', error);
+      if (remaining > 0) {
+        await new Promise((resolve) => setTimeout(resolve, remaining));
+      }
+      reader?.cancel();
       setIsLoading(false);
     }
-  }, [hasLeftConnection, getConnectedNodesData, id, queryClient, setNodes]);
-
-  // 컴포넌트 언마운트 시 SSE 연결 해제
-  useEffect(() => {
-    return () => {
-      eventSource?.close();
-    };
-  }, [eventSource]);
+  }, [hasLeftConnection, id, pid, queryClient, setNodes, getConnectedNodesData]);
 
   return {
     imageUrl,
     isLoading,
     hasLeftConnection,
     generateImage,
-    setImageUrl,
   };
 };
