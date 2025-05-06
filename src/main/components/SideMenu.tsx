@@ -76,14 +76,23 @@ export default function SideMenu(props: { selectedType: string | null }) {
         className={`flex h-[calc(100%-130px)] flex-col items-center self-center overflow-x-hidden overflow-y-scroll scroll-smooth p-4`}
       >
         {props.selectedType === 'image' && (
-          <div
-            key='special-image-node'
-            className='m-3 h-[200px] text-black'
-            draggable
-            onDragStart={(e) => onDragStart(e, 'imageUpload', 'SPECIAL_MODEL')}
-          >
-            {/* 이 컴포넌트를 원하는 대로 구현하세요 */}
-            <ImageUploadNodeInput id='imageUpload' data={{ value: 'default' }} />
+          <div>
+            <p className='flex items-start px-4 text-center text-sm font-semibold text-[#666666]'>
+              이미지 업로드용 노드
+            </p>
+            <div
+              key='special-image-node'
+              className='m-3 h-[200px] text-black'
+              draggable
+              onDragStart={(e) => onDragStart(e, 'imageUpload', 'SPECIAL_MODEL')}
+            >
+              {/* 이 컴포넌트를 원하는 대로 구현하세요 */}
+              <ImageUploadNodeInput id='imageUpload' data={{ value: 'default' }} />
+            </div>
+            <div className='w-full border-b-[2px] border-[#666666] opacity-15' />
+            <p className='flex items-start px-4 pt-4 text-center text-sm font-semibold text-[#666666]'>
+              이미지 AI 모델 노드
+            </p>
           </div>
         )}
         {models
