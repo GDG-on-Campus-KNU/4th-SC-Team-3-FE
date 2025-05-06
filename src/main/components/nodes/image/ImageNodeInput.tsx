@@ -102,8 +102,9 @@ export function ImageNodeInput({
           }}
         />
         {isLoading && (
-          <div className='absolute inset-0 flex items-center justify-center bg-black/50'>
-            <img src={pipeSpinner} alt='로딩중...' className='h-24 w-24' />
+          <div className='absolute inset-0 flex flex-col items-center justify-center bg-black/50'>
+            <img src={pipeSpinner} alt='로딩중...' className='h-10 w-10' />
+            <p className='text-white'>Loading...</p>
           </div>
         )}
         <button
