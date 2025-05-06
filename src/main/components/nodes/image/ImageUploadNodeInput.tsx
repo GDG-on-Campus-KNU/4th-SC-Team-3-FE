@@ -2,11 +2,14 @@ import React, { useCallback, useState } from 'react';
 
 import { FilePlus, Image, Expand } from 'lucide-react';
 
+import ImageExpandModal from '@/main/components/ImageExpandModal';
+
 import { NodeProps, useReactFlow } from '@xyflow/react';
 
 export function ImageUploadNodeInput({ id, data }: { id: string; data: { value?: string } }) {
   const { updateNodeData } = useReactFlow();
   const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [isModalOpen, setModalOpen] = useState(false);
 
   const handleImageUpload = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,7 +61,6 @@ export function ImageUploadNodeInput({ id, data }: { id: string; data: { value?:
       {/* 이미지 업로드 */}
       <div
         className={`relative m-[5px] flex h-[150px] w-[235px] flex-col justify-center overflow-hidden rounded-sm bg-[#FFF1D1] p-[5px] transition-all duration-300 group-hover:shadow-inner`}
-        onClick={triggerFileInput}
         style={{ cursor: 'pointer' }}
       >
         {imageUrl ? (
@@ -69,16 +71,16 @@ export function ImageUploadNodeInput({ id, data }: { id: string; data: { value?:
               className='h-full w-full object-contain transition-transform duration-700 group-hover:scale-105'
             />
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                window.open(imageUrl, '_blank');
-              }}
+              onClick={() => setModalOpen(true)}
               className='absolute right-2 top-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/50 text-white opacity-0 transition-opacity duration-200 hover:bg-black/70 group-hover:opacity-100'
               title='원본 크기로 보기'
             >
               <Expand size={16} />
             </button>
-            <div className='absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100'>
+            <div
+              onClick={triggerFileInput}
+              className='absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100'
+            >
               <FilePlus
                 size='44'
                 className={`text-white/90 transition-all duration-300 hover:scale-110 hover:text-white`}
@@ -86,7 +88,7 @@ export function ImageUploadNodeInput({ id, data }: { id: string; data: { value?:
             </div>
           </>
         ) : (
-          <div className='relative h-full w-full'>
+          <div onClick={triggerFileInput} className='relative h-full w-full'>
             <div className='absolute inset-0 flex flex-col items-center justify-center'>
               <FilePlus
                 size='44'
@@ -104,6 +106,9 @@ export function ImageUploadNodeInput({ id, data }: { id: string; data: { value?:
           </div>
         )}
       </div>
+      {isModalOpen && imageUrl && (
+        <ImageExpandModal url={imageUrl} onClose={() => setModalOpen(false)} />
+      )}
     </div>
   );
 }

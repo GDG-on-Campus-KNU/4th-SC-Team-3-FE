@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 
 import { Image, Play, FilePlus, Expand } from 'lucide-react';
 
-import attentionImg from '@/assets/signin/img-attention.png';
+import testImg from '@/assets/main/img-test.png';
 import { useReactFlow } from '@xyflow/react';
 
 export function ImageNodeInput({
@@ -14,6 +14,7 @@ export function ImageNodeInput({
 }) {
   const { updateNodeData } = useReactFlow();
   const [imageUrl, setImageUrl] = useState<string | null>(data.value || null);
+  const [isModalOpen, setModalOpen] = useState(false);
 
   return (
     <div
@@ -39,16 +40,17 @@ export function ImageNodeInput({
         style={{ cursor: 'pointer' }}
       >
         <img
-          src={imageUrl || attentionImg}
+          src={imageUrl || testImg}
           alt='업로드된 이미지'
           className={`h-[150px] w-[235px] rounded-sm object-cover transition-all duration-300 group-hover:shadow-inner`}
           onError={(e) => {
-            (e.target as HTMLImageElement).src = attentionImg;
+            (e.target as HTMLImageElement).src = testImg;
           }}
         />
         <button
           className='absolute right-2 top-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/50 text-white opacity-0 transition-opacity duration-200 hover:bg-black/70 group-hover:opacity-100'
           title='원본 크기로 보기'
+          onClick={() => setModalOpen(true)}
         >
           <Expand size={16} />
         </button>
