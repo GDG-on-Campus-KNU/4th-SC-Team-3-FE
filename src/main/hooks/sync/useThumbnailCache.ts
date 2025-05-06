@@ -2,49 +2,40 @@ import { useEffect, useRef } from 'react';
 
 import { toPng } from 'html-to-image';
 
-import { ReactFlowInstance } from '@xyflow/react';
-
-export const useThumbnailCache = (
-  reactFlowWrapperRef: React.RefObject<HTMLDivElement>,
-  reactFlowInstance: ReactFlowInstance,
-) => {
+/**
+ * @param wrapperRef 캡처할 DOM을 가리키는 ref
+ * @param nodes React Flow 의 노드 배열
+ * @param edges React Flow 의 엣지 배열
+ *
+ * @returns latestPngRef.current 에 base64 png 문자열
+ */
+export function useThumbnailCache(
+  wrapperRef: React.RefObject<HTMLElement>,
+  nodes: any[],
+  edges: any[],
+) {
   const latestPngRef = useRef<string | null>(null);
 
-  // 1) 노드/엣지 변경 시 캡쳐
   useEffect(() => {
-    // 디바운스나 쓰로틀을 걸어야 과도한 캡쳐를 막을 수 있습니다.
-    let timeout: NodeJS.Timeout;
-
-    const capture = () => {
-      if (!reactFlowWrapperRef.current) return;
-      clearTimeout(timeout);
-      timeout = setTimeout(async () => {
-        try {
-          const png = await toPng(reactFlowWrapperRef.current, {
-            cacheBust: true,
-            backgroundColor: '#ffffff',
-          });
-          latestPngRef.current = png; // base64 문자열로 저장
-          console.log('🎞️ 새 썸네일 저장됨');
-        } catch (e) {
-          console.warn('❗ 캡쳐 실패', e);
-        }
-      }, 500);
-    };
-
-    // React Flow 인스턴스가 제공하는 이벤트 구독
-    const unsubNodes = (reactFlowInstance as any).on('nodesChange', capture);
-    const unsubEdges = (reactFlowInstance as any).on('edgesChange', capture);
-
-    // 처음 한 번 캡쳐
-    capture();
-
-    return () => {
-      clearTimeout(timeout);
-      unsubNodes();
-      unsubEdges();
-    };
-  }, [reactFlowWrapperRef, reactFlowInstance]);
+    // nodes 또는 edges 가 바뀔 때마다 캡처
+    if (!wrapperRef.current) return;
+    const element = wrapperRef.current;
+    (async () => {
+      try {
+        const png = await toPng(element, {
+          cacheBust: true,
+          backgroundColor: '#ffffff',
+        });
+        latestPngRef.current = png;
+      } catch (err) {
+        console.warn('❗ 썸네일 캡처 실패', err);
+      }
+    })();
+  }, [
+    // wrapperRef 가 바뀌지는 않으니 생략 가능
+    nodes,
+    edges,
+  ]);
 
   return latestPngRef;
-};
+}

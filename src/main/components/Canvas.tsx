@@ -6,6 +6,7 @@ import { useEdgeClickHandler } from '../hooks/handle/useEdgeClickHandler';
 import { useFlowDragOverHandler } from '../hooks/handle/useFlowDragOverHandler';
 import { useFlowDropHandler } from '../hooks/handle/useFlowDropHandler';
 import { useSyncFlow } from '../hooks/sync/useSyncFlow';
+import { useThumbnailCache } from '../hooks/sync/useThumbnailCache';
 import { useTimeStampToLocalStorage } from '../hooks/sync/useTimeStampToLocalStorage';
 import { useUpdateFlow } from '../hooks/sync/useUpdateFlow';
 import { useHighlightSelectedEdge } from '../hooks/useHighlightSelectedEdge';
@@ -85,7 +86,9 @@ export default function Canvas() {
   useTimeStampToLocalStorage(reactFlowInstance, nodes, edges);
 
   // 10초마다 timestamp 비교 및 썸네일 서버 전송 커스텀 훅
-  useUpdateFlow(wrapperRef);
+  const latestPngRef = useThumbnailCache(wrapperRef, nodes, edges);
+
+  useUpdateFlow(wrapperRef, latestPngRef);
 
   // 노드가 선택되었을 때 해당 노드의 zIndex를 조정하는 커스텀 훅
   useHighlightSelectedEdge(selectedId, edges, setEdges);
