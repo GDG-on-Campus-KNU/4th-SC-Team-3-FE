@@ -133,7 +133,7 @@ export function ImageNodeInput({
               leaveFrom='scale-100 opacity-100'
               leaveTo='scale-75 opacity-0'
             >
-              <Dialog.Panel className='overflow-hidden rounded-lg bg-white'>
+              <Dialog.Panel className='overflow-hidden rounded-lg border-8 border-white bg-white shadow-lg'>
                 <img src={testImg} className='max-h-[80vh] max-w-full' />
               </Dialog.Panel>
             </Transition.Child>
