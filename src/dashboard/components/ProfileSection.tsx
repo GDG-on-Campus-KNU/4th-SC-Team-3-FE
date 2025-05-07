@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import ProfilePiper from '@/assets/dashboard/img-profile-piper.png';
@@ -13,17 +13,19 @@ const getLargerGoogleProfileImage = (url: string, size: number = 256): string =>
 export const ProfileSection = () => {
   const { member } = useMemberStore();
   const navigate = useNavigate();
+  const [profileImageError, setProfileImageError] = useState(false);
 
   return (
     <div className='w-full'>
       {/* Profile Section */}
       <div className='relative flex h-full w-full items-center justify-between'>
         <div className='absolute -top-28 left-0 h-[230px] w-[230px] overflow-hidden rounded-full border-[16px] border-white bg-[#4F846C]'>
-          {member?.picture ? (
+          {member?.picture && !profileImageError ? (
             <img
               src={getLargerGoogleProfileImage(member.picture)}
               alt='profile'
               className='absolute object-cover'
+              onError={() => setProfileImageError(true)}
             />
           ) : (
             <img
