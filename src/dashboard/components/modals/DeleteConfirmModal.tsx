@@ -42,8 +42,7 @@ export const DeleteConfirmModal: React.FC<DeleteConfirmModalProps> = ({
         <div className='flex justify-end gap-2'>
           <button
             onClick={onClose}
-            // className='group flex scale-100 transform items-center justify-center gap-2 rounded-lg bg-[#e24646] px-4 py-2 text-sm text-white transition-transform duration-300 ease-in-out hover:scale-[1.02]'
-            className='group flex scale-100 transform rounded-md border border-gray-300 bg-gray-100 px-4 py-2 text-sm text-gray-700 hover:scale-[1.02] hover:bg-gray-200'
+            className='group flex scale-100 transform rounded-lg border border-gray-300 bg-transparent px-4 py-2 text-sm text-gray-700 hover:scale-[1.02]'
           >
             취소하기
           </button>

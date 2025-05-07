@@ -49,7 +49,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
         <p className='mb-4 text-sm text-gray-500'>프로젝트의 이름을 입력해주세요.</p>
         <input
           type='text'
-          className='h-10 w-full rounded-lg border px-3 text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-pipy-blue'
+          className='h-10 w-full rounded-lg border border-gray-400 px-3 text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-pipy-blue'
           placeholder='Untitled'
           value={name}
           onChange={(e) => onNameChange(e.target.value)}
