@@ -11,6 +11,8 @@ export default function connectionLineTypeHandler(props: ConnectionLineComponent
       return <TextConnectionLine {...props} />;
     case 'image':
       return <ImageConnectionLine {...props} />;
+    case 'imageUpload':
+      return <ImageConnectionLine {...props} />;
     default:
       return <TextConnectionLine {...props} />;
   }

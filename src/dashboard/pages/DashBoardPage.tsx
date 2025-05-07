@@ -3,8 +3,23 @@ import { ModelSection } from '../components/ModelSection';
 import { ProfileSection } from '../components/ProfileSection';
 import { ProjectSection } from '../components/ProjectSection';
 import ImageBottomPiper from '@/assets/dashboard/img-bottom-piper.png';
+import useMemberStore from '@/dashboard/stores/MemberStore';
+import { useEffect } from 'react';
+import { fetchMember } from '@/dashboard/api/fetchMember';
 
 export default function DashBoardPage() {
+  const { member, setMember } = useMemberStore();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await fetchMember();
+      setMember(data);
+    };
+    if (!member) {
+      fetchData();
+    }
+  }, [member]);
+  
   return (
     <div className='fixed h-screen w-screen overflow-x-hidden overflow-y-scroll bg-white'>
       <DashBoardHeader />
@@ -13,7 +28,7 @@ export default function DashBoardPage() {
         {/* 1440px 기준 양측 280px 여백 */}
         <ProfileSection />
         {/* 마이프로젝트 */}
-        <ProjectSection />
+        { member ? <ProjectSection /> : <></> }
         {/* ai 모델 */}
         <ModelSection />
       </div>
