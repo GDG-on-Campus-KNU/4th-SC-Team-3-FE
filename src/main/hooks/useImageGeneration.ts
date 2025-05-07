@@ -96,6 +96,7 @@ export const useImageGeneration = (id: string) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ projectId: Number(pid), nodes: getConnectedNodesData() }),
         signal: controller.signal,
+        credentials: 'include',
       });
       // 상태 코드가 200이 아닌 경우 오류 처리
       if (!res.ok) {
