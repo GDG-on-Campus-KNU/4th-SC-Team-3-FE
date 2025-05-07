@@ -4,22 +4,10 @@ import type { Node } from '@xyflow/react';
 
 type NodesSetter = React.Dispatch<React.SetStateAction<Node<any>[]>>;
 
-interface Bounds {
-  left: number;
-  top: number;
-  right: number;
-  bottom: number;
-}
-
 interface CustomNode extends Node {
   positionAbsolute?: { x: number; y: number };
   width?: number;
   height?: number;
-  __rf?: {
-    positionAbsolute?: { x: number; y: number };
-    width?: number;
-    height?: number;
-  };
 }
 
 export function useNodeDragHandler(setNodes: NodesSetter) {
@@ -31,27 +19,28 @@ export function useNodeDragHandler(setNodes: NodesSetter) {
         nds.map((n) => {
           if (n.type !== 'category') return n;
 
-          const absPos =
-            draggedNode.positionAbsolute ||
-            (draggedNode as any).__rf?.positionAbsolute ||
-            draggedNode.position;
-          const width = Number(
-            draggedNode.width ?? (draggedNode as any).__rf?.width ?? draggedNode.data?.width ?? 0,
-          );
-          const height = Number(
-            draggedNode.height ??
-              (draggedNode as any).__rf?.height ??
-              draggedNode.data?.height ??
-              0,
-          );
+          // 실시간으로 DOM에서 bounds 계산
+          const categoryElement = document.querySelector(`[data-id="${n.id}"]`);
+          if (!categoryElement) return n;
 
-          const bounds = (n.data.bounds as Bounds) ?? null;
+          const bounds = categoryElement.getBoundingClientRect();
+
+          // 드래그된 노드의 절대 위치 계산 (viewport 기준)
+          const draggedElement = document.querySelector(`[data-id="${draggedNode.id}"]`);
+          const draggedRect = draggedElement?.getBoundingClientRect() || {
+            left: draggedNode.positionAbsolute?.x || 0,
+            top: draggedNode.positionAbsolute?.y || 0,
+            width: Number(draggedNode.width ?? 0),
+            height: Number(draggedNode.height ?? 0),
+            right: (draggedNode.positionAbsolute?.x || 0) + Number(draggedNode.width ?? 0),
+            bottom: (draggedNode.positionAbsolute?.y || 0) + Number(draggedNode.height ?? 0),
+          };
+
           const isHover =
-            !!bounds &&
-            absPos.x < bounds.right &&
-            absPos.x + width > bounds.left &&
-            absPos.y < bounds.bottom &&
-            absPos.y + height > bounds.top;
+            draggedRect.left < bounds.right &&
+            draggedRect.right > bounds.left &&
+            draggedRect.top < bounds.bottom &&
+            draggedRect.bottom > bounds.top;
 
           return {
             ...n,
