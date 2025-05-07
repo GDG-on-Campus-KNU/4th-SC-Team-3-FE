@@ -33,11 +33,9 @@ export const ProjectSection = () => {
   }, []);
 
   const handleCreate = async () => {
-    if (newProjectName.trim()) {
-      await createProject(navigate, newProjectName); // 이름을 전달하도록 createFlow 수정 필요
-      setIsCreateModalOpen(false);
-      setNewProjectName('');
-    }
+    await createProject(navigate, newProjectName.trim() ? newProjectName : 'Untitled'); // 이름을 전달하도록 createFlow 수정 필요
+    setIsCreateModalOpen(false);
+    setNewProjectName('');
   };
 
   return (
@@ -76,7 +74,7 @@ export const ProjectSection = () => {
                   className='h-full w-full rounded-lg object-cover'
                 />
               ) : (
-                <div className='flex h-[200px] items-center justify-center rounded-lg border-2 border-dashed border-[#D9D9D9] bg-[#EDEDED] text-5xl text-[#D9D9D9] transition-all group-hover:border-[#3a7deb] group-hover:text-[#3a7deb]' />
+                <div className='flex h-[200px] items-center justify-center bg-[#EDEDED] text-5xl text-[#D9D9D9] transition-all' />
               )}
               <button
                 className='group absolute right-2 top-2 z-10 hidden rounded-full bg-[#E65429] opacity-70 shadow-md ease-in-out hover:opacity-100 group-hover:block'
@@ -88,7 +86,18 @@ export const ProjectSection = () => {
                 <X className='text-white' size={20} />
               </button>
             </div>
-            <p className='mt-2 text-base text-[#404040]'>{project.name}</p>
+            <p
+              className='mt-2 text-base text-[#404040]'
+              style={{
+                display: 'inline-block',
+                maxWidth: '99%', // 최대 너비 설정
+                whiteSpace: 'nowrap', // 텍스트 줄바꿈 방지
+                overflow: 'hidden', // 넘치는 텍스트 숨기기
+                textOverflow: 'ellipsis', // 넘치는 텍스트에 '...' 표시
+              }}
+            >
+              {project.name}
+            </p>
 
             <p className='text-xs text-[#808080]'>
               최종 수정: {formatUpdatedAt(project.updatedAt)}
@@ -109,6 +118,7 @@ export const ProjectSection = () => {
         isOpen={!!deleteTargetId}
         onClose={() => setDeleteTargetId(null)}
         onConfirm={() => handleDelete(deleteTargetId!)}
+        projectName={projects.find((p) => p.projectId === deleteTargetId)?.name || 'Untitled'}
       />
     </>
   );
