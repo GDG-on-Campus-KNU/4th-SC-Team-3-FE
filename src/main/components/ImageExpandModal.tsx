@@ -23,7 +23,7 @@ function ImageExpandModal({ url, onClose }: ImageExpandModalProps) {
 
   return createPortal(
     <div
-      className='fixed inset-0 z-50 flex items-center justify-center bg-black/70'
+      className='fixed inset-0 z-50 flex items-center justify-center bg-black/50'
       onClick={onClose}
     >
       <div
