@@ -6,7 +6,7 @@ import useDnDStore from '@/main/stores/DnDStore';
 import useSelectedObjectStore from '@/main/stores/selectObjectStore';
 
 import Funnel from '@/assets/main/icon-funnel.svg';
-import { useReactFlow, Handle, Position } from '@xyflow/react';
+import { useReactFlow, Handle, Position, useStore } from '@xyflow/react';
 
 export interface CategoryItemData {
   id: string;
@@ -39,6 +39,11 @@ export function CategoryNode({
 
   const [isDraggingOver, setIsDraggingOver] = useState(false);
 
+  const nodePosition = useStore((store) => {
+    const node = store.nodeLookup.get(id);
+    return node?.position;
+  });
+
   useEffect(() => {
     const updateBounds = () => {
       if (!wrapperRef.current) return;
@@ -68,8 +73,13 @@ export function CategoryNode({
     const observer = new ResizeObserver(updateBounds);
     if (wrapperRef.current) observer.observe(wrapperRef.current);
 
-    return () => observer.disconnect();
-  }, [setNodes, id]);
+    const positionObserver = setInterval(updateBounds, 100);
+
+    return () => {
+      observer.disconnect();
+      clearInterval(positionObserver);
+    };
+  }, [id, setNodes, nodePosition]);
 
   const handleDragLeave = (e: React.DragEvent) => {
     e.preventDefault();

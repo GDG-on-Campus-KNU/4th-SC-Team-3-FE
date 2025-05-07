@@ -89,7 +89,6 @@ export default function Canvas() {
 
   const latestPngRef = useThumbnailCache(reactFlowInstance, wrapperRef);
 
-
   useUpdateFlow(wrapperRef, latestPngRef);
 
   // 노드가 선택되었을 때 해당 노드의 zIndex를 조정하는 커스텀 훅
