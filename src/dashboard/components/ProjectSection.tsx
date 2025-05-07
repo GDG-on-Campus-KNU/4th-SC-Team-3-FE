@@ -69,11 +69,15 @@ export const ProjectSection = () => {
             onClick={() => navigate(`/main/${project.projectId}`)}
           >
             <div className='relative h-[200px] overflow-hidden rounded-lg border-2 border-dashed border-[#D9D9D9] transition-all group-hover:border-[#3a7deb]'>
-              <img
-                src={project.thumbnail || ''}
-                alt={project.name}
-                className='h-full w-full rounded-lg object-cover'
-              />
+              {project.thumbnail ? (
+                <img
+                  src={project.thumbnail || ''}
+                  alt={project.name}
+                  className='h-full w-full rounded-lg object-cover'
+                />
+              ) : (
+                <div className='flex h-[200px] items-center justify-center rounded-lg border-2 border-dashed border-[#D9D9D9] bg-[#EDEDED] text-5xl text-[#D9D9D9] transition-all group-hover:border-[#3a7deb] group-hover:text-[#3a7deb]' />
+              )}
               <button
                 className='group absolute right-2 top-2 z-10 hidden rounded-full bg-[#E65429] opacity-70 shadow-md ease-in-out hover:opacity-100 group-hover:block'
                 onClick={(e) => {
