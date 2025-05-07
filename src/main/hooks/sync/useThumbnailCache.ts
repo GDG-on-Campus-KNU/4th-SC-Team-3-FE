@@ -35,14 +35,17 @@ export function useThumbnailCache(
 
       // useReactFlow 훅을 사용해 노드 정보 가져오기
       const nodes = reactFlowInstance.getNodes();
-      const nodesBounds = getNodesBounds(nodes); // 노드들의 바운드를 계산
-      const viewport = getViewportForBounds(nodesBounds, 400, 400, 0.05, 1, 0.5); // 노드 바운드를 기준으로 뷰포트 계산
+      const nodesBounds = getNodesBounds(nodes);
+      console.log(nodesBounds); // 노드들의 바운드를 계산
+      const viewport = getViewportForBounds(nodesBounds, 400, 400, 0.1, 5, 0.5); // 노드 바운드를 기준으로 뷰포트 계산
 
       try {
         // HTML을 PNG로 변환
         const png = await toPng(el, {
           cacheBust: true, // 캐시를 우회하여 새로 캡처
           backgroundColor: '#EDEDED', // 배경 색상을 흰색으로 설정
+          width: 400, // 캡처할 이미지의 너비
+          height: 400, // 캡처할 이미지의 높이
           style: {
             transform: `translate(${viewport.x}px, ${viewport.y}px) scale(${viewport.zoom})`, // 뷰포트 이동 및 줌 적용
           },
