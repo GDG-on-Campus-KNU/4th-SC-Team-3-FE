@@ -4,6 +4,8 @@ import { useLocation } from 'react-router-dom';
 import { compare } from 'fast-json-patch';
 
 import { updateProjectCanvas } from '@/main/api/updateProjectCanvas';
+import { updateProjectName } from '@/main/api/updateProjectName';
+import useProjectStore from '@/main/stores/projectStore';
 
 import {
   LOCAL_CHANGE_TIMESTAMP_KEY,
@@ -18,6 +20,7 @@ export const useUpdateFlow = (
 ) => {
   const reactFlowInstance = useReactFlow();
   const location = useLocation();
+  const { projectName, pid, setProjectName } = useProjectStore();
 
   // 1) 주기적 캔버스 업데이트
   useEffect(() => {
@@ -92,4 +95,19 @@ export const useUpdateFlow = (
       })();
     };
   }, [location, reactFlowInstance, reactFlowWrapperRef]);
+
+  useEffect(() => {
+    return () => {
+      (async () => {
+        if (projectName && pid) {
+          try {
+            await updateProjectName(pid, projectName);
+            console.log('✅ 프로젝트 이름 업데이트 성공');
+          } catch (err) {
+            console.warn('❌ 프로젝트 이름 업데이트 실패:', err);
+          }
+        }
+      })();
+    };
+  }, [projectName, pid, setProjectName]);
 };

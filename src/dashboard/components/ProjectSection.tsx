@@ -7,10 +7,8 @@ import { createProject } from '../api/createProject';
 import { deleteProject } from '../api/deleteProject';
 import { fetchProjectList, Project } from '../api/fetchProjectList';
 import { formatUpdatedAt } from '../api/formatUpdatedAt';
-import { updateProjectName } from '../api/updateProjectName';
 import { CreateProjectModal } from './modals/CreateProjectModal';
 import { DeleteConfirmModal } from './modals/DeleteConfirmModal';
-import { EditProjectModal } from './modals/EditProjectModal';
 
 export const ProjectSection = () => {
   const navigate = useNavigate();
@@ -18,9 +16,6 @@ export const ProjectSection = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [newProjectName, setNewProjectName] = useState('');
   const [deleteTargetId, setDeleteTargetId] = useState<number | null>(null);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [editProjectName, setEditProjectName] = useState('');
-  const [editTargetId, setEditTargetId] = useState<number | null>(null);
 
   const loadProjects = async () => {
     const data = await fetchProjectList();
@@ -42,16 +37,6 @@ export const ProjectSection = () => {
       await createProject(navigate, newProjectName); // 이름을 전달하도록 createFlow 수정 필요
       setIsCreateModalOpen(false);
       setNewProjectName('');
-    }
-  };
-
-  const handleEdit = async () => {
-    if (editTargetId && editProjectName.trim()) {
-      await updateProjectName(editTargetId, editProjectName);
-      loadProjects();
-      setIsEditModalOpen(false);
-      setEditTargetId(null);
-      setEditProjectName('');
     }
   };
 
@@ -84,11 +69,15 @@ export const ProjectSection = () => {
             onClick={() => navigate(`/main/${project.projectId}`)}
           >
             <div className='relative h-[200px] overflow-hidden rounded-lg border-2 border-dashed border-[#D9D9D9] transition-all group-hover:border-[#3a7deb]'>
-              <img
-                src={project.thumbnail || ''}
-                alt={project.name}
-                className='h-full w-full rounded-lg object-cover'
-              />
+              {project.thumbnail ? (
+                <img
+                  src={project.thumbnail || ''}
+                  alt={project.name}
+                  className='h-full w-full rounded-lg object-cover'
+                />
+              ) : (
+                <div className='flex h-[200px] items-center justify-center rounded-lg border-2 border-dashed border-[#D9D9D9] bg-[#EDEDED] text-5xl text-[#D9D9D9] transition-all group-hover:border-[#3a7deb] group-hover:text-[#3a7deb]' />
+              )}
               <button
                 className='group absolute right-2 top-2 z-10 hidden rounded-full bg-[#E65429] opacity-70 shadow-md ease-in-out hover:opacity-100 group-hover:block'
                 onClick={(e) => {
@@ -100,17 +89,7 @@ export const ProjectSection = () => {
               </button>
             </div>
             <p className='mt-2 text-base text-[#404040]'>{project.name}</p>
-            <button
-              className='absolute left-2 top-2 z-10 hidden rounded-full bg-[#3a7deb] px-2 py-1 text-xs text-white opacity-80 hover:opacity-100 group-hover:block'
-              onClick={(e) => {
-                e.stopPropagation();
-                setEditTargetId(project.projectId);
-                setEditProjectName(project.name);
-                setIsEditModalOpen(true);
-              }}
-            >
-              이름 수정
-            </button>
+
             <p className='text-xs text-[#808080]'>
               최종 수정: {formatUpdatedAt(project.updatedAt)}
             </p>
@@ -124,14 +103,6 @@ export const ProjectSection = () => {
         onCreate={handleCreate}
         name={newProjectName}
         onNameChange={setNewProjectName}
-      />
-
-      <EditProjectModal
-        isOpen={!!isEditModalOpen}
-        onClose={() => setIsEditModalOpen(false)}
-        name={editProjectName}
-        onNameChange={setEditProjectName}
-        onConfirm={handleEdit}
       />
 
       <DeleteConfirmModal

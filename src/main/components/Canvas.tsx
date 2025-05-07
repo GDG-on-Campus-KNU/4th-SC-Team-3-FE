@@ -87,7 +87,8 @@ export default function Canvas() {
 
   // 10초마다 timestamp 비교 및 썸네일 서버 전송 커스텀 훅
 
-  const latestPngRef = useThumbnailCache(wrapperRef);
+  const latestPngRef = useThumbnailCache(reactFlowInstance, wrapperRef);
+
 
   useUpdateFlow(wrapperRef, latestPngRef);
 
