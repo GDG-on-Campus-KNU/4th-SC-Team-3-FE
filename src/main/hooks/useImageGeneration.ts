@@ -41,7 +41,6 @@ export const useImageGeneration = (id: string) => {
       .map((node) => {
         if (node?.type === 'text') {
           return {
-            nodeId: node.id,
             content: node.data.value,
             type: 'text_prompt',
           };
@@ -50,9 +49,7 @@ export const useImageGeneration = (id: string) => {
         if (node?.type === 'category') {
           const categories = (node.data as any).categories || [];
           return {
-            nodeId: node.id,
             contents: categories.map((cat: any) => ({
-              nodeId: cat.id,
               key: cat.name,
               value: cat.value,
               type: 'category_prompt',
@@ -63,7 +60,6 @@ export const useImageGeneration = (id: string) => {
 
         if (node?.type === 'categoryItem') {
           return {
-            nodeId: node.id,
             key: node.data.name,
             value: node.data.value,
             type: 'category_prompt',
