@@ -6,6 +6,7 @@ import { Baseline, FunnelPlus, Play } from 'lucide-react';
 import { analyzeTextNode } from '@/main/api/analyzeTextNode';
 
 import { useReactFlow, useStore } from '@xyflow/react';
+import { useToast } from '@/global/hooks/use-toast';
 
 export function TextNodeInput({
   id,
@@ -29,6 +30,8 @@ export function TextNodeInput({
   const edges = useStore((state) => state.edges);
   const [hasRightConnection, setHasRightConnection] = useState(false);
 
+  const { toast } = useToast();
+
   useEffect(() => {
     const hasRight = edges.some((edge) => edge.source === id && edge.sourceHandle === 'text-right');
     setHasRightConnection(hasRight);
@@ -45,11 +48,8 @@ export function TextNodeInput({
     }, 2000); // 2초 후에 이미지 URL 변경
   }, [hasRightConnection]);
 
-  const handleConvertClick = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setIsConverting(true);
-
-    const categories = (await analyzeTextNode(data.value!)).map((category: any, index: number) => {
+  const getAnalyzedCategories = async () => {
+    return (await analyzeTextNode(data.value!)).map((category: any, index: number) => {
       return {
         id: `${id}-item-${index + 1}`,
         name: category.key,
@@ -57,26 +57,38 @@ export function TextNodeInput({
         parentId: id,
       };
     });
+  };
 
-    console.log('Converted categories:', categories);
-
-    setNodes((nds) =>
-      nds.map((node) => {
-        if (node.id === id) {
-          return {
-            ...node,
-            type: 'category',
-            data: {
-              categories: categories,
-            },
-            position: node.position,
-          };
-        }
-        return node;
-      }),
-    );
-
-    setIsConverting(false);
+  const handleConvertClick = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsConverting(true);
+    try {
+      const categories = await getAnalyzedCategories();
+      setNodes((nds) =>
+        nds.map((node) => {
+          if (node.id === id) {
+            return {
+              ...node,
+              type: 'category',
+              data: {
+                categories: categories,
+              },
+              position: node.position,
+            };
+          }
+          return node;
+        }),
+      );
+    } catch (error) {
+      toast({
+        title: '카테고리 변환에 실패했습니다.',
+        description: '알 수 없는 오류가 발생했습니다.',
+        variant: 'destructive',
+        duration: 3000,
+      });
+    } finally {
+      setIsConverting(false);
+    }
   };
 
   const handleTextareaClick = (e: React.MouseEvent) => {

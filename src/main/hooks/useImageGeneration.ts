@@ -117,7 +117,7 @@ export const useImageGeneration = (id: string) => {
           const text = part.replace(/^data:\s*/, '').trim();
           if (!text) continue;
 
-          let evt: { event: string; data?: { url: string } };
+          let evt: { event: string; data?: { url: string }, message?: string };
           try {
             evt = JSON.parse(text);
           } catch {
@@ -144,14 +144,23 @@ export const useImageGeneration = (id: string) => {
             }
             return;
           }
+          if (evt.event === 'error') {
+            const message = evt.message || '알 수 없는 오류가 발생했습니다.';
+            toast({
+              title: '사진 생성에 실패했습니다.',
+              description: message,
+              variant: 'destructive',
+              duration: 3000,
+            });
+          }
         }
       }
     } catch (err: any) {
       if (err.name !== 'AbortError') {
         console.error(err);
         toast({
-          title: '이미지 생성 실패',
-          description: err.message || '이미지 생성 중 오류가 발생했습니다',
+          title: '사진 생성에 실패했습니다.',
+          description: '알 수 없는 오류가 발생했습니다.',
           variant: 'destructive',
           duration: 3000,
         });
