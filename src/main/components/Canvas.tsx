@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
+import { useParams } from 'react-router-dom';
 
 import connectionLineTypeHandler from '../api/connectionLineTypeHandler';
 import { CategoryItemData } from '../components/nodes/category/CategoryNode';
@@ -33,6 +34,7 @@ const initialNodes: Node[] = [];
 const initialEdges: Edge[] = [];
 
 export default function Canvas() {
+  const { pid } = useParams<{ pid: string }>();
   const reactFlowInstance = useReactFlow();
 
   const { nodeType, modelName } = useDnDStore();
@@ -87,7 +89,7 @@ export default function Canvas() {
 
   // 10초마다 timestamp 비교 및 썸네일 서버 전송 커스텀 훅
 
-  const latestPngRef = useThumbnailCache(reactFlowInstance, wrapperRef);
+  const latestPngRef = useThumbnailCache(wrapperRef, pid!);
 
   useUpdateFlow(wrapperRef, latestPngRef);
 

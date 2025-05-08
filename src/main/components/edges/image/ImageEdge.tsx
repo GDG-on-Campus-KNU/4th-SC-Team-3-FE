@@ -60,7 +60,7 @@ export default function ImageEdge({
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
       >
-        <path d={edgePath} fill='none' className='stroke-pipy-yellow' strokeWidth={16} />
+        <path d={edgePath} fill='none' stroke='#FFBD1E' strokeWidth={16} />
         <EdgeLabelRenderer>
           {labelX - sourceX > 56 &&
             ((sourceY > targetY && sourceY - targetY > 28) ||
