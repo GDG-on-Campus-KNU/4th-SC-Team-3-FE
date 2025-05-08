@@ -17,6 +17,16 @@ export const uploadFlowToServer = async (data: FlowSnapshot): Promise<void> => {
   await axiosClient.post(`/projects/${data.pid}`, data);
 };
 
+export function deduplicateById(nodes: Node[], edges: Edge[]) {
+  const nodeIds = new Set(nodes.map((n) => n.id));
+  const filteredEdges = edges.filter((e) => !nodeIds.has(e.id)); // 중복 edge 제거
+  console.log;
+  return {
+    nodes: nodes,
+    edges: filteredEdges,
+  };
+}
+
 export const useSyncFlow = (
   reactFlowInstance: ReactFlowInstance | null,
   setNodes: (nodes: Node[]) => void,
@@ -26,8 +36,9 @@ export const useSyncFlow = (
   const { setProjectName, setPid } = useProjectStore();
 
   const applySnapshot = (data: FlowSnapshot) => {
-    setNodes(data.snapshot.nodes || []);
-    setEdges(data.snapshot.edges || []);
+    const { nodes, edges } = deduplicateById(data.snapshot.nodes, data.snapshot.edges);
+    setNodes(nodes || []);
+    setEdges(edges || []);
     reactFlowInstance!.setViewport(data.snapshot.viewport || { x: 0, y: 0, zoom: 0.75 });
   };
 
@@ -35,7 +46,21 @@ export const useSyncFlow = (
     if (!reactFlowInstance) return;
 
     const sync = async () => {
+      let localSnapshot: FlowSnapshot | null = null;
       let serverSnapshot: FlowSnapshot | null = null;
+
+      try {
+        // 로컬 먼저 시도
+        const localRaw = localStorage.getItem(LOCAL_STORAGE_KEY + pid);
+        if (localRaw) {
+          localSnapshot = JSON.parse(localRaw);
+          if (localSnapshot!.pid !== Number(pid)) {
+            localSnapshot = null; // pid가 다르면 무시
+          }
+        }
+      } catch (e) {
+        console.warn('로컬 로딩 실패:', e);
+      }
 
       try {
         // 서버에서 가져오기
@@ -49,13 +74,12 @@ export const useSyncFlow = (
           snapshot: JSON.parse(serverData.canvas),
         } as FlowSnapshot;
         console.log('server:', serverSnapshot);
-        applySnapshot(serverSnapshot);
       } catch (e) {
         console.warn('서버 로딩 실패:', e);
       }
 
       // 아무 것도 없으면 기본값
-      if (!serverSnapshot) {
+      if (!localSnapshot && !serverSnapshot) {
         console.log('신규 Flow. 기본값 사용');
         localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(DEFAULT_FLOW_SNAPSHOT));
         applySnapshot(DEFAULT_FLOW_SNAPSHOT);
@@ -63,8 +87,24 @@ export const useSyncFlow = (
         return;
       }
 
-      setProjectName(serverSnapshot?.name || null);
-      setPid(serverSnapshot?.pid || null);
+      // 둘 중 최신값 사용
+      const latestSnapshot =
+        !serverSnapshot ||
+        (localSnapshot && new Date(localSnapshot.timestamp) > new Date(serverSnapshot.timestamp))
+          ? localSnapshot!
+          : serverSnapshot;
+      console.log(latestSnapshot);
+      applySnapshot(latestSnapshot);
+
+      // 오래된 쪽 덮어쓰기
+      if (latestSnapshot === serverSnapshot) {
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(latestSnapshot!));
+      } else if (latestSnapshot === localSnapshot && serverSnapshot) {
+        await uploadFlowToServer(latestSnapshot!);
+      }
+
+      setProjectName(latestSnapshot?.name || null);
+      setPid(latestSnapshot?.pid || null);
     };
     sync();
   }, []);

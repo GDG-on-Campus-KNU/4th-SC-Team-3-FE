@@ -31,7 +31,7 @@ export const useUpdateFlow = (
 
       const now = new Date();
       const diffInMs = now.getTime() - new Date(rawLocalTimestamp).getTime();
-      if (diffInMs < 10 * 1000) return;
+      if (diffInMs < 1 * 1000) return;
 
       const localData = JSON.parse(rawLocalData);
       const currentSnapshot = {
