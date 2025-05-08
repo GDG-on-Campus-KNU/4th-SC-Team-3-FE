@@ -16,9 +16,8 @@ export const RootLayout = () => {
   const isCanvasPath = location.pathname.startsWith('/main');
 
   const handleSave = () => {
-    if (editedName?.trim()) {
-      setProjectName(editedName.trim());
-    }
+    setProjectName(editedName!.trim());
+
     setIsEditing(false);
   };
 
@@ -30,6 +29,10 @@ export const RootLayout = () => {
       setIsEditing(false);
     }
   };
+
+  useEffect(() => {
+    setEditedName(projectName);
+  }, [projectName]);
 
   return (
     <div className='fixed h-screen w-screen overflow-hidden'>

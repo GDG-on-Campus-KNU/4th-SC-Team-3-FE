@@ -17,6 +17,7 @@ import { useNodeDragStopHandler } from '../hooks/useNodeDragStopHandler';
 import { edgeTypes } from '../lib/edge.type';
 import { nodeTypes } from '../lib/node.type';
 import useDnDStore from '../stores/DnDStore';
+import useProjectStore from '../stores/projectStore';
 import useSelectedObjectStore from '../stores/selectObjectStore';
 import {
   ReactFlow,
@@ -34,6 +35,7 @@ const initialNodes: Node[] = [];
 const initialEdges: Edge[] = [];
 
 export default function Canvas() {
+  // const { setProjectName } = useProjectStore();
   const { pid } = useParams<{ pid: string }>();
   const reactFlowInstance = useReactFlow();
 
