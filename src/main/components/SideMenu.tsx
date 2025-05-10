@@ -34,7 +34,13 @@ export default function SideMenu(props: { selectedType: string | null }) {
     },
     {
       type: 'image',
-      models: ['Gemi', 'Gemi1', 'Gemi2', 'Gemi3', 'Gemi4'],
+      models: [
+        'gemini-2.0-flash',
+        'OpenAI DALL·E 3',
+        'Stability AI Stable Diffusion XL',
+        'Adobe Firefly',
+        'Midjourney v6',
+      ],
     },
     {
       type: 'audio',
