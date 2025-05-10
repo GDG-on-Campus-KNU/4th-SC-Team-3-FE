@@ -111,7 +111,7 @@ export function TextPromptNodeInput({
 
       <div className='m-[5px] flex h-[150px] w-[235px] flex-col items-stretch rounded-sm bg-[#C9DCF9] p-[5px] transition-all duration-300'>
         <textarea
-          className='m-[5px] h-[100px] w-[215px] resize-none bg-transparent placeholder-[#808080] focus-visible:outline-none group-hover:placeholder-[#666666]'
+          className='nodrag m-[5px] h-[100px] w-[215px] resize-none bg-transparent placeholder-[#808080] focus-visible:outline-none group-hover:placeholder-[#666666]'
           onClick={handleTextareaClick}
           onChange={handleTextareaChange}
           placeholder='텍스트를 입력해 주세요'

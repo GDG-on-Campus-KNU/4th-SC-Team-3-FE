@@ -22,7 +22,6 @@ export function TextNodeInput({
     { id: `${id}-item-4`, name: 'Category 4', value: 'Value 4', parentId: id },
   ];
 
-  const { setNodes, updateNodeData } = useReactFlow();
   const [isConverting, setIsConverting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState<string | null>(data.value || null);
@@ -47,57 +46,6 @@ export function TextNodeInput({
       setIsLoading(false);
     }, 2000); // 2초 후에 이미지 URL 변경
   }, [hasRightConnection]);
-
-  const getAnalyzedCategories = async () => {
-    return (await analyzeTextNode(data.value!)).map((category: any, index: number) => {
-      return {
-        id: `${id}-item-${index + 1}`,
-        name: category.key,
-        value: category.value,
-        parentId: id,
-      };
-    });
-  };
-
-  const handleConvertClick = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setIsConverting(true);
-    try {
-      const categories = await getAnalyzedCategories();
-      setNodes((nds) =>
-        nds.map((node) => {
-          if (node.id === id) {
-            return {
-              ...node,
-              type: 'category',
-              data: {
-                categories: categories,
-              },
-              position: node.position,
-            };
-          }
-          return node;
-        }),
-      );
-    } catch (error) {
-      toast({
-        title: '카테고리 변환에 실패했습니다.',
-        description: '알 수 없는 오류가 발생했습니다.',
-        variant: 'destructive',
-        duration: 3000,
-      });
-    } finally {
-      setIsConverting(false);
-    }
-  };
-
-  const handleTextareaClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-  };
-
-  const handleTextareaChange = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
-    updateNodeData(id, { value: evt.target.value });
-  };
 
   return (
     <div className='group flex flex-col rounded-md border border-transparent bg-white transition-all duration-300 hover:border-[#C9DCF9]/50 hover:shadow-lg'>
