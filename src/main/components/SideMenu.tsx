@@ -30,16 +30,22 @@ export default function SideMenu(props: { selectedType: string | null }) {
   const models: AIModels[] = [
     {
       type: 'text',
-      models: ['ChatGPT', 'aaaaaa', 'bbbbbb', 'cccccc', 'dddddT', 'asdfasdfasdf'],
+      models: [
+        'Gemini 1.5 Pro',
+        'OpenAI GPT-4o Turbo',
+        'Anthropic Claude 3 Opus',
+        'Meta Llama 3 70B',
+        'Mistral Large',
+      ],
     },
     {
       type: 'image',
       models: [
-        'gemini-2.0-flash',
+        'Gemini-2.0-flash',
         'OpenAI DALL·E 3',
-        'Stability AI Stable Diffusion XL',
-        'Adobe Firefly',
         'Midjourney v6',
+        'Stability AI SDXL',
+        'Adobe Firefly',
       ],
     },
     {
