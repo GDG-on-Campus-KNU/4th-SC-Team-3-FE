@@ -8,5 +8,6 @@ export const analyzeTextNode = async (content: string) => {
     return response.data;
   } catch (error) {
     console.error('❌ 노드 분석 실패:', error);
+    throw error;
   }
 };

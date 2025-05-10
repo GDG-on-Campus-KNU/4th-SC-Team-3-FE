@@ -10,7 +10,7 @@ export const axiosClient = axios.create({
 
 // 응답 인터셉터: 에러 처리
 axiosClient.interceptors.response.use(
-  (response) => response.data, // 응답 데이터만 반환
+  (response) => response.data,
   (error) => {
     if (error.response?.status === 401) {
       console.error('Unauthorized Error:', error);
