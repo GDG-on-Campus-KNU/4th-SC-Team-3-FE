@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import ProfilePiper from '@/assets/dashboard/img-profile-piper.png';
 import { fetchMember } from '@/dashboard/api/fetchMember';
 import useMemberStore from '@/dashboard/stores/MemberStore';
+import { useToast } from '@/global/hooks/use-toast';
 import { Button } from '@/global/ui';
 
 const getLargerGoogleProfileImage = (url: string, size: number = 256): string => {
@@ -12,8 +13,16 @@ const getLargerGoogleProfileImage = (url: string, size: number = 256): string =>
 
 export const ProfileSection = () => {
   const { member } = useMemberStore();
+  const { toast } = useToast();
   const navigate = useNavigate();
   const [profileImageError, setProfileImageError] = useState(false);
+  const handleMyPageClick = () => {
+    toast({
+      duration: 2000,
+      title: '준비 중입니다.',
+      description: '해당 기능은 현재 준비 중입니다.',
+    });
+  };
 
   return (
     <div className='w-full'>
@@ -48,7 +57,9 @@ export const ProfileSection = () => {
           오늘은 어떤 플로우를 만드시나요?
         </h1>
         {member ? (
-          <Button className='mt-10 h-10 w-44 bg-[#5B5B5B] text-white'>마이페이지</Button>
+          <Button className='mt-10 h-10 w-44 bg-[#5B5B5B] text-white' onClick={handleMyPageClick}>
+            마이페이지
+          </Button>
         ) : (
           <Button
             className='mt-10 h-10 w-44 border border-[#3A7DE8] text-[#3A7DE8]'
