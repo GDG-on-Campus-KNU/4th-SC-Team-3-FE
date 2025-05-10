@@ -6,6 +6,7 @@ import { useLocation } from 'react-router-dom';
 import useProjectStore from '@/main/stores/projectStore';
 
 import logo from '../../assets/logo.svg';
+import { Toaster } from '../ui/toaster';
 
 export const RootLayout = () => {
   const { projectName, setProjectName } = useProjectStore();
@@ -72,6 +73,7 @@ export const RootLayout = () => {
       </div>
       <div className='h-[calc(100dvh-3rem)] overflow-y-auto'>
         <Outlet />
+        <Toaster />
       </div>
     </div>
   );

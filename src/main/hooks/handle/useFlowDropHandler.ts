@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 
+import { useToast } from '@/global/hooks/use-toast';
 import { Node, ReactFlowInstance } from '@xyflow/react';
 
 export interface CategoryItemData {
@@ -16,6 +17,7 @@ export const useFlowDropHandler = (
   nodeLength: number,
   setNodes: (updater: (nodes: Node[]) => Node[]) => void,
 ) => {
+  const { toast } = useToast();
   const onDrop = useCallback(
     (event: React.DragEvent<HTMLDivElement>) => {
       event.preventDefault();
@@ -28,6 +30,14 @@ export const useFlowDropHandler = (
 
       const raw = event.dataTransfer.getData('application/reactflow-item');
 
+      if (nodeType === 'text') {
+        event.preventDefault();
+        toast({
+          title: '지원 예정인 기능입니다✨',
+          description: '곧 사용 가능한 노드가 추가될 예정이에요.',
+        });
+        return;
+      }
       if (nodeType === 'categoryItem' && raw) {
         const item = JSON.parse(raw) as CategoryItemData;
 
