@@ -19,8 +19,9 @@ export const ProfileSection = () => {
   const handleMyPageClick = () => {
     toast({
       duration: 2000,
-      title: '준비 중입니다.',
+      title: '준비 중입니다✨',
       description: '해당 기능은 현재 준비 중입니다.',
+      variant: 'info',
     });
   };
 
