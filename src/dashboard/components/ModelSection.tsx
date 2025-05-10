@@ -102,7 +102,11 @@ export const ModelSection = () => {
           <div className='grid grid-cols-4 gap-5'>
             {models.map((model) => (
               <div key={model.name} className='flex flex-col'>
-                <img src={model.thumbnail} alt={model.name} className='h-[200px] rounded-lg' />
+                <img
+                  src={model.thumbnail}
+                  alt={model.name}
+                  className='h-[200px] rounded-lg transition-transform duration-300 hover:scale-105'
+                />
                 <p className='mt-2 truncate text-base text-black'>{model.name}</p>
               </div>
             ))}
