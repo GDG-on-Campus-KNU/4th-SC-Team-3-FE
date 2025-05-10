@@ -5,6 +5,7 @@ import ImageNodeInput from './nodes/image/ImageNodeInput';
 import ImageUploadNodeInput from './nodes/image/ImageUploadNodeInput';
 import TextNodeInput from './nodes/text/TextNodeInput';
 import TextPromptNodeInput from './nodes/text/TextPromptNodeInput';
+import { useToast } from '@/global/hooks/use-toast';
 
 export interface AIModels {
   type: string;
@@ -13,6 +14,7 @@ export interface AIModels {
 
 export default function SideMenu(props: { selectedType: string | null }) {
   const { setNodeType, setModelName } = useDnDStore();
+  const { toast } = useToast();
 
   const searchType =
     props.selectedType === 'text'
