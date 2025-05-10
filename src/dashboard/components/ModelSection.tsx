@@ -110,8 +110,9 @@ export const ModelSection = () => {
   const { toast } = useToast();
   const handleExpandClick = () => {
     toast({
+      variant: 'info',
       duration: 2000,
-      title: '준비 중입니다.',
+      title: '준비 중입니다✨',
       description: '해당 기능은 현재 준비 중입니다.',
     });
   };

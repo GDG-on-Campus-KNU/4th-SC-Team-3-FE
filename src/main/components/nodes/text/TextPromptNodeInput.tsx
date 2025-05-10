@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { ScaleLoader } from 'react-spinners';
 
+import axios, { AxiosError } from 'axios';
 import { Baseline, FunnelPlus, Play } from 'lucide-react';
 
 import { analyzeTextNode } from '@/main/api/analyzeTextNode';
@@ -64,12 +65,26 @@ export function TextPromptNodeInput({
         }),
       );
     } catch (error) {
-      toast({
-        title: '카테고리 변환에 실패했습니다.',
-        description: '알 수 없는 오류가 발생했습니다.',
-        variant: 'destructive',
-        duration: 3000,
-      });
+      if (axios.isAxiosError(error) && error.response) {
+        type ErrorResponse = {
+          status: number;
+          error: string;
+        };
+        const data = error.response.data as ErrorResponse;
+        toast({
+          title: '카테고리 변환에 실패했습니다.',
+          description: data.error,
+          variant: 'destructive',
+          duration: 3000,
+        });
+      } else {
+        toast({
+          variant: 'destructive',
+          title: '카테고리 변환에 실패했습니다.',
+          description: '알 수 없는 오류가 발생했습니다.',
+          duration: 3000,
+        });
+      }
     } finally {
       setIsConverting(false);
     }

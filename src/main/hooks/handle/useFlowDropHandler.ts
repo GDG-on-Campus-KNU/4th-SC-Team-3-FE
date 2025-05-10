@@ -23,8 +23,9 @@ export const useFlowDropHandler = (
       event.preventDefault();
       if (!nodeType || !reactFlowInstance) return;
 
-      if (nodeType === 'image' && modelName !== 'gemini-2.0-flash') {
+      if (nodeType === 'image' && modelName !== 'Gemini-2.0-flash') {
         toast({
+          variant: 'info',
           title: '지원 예정인 모델입니다✨',
           description: `${modelName} 노드는 아직 사용하실 수 없어요. 
 “gemini-2.0-flash” 모델만 드롭 가능합니다.`,
@@ -35,6 +36,7 @@ export const useFlowDropHandler = (
       if (nodeType === 'text') {
         event.preventDefault();
         toast({
+          variant: 'info',
           title: '지원 예정인 기능입니다✨',
           description: '곧 사용 가능한 노드가 추가될 예정이에요.',
         });
