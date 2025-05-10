@@ -23,12 +23,14 @@ export const useFlowDropHandler = (
       event.preventDefault();
       if (!nodeType || !reactFlowInstance) return;
 
-      const position = reactFlowInstance.screenToFlowPosition({
-        x: event.clientX,
-        y: event.clientY,
-      });
-
-      const raw = event.dataTransfer.getData('application/reactflow-item');
+      if (nodeType === 'image' && modelName !== 'gemini-2.0-flash') {
+        toast({
+          title: '지원 예정인 모델입니다✨',
+          description: `${modelName} 노드는 아직 사용하실 수 없어요. 
+“gemini-2.0-flash” 모델만 드롭 가능합니다.`,
+        });
+        return;
+      }
 
       if (nodeType === 'text') {
         event.preventDefault();
@@ -38,6 +40,14 @@ export const useFlowDropHandler = (
         });
         return;
       }
+
+      const position = reactFlowInstance.screenToFlowPosition({
+        x: event.clientX,
+        y: event.clientY,
+      });
+
+      const raw = event.dataTransfer.getData('application/reactflow-item');
+
       if (nodeType === 'categoryItem' && raw) {
         const item = JSON.parse(raw) as CategoryItemData;
 
