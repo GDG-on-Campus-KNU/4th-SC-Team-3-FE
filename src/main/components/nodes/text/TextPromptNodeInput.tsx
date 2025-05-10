@@ -79,9 +79,9 @@ export function TextPromptNodeInput({
         });
       } else {
         toast({
+          variant: 'destructive',
           title: '카테고리 변환에 실패했습니다.',
           description: '알 수 없는 오류가 발생했습니다.',
-          variant: 'destructive',
           duration: 3000,
         });
       }
