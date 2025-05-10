@@ -4,6 +4,7 @@ import useDnDStore from '../stores/DnDStore';
 import ImageNodeInput from './nodes/image/ImageNodeInput';
 import ImageUploadNodeInput from './nodes/image/ImageUploadNodeInput';
 import TextNodeInput from './nodes/text/TextNodeInput';
+import TextPromptNodeInput from './nodes/text/TextPromptNodeInput';
 
 export interface AIModels {
   type: string;
@@ -92,6 +93,26 @@ export default function SideMenu(props: { selectedType: string | null }) {
             <div className='w-full border-b-[2px] border-[#666666] opacity-15' />
             <p className='flex items-start px-4 pt-4 text-center text-sm font-semibold text-[#666666]'>
               이미지 AI 모델 노드
+            </p>
+          </div>
+        )}
+        {props.selectedType === 'text' && (
+          <div>
+            <p className='flex items-start px-4 text-center text-sm font-semibold text-[#666666]'>
+              텍스트 입력용 노드
+            </p>
+            <div
+              key='special-text-node'
+              className='m-3 h-[200px] text-black'
+              draggable
+              onDragStart={(e) => onDragStart(e, 'textPrompt', 'SPECIAL_MODEL')}
+            >
+              {/* 이 컴포넌트를 원하는 대로 구현하세요 */}
+              <TextPromptNodeInput id='text' data={{ model: 'text', value: '' }} />
+            </div>
+            <div className='w-full border-b-[2px] border-[#666666] opacity-15' />
+            <p className='flex items-start px-4 pt-4 text-center text-sm font-semibold text-[#666666]'>
+              텍스트 AI 모델 노드
             </p>
           </div>
         )}
