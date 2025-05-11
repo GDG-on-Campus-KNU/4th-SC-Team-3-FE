@@ -22,22 +22,19 @@ export function useThumbnailCache(
       const el = wrapperRef.current;
       if (!el || !(el instanceof HTMLElement)) return;
 
-      const HIDE_SELECTORS = ['.react-flow__minimap', '.react-flow__controls'];
-      const originalDisplays = new Map<Element, string>();
-
-      HIDE_SELECTORS.forEach((selector) => {
-        el.querySelectorAll(selector).forEach((el) => {
-          originalDisplays.set(el, (el as HTMLElement).style.display);
-          (el as HTMLElement).style.display = 'none';
-        });
-      });
-
       try {
         const png = await toPng(el, {
           cacheBust: true,
           backgroundColor: '#EDEDED',
           canvasWidth: window.innerWidth,
           canvasHeight: window.innerHeight,
+          filter: (node) => {
+            if (node.classList) {
+              return !node.classList.contains('react-flow__minimap') && 
+                !node.classList.contains('react-flow__controls');
+            }
+            return true;
+          },
         });
 
         if (isMounted) {
@@ -60,10 +57,6 @@ export function useThumbnailCache(
         }
       } catch (err) {
         console.warn('❗ 썸네일 캡처 실패', err);
-      } finally {
-        originalDisplays.forEach((display, el) => {
-          (el as HTMLElement).style.display = display || '';
-        });
       }
     };
 

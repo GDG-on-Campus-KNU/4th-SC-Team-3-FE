@@ -143,7 +143,7 @@ export const ModelSection = () => {
                 <img
                   src={thumbnail}
                   alt={name}
-                  className='h-[200px] rounded-lg transition-transform duration-300 group-hover:scale-105'
+                  className='h-[200px] object-cover rounded-lg transition-transform duration-300 group-hover:scale-105'
                 />
                 <p className='mt-2 truncate text-base text-black'>{name}</p>
               </a>

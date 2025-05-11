@@ -10,7 +10,7 @@ export default {
     profile: {
       first: 'Hello',
       second: '',
-      last: 'what kind of flow will you create today?',
+      last: 'What kind of flow will you create today?',
       myPage: 'My Page',
       login: 'Log in',
     },
@@ -36,7 +36,7 @@ export default {
       videoBased: 'Video-based AI models',
       audioBased: 'Audio-based AI models',
       explore: 'you can explore',
-      more: 'more',
+      more: 'More',
     },
   },
   sideMenu: {
