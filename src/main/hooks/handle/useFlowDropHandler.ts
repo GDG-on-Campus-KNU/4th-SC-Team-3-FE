@@ -35,7 +35,7 @@ export const useFlowDropHandler = (
         return;
       }
 
-      if (nodeType === 'text') {
+      if (nodeType === 'text' || nodeType === 'video' || nodeType === 'audio') {
         toast({
           variant: 'info',
           title: t('toast.notYetTitle2'),

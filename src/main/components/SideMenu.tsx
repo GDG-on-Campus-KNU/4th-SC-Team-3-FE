@@ -3,10 +3,12 @@ import { useTranslation } from 'react-i18next';
 import { Search } from 'lucide-react';
 
 import useDnDStore from '../stores/DnDStore';
+import AudioNodeInput from './nodes/audio/AudioNodeInput';
 import ImageNodeInput from './nodes/image/ImageNodeInput';
 import ImageUploadNodeInput from './nodes/image/ImageUploadNodeInput';
 import TextNodeInput from './nodes/text/TextNodeInput';
 import TextPromptNodeInput from './nodes/text/TextPromptNodeInput';
+import VideoNodeInput from './nodes/video/VideoNodeInput';
 import { useToast } from '@/global/hooks/use-toast';
 
 export interface AIModels {
@@ -53,11 +55,11 @@ export default function SideMenu(props: { selectedType: string | null }) {
     },
     {
       type: 'audio',
-      models: ['AudioMD1', 'AudioMD2', 'AudioMD3'],
+      models: ['ElevenLabs', 'Murf AI', 'Resemble AI', 'Descript', 'PlayHT'],
     },
     {
       type: 'video',
-      models: ['vdmd', 'vdmdvdmd'],
+      models: ['Runway ML', 'Synthesia', 'SkyReels', 'Descript'],
     },
   ];
 
@@ -148,6 +150,12 @@ export default function SideMenu(props: { selectedType: string | null }) {
               )}
               {props.selectedType === 'image' && (
                 <ImageNodeInput id={modelName} data={{ model: modelName }} />
+              )}
+              {props.selectedType === 'video' && (
+                <VideoNodeInput id={modelName} data={{ model: modelName }} />
+              )}
+              {props.selectedType === 'audio' && (
+                <AudioNodeInput id={modelName} data={{ model: modelName }} />
               )}
             </div>
           ))}
