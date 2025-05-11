@@ -10,9 +10,11 @@ import { fetchProjectList, Project } from '../api/fetchProjectList';
 import { formatUpdatedAt } from '../api/formatUpdatedAt';
 import { CreateProjectModal } from './modals/CreateProjectModal';
 import { DeleteConfirmModal } from './modals/DeleteConfirmModal';
+import { useToast } from '@/global/hooks/use-toast';
 
 export const ProjectSection = () => {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const navigate = useNavigate();
   const [projects, setProjects] = useState<Project[]>([]);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -28,6 +30,14 @@ export const ProjectSection = () => {
     loadProjects();
   }, []);
 
+  const handleExpandClick = () => {
+    toast({
+      variant: 'info',
+      duration: 2000,
+      title: t('toast.notYetTitle2'),
+      description: t('toast.notYetContent4'),
+    });
+  };
   const handleDelete = useCallback(async (projectId: number) => {
     await deleteProject(projectId);
     loadProjects();
@@ -46,7 +56,9 @@ export const ProjectSection = () => {
         <h1 className='text-2xl font-medium tracking-wide text-[#505050]'>
           {t('dashboard.project.title')}
         </h1>
-        <h3 className='text-[#808080]'>+ {t('dashboard.project.more')}</h3>
+        <button onClick={handleExpandClick} className='text-[#808080]'>
+          + {t('dashboard.project.more')}
+        </button>
       </div>
 
       <div className='mt-5 flex h-full w-full flex-wrap items-center justify-start gap-5'>

@@ -8,7 +8,7 @@ export default {
       bottom: 'be a part of it!',
     },
     profile: {
-      first: 'Hello,',
+      first: 'Hello',
       second: '',
       last: 'what kind of flow will you create today?',
       myPage: 'My Page',
@@ -40,10 +40,10 @@ export default {
     },
   },
   sideMenu: {
-    textSerach: 'Search text-based AI models',
-    imageSerach: 'Search image-based AI models',
-    videoSerach: 'Search video-based AI models',
-    audioSerach: 'Search audio-based AI models',
+    textSerach: 'Search text-based AI',
+    imageSerach: 'Search image-based AI',
+    videoSerach: 'Search video-based AI',
+    audioSerach: 'Search audio-based AI',
     textNode: 'Text input node',
     textAINode: 'Text AI model node',
     imageNode: 'Image input node',
