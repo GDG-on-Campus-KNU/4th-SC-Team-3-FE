@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { FilePlus, Image, Expand } from 'lucide-react';
 
@@ -10,6 +11,7 @@ export function ImageUploadNodeInput({ id, data }: { id: string; data: { value?:
   const { updateNodeData } = useReactFlow();
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [isModalOpen, setModalOpen] = useState(false);
+  const { t } = useTranslation();
 
   const handleImageUpload = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -97,7 +99,7 @@ export function ImageUploadNodeInput({ id, data }: { id: string; data: { value?:
               <span
                 className={`self-center text-[#808080] transition-all duration-300 group-hover:font-medium group-hover:text-[#666666]`}
               >
-                파일 가져오기
+                {t('node.imagePlaceholder')}
               </span>
             </div>
             <div

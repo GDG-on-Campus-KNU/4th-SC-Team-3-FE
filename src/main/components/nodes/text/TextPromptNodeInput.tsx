@@ -1,8 +1,9 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ScaleLoader } from 'react-spinners';
 
-import axios, { AxiosError } from 'axios';
-import { Baseline, FunnelPlus, Play } from 'lucide-react';
+import axios from 'axios';
+import { Baseline, FunnelPlus } from 'lucide-react';
 
 import { analyzeTextNode } from '@/main/api/analyzeTextNode';
 
@@ -16,16 +17,9 @@ export function TextPromptNodeInput({
   id: string;
   data: { model: string; value?: string };
 }) {
-  const mockCategories = [
-    { id: `${id}-item-1`, name: 'Category 1', value: 'Value 1', parentId: id },
-    { id: `${id}-item-2`, name: 'Category 2', value: 'Value 2', parentId: id },
-    { id: `${id}-item-3`, name: 'Category 3', value: 'Value 3', parentId: id },
-    { id: `${id}-item-4`, name: 'Category 4', value: 'Value 4', parentId: id },
-  ];
-
+  const { t } = useTranslation();
   const { setNodes, updateNodeData } = useReactFlow();
   const [isConverting, setIsConverting] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState<string | null>(data.value || null);
 
   const edges = useStore((state) => state.edges);
@@ -72,16 +66,16 @@ export function TextPromptNodeInput({
         };
         const data = error.response.data as ErrorResponse;
         toast({
-          title: '카테고리 변환에 실패했습니다.',
+          title: t('toast.failTitle'),
           description: data.error,
           variant: 'destructive',
           duration: 3000,
         });
       } else {
         toast({
+          title: t('toast.failTitle'),
+          description: t('toast.failContent'),
           variant: 'destructive',
-          title: '카테고리 변환에 실패했습니다.',
-          description: '알 수 없는 오류가 발생했습니다.',
           duration: 3000,
         });
       }
@@ -104,9 +98,6 @@ export function TextPromptNodeInput({
         <div className='flex h-[28px] w-[28px] flex-col justify-center self-center rounded-sm border-2 border-pipy-blue'>
           <Baseline size='18' strokeWidth='2.5' className='self-center text-pipy-blue' />
         </div>
-        {/* <div className='font-[Noto Sans] ml-2 h-[28px] w-[180px] pt-0.5 text-left text-[16px] font-semibold text-[#000000]'>
-          {data.model}
-        </div> */}
       </div>
 
       <div className='m-[5px] flex h-[150px] w-[235px] flex-col items-stretch rounded-sm bg-[#C9DCF9] p-[5px] transition-all duration-300'>
@@ -114,21 +105,21 @@ export function TextPromptNodeInput({
           className='nodrag m-[5px] h-[100px] w-[215px] resize-none bg-transparent placeholder-[#808080] focus-visible:outline-none group-hover:placeholder-[#666666]'
           onClick={handleTextareaClick}
           onChange={handleTextareaChange}
-          placeholder='텍스트를 입력해 주세요'
+          placeholder={t('node.textPlaceholder')}
           value={data.value || ''}
         />
 
         <button
           onClick={handleConvertClick}
-          disabled={isConverting || !mockCategories || hasRightConnection}
+          disabled={isConverting || hasRightConnection}
           className={`group/btn flex h-[35px] w-[225px] flex-row items-center justify-center self-end rounded-sm transition-all duration-300 ${
-            isConverting || !mockCategories || hasRightConnection
+            isConverting || hasRightConnection
               ? 'cursor-not-allowed bg-gray-400'
               : 'bg-[#808080] hover:bg-[#3A7DE8] hover:shadow-md'
           }`}
         >
           {isConverting ? (
-            <span className='text-white'>변환 중...</span>
+            <span className='text-white'>...</span>
           ) : (
             <>
               <FunnelPlus
@@ -142,7 +133,7 @@ export function TextPromptNodeInput({
                   !isConverting && 'group-hover/btn:font-semibold'
                 }`}
               >
-                카테고리로 변환
+                {t('node.convertButton')}
               </span>
             </>
           )}

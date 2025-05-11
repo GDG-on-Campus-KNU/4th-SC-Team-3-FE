@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import ProfilePiper from '@/assets/dashboard/img-profile-piper.png';
@@ -12,6 +13,7 @@ const getLargerGoogleProfileImage = (url: string, size: number = 256): string =>
 };
 
 export const ProfileSection = () => {
+  const { t } = useTranslation();
   const { member } = useMemberStore();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -19,8 +21,8 @@ export const ProfileSection = () => {
   const handleMyPageClick = () => {
     toast({
       duration: 2000,
-      title: '준비 중입니다✨',
-      description: '해당 기능은 현재 준비 중입니다.',
+      title: t('toast.notYetTitle'),
+      description: t('toast.notYetContent4'),
       variant: 'info',
     });
   };
@@ -46,27 +48,28 @@ export const ProfileSection = () => {
           )}
         </div>
         <h1 className='ml-[250px] mt-7 text-3xl font-medium tracking-wide text-[#5B5B5B]'>
-          안녕하세요
+          {t('dashboard.profile.first')}
           {member ? (
             <>
-              , <span className='font-bold'>{member.name}</span>님
+              , <span className='font-bold'>{member.name}</span>
+              {t('dashboard.profile.second')}
             </>
           ) : (
             <></>
           )}
           !<br />
-          오늘은 어떤 플로우를 만드시나요?
+          {t('dashboard.profile.last')}
         </h1>
         {member ? (
           <Button className='mt-10 h-10 w-44 bg-[#5B5B5B] text-white' onClick={handleMyPageClick}>
-            마이페이지
+            {t('dashboard.profile.myPage')}
           </Button>
         ) : (
           <Button
             className='mt-10 h-10 w-44 border border-[#3A7DE8] text-[#3A7DE8]'
             onClick={() => navigate('/signin')}
           >
-            로그인하기
+            {t('dashboard.profile.login')}
           </Button>
         )}
       </div>

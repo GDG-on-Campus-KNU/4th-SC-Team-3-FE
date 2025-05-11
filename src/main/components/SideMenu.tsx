@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 import { Search } from 'lucide-react';
 
 import useDnDStore from '../stores/DnDStore';
@@ -13,18 +15,19 @@ export interface AIModels {
 }
 
 export default function SideMenu(props: { selectedType: string | null }) {
+  const { t } = useTranslation();
   const { setNodeType, setModelName } = useDnDStore();
   const { toast } = useToast();
 
   const searchType =
     props.selectedType === 'text'
-      ? '텍스트'
+      ? t('sideMenu.textSerach')
       : props.selectedType === 'image'
-        ? '이미지'
+        ? t('sideMenu.imageSerach')
         : props.selectedType === 'video'
-          ? '비디오'
+          ? t('sideMenu.videoSerach')
           : props.selectedType === 'audio'
-            ? '오디오'
+            ? t('sideMenu.audioSerach')
             : '';
 
   const models: AIModels[] = [
@@ -82,7 +85,7 @@ export default function SideMenu(props: { selectedType: string | null }) {
           <input
             type='search'
             name='searchAIModel'
-            placeholder={`${searchType} AI 모델 검색`}
+            placeholder={searchType}
             className='font-[Noto Sans] h-[30px] w-[180px] self-center bg-transparent text-left text-[16px] font-medium placeholder-[#666666] focus-visible:outline-none'
           />
         </div>
@@ -93,7 +96,7 @@ export default function SideMenu(props: { selectedType: string | null }) {
         {props.selectedType === 'image' && (
           <div>
             <p className='flex items-start px-4 text-center text-sm font-semibold text-[#666666]'>
-              이미지 업로드용 노드
+              {t('sideMenu.imageNode')}
             </p>
             <div
               key='special-image-node'
@@ -101,19 +104,18 @@ export default function SideMenu(props: { selectedType: string | null }) {
               draggable
               onDragStart={(e) => onDragStart(e, 'imageUpload', 'SPECIAL_MODEL')}
             >
-              {/* 이 컴포넌트를 원하는 대로 구현하세요 */}
               <ImageUploadNodeInput id='imageUpload' data={{ value: 'default' }} />
             </div>
             <div className='w-full border-b-[2px] border-[#666666] opacity-15' />
             <p className='flex items-start px-4 pt-4 text-center text-sm font-semibold text-[#666666]'>
-              이미지 AI 모델 노드
+              {t('sideMenu.imageAINode')}
             </p>
           </div>
         )}
         {props.selectedType === 'text' && (
           <div>
             <p className='flex items-start px-4 text-center text-sm font-semibold text-[#666666]'>
-              텍스트 입력용 노드
+              {t('sideMenu.textNode')}
             </p>
             <div
               key='special-text-node'
@@ -121,12 +123,11 @@ export default function SideMenu(props: { selectedType: string | null }) {
               draggable
               onDragStart={(e) => onDragStart(e, 'textPrompt', 'SPECIAL_MODEL')}
             >
-              {/* 이 컴포넌트를 원하는 대로 구현하세요 */}
               <TextPromptNodeInput id='text' data={{ model: 'text', value: '' }} />
             </div>
             <div className='w-full border-b-[2px] border-[#666666] opacity-15' />
             <p className='flex items-start px-4 pt-4 text-center text-sm font-semibold text-[#666666]'>
-              텍스트 AI 모델 노드
+              {t('sideMenu.textAINode')}
             </p>
           </div>
         )}

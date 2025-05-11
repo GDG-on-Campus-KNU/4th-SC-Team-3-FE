@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useToast } from '@/global/hooks/use-toast';
 import { Node, ReactFlowInstance } from '@xyflow/react';
@@ -18,6 +19,8 @@ export const useFlowDropHandler = (
   setNodes: (updater: (nodes: Node[]) => Node[]) => void,
 ) => {
   const { toast } = useToast();
+  const { t } = useTranslation();
+
   const onDrop = useCallback(
     (event: React.DragEvent<HTMLDivElement>) => {
       event.preventDefault();
@@ -26,19 +29,17 @@ export const useFlowDropHandler = (
       if (nodeType === 'image' && modelName !== 'Gemini-2.0-flash') {
         toast({
           variant: 'info',
-          title: '지원 예정인 모델입니다✨',
-          description: `${modelName} 노드는 아직 사용하실 수 없어요. 
-“gemini-2.0-flash” 모델만 드롭 가능합니다.`,
+          title: t('toast.notYetTitle'),
+          description: `${modelName} ${t('toast.notYetContent2')} ${t('toast.notYetContent3')}`,
         });
         return;
       }
 
       if (nodeType === 'text') {
-        event.preventDefault();
         toast({
           variant: 'info',
-          title: '지원 예정인 기능입니다✨',
-          description: '곧 사용 가능한 노드가 추가될 예정이에요.',
+          title: t('toast.notYetTitle2'),
+          description: t('toast.notYetContent'),
         });
         return;
       }
@@ -95,7 +96,7 @@ export const useFlowDropHandler = (
 
       setNodes((nds) => nds.concat(newNode));
     },
-    [reactFlowInstance, nodeType, modelName, setNodes],
+    [reactFlowInstance, nodeType, modelName, setNodes, t],
   );
 
   return onDrop;
