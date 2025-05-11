@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import ImgElevenLabs from '@/assets/dashboard/thumbnail/audio/img-elevenlabs.png';
 import ImgMurf from '@/assets/dashboard/thumbnail/audio/img-murf.png';
@@ -29,8 +30,7 @@ interface Model {
 }
 
 interface SectionConfig {
-  key: string;
-  label: string;
+  key: 'text' | 'image' | 'video' | 'audio';
   color: string;
   models: Model[];
 }
@@ -38,7 +38,6 @@ interface SectionConfig {
 const SECTION_CONFIGS: SectionConfig[] = [
   {
     key: 'text',
-    label: '텍스트 중심 AI 모델',
     color: '#3A7DE8',
     models: [
       {
@@ -54,7 +53,6 @@ const SECTION_CONFIGS: SectionConfig[] = [
   },
   {
     key: 'image',
-    label: '이미지 중심 AI 모델',
     color: '#EAAF1E',
     models: [
       {
@@ -78,7 +76,6 @@ const SECTION_CONFIGS: SectionConfig[] = [
   },
   {
     key: 'video',
-    label: '비디오 중심 AI 모델',
     color: '#EF9EE1',
     models: [
       { name: 'Runway ML', thumbnail: ImgRunway, url: 'https://runwayml.com' },
@@ -90,7 +87,6 @@ const SECTION_CONFIGS: SectionConfig[] = [
   },
   {
     key: 'audio',
-    label: '오디오 중심 AI 모델',
     color: '#337758',
     models: [
       { name: 'ElevenLabs', thumbnail: ImgElevenLabs, url: 'https://elevenlabs.io/' },
@@ -107,26 +103,30 @@ const SECTION_CONFIGS: SectionConfig[] = [
 ];
 
 export const ModelSection = () => {
+  const { t } = useTranslation();
   const { toast } = useToast();
+
   const handleExpandClick = () => {
     toast({
       variant: 'info',
       duration: 2000,
-      title: '준비 중입니다✨',
-      description: '해당 기능은 현재 준비 중입니다.',
+      title: t('toast.notYetTitle2'),
+      description: t('toast.notYetContent4'),
     });
   };
+
   return (
     <>
-      {SECTION_CONFIGS.map(({ key, label, color, models }) => (
+      {SECTION_CONFIGS.map(({ key, color, models }) => (
         <section key={key} className='mt-14'>
           {/* 헤더 */}
           <div className='mb-5 flex items-center justify-between'>
             <h1 className='text-2xl font-bold tracking-wide text-[#505050]'>
-              <span style={{ color }}>{label}</span> 구경하기
+              <span style={{ color }}>{t(`dashboard.model.${key}Based`)}</span>{' '}
+              {t('dashboard.model.explore')}
             </h1>
             <button className='cursor-pointer text-[#808080]' onClick={handleExpandClick}>
-              + 더보기
+              + {t('dashboard.model.more')}
             </button>
           </div>
 
@@ -140,13 +140,11 @@ export const ModelSection = () => {
                 rel='noopener noreferrer'
                 className='group flex flex-col'
               >
-                {/* 썸네일 */}
                 <img
                   src={thumbnail}
                   alt={name}
                   className='h-[200px] rounded-lg transition-transform duration-300 group-hover:scale-105'
                 />
-                {/* 이름 */}
                 <p className='mt-2 truncate text-base text-black'>{name}</p>
               </a>
             ))}

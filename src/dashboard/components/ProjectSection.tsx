@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import { X } from 'lucide-react';
@@ -11,6 +12,7 @@ import { CreateProjectModal } from './modals/CreateProjectModal';
 import { DeleteConfirmModal } from './modals/DeleteConfirmModal';
 
 export const ProjectSection = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [projects, setProjects] = useState<Project[]>([]);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -41,8 +43,10 @@ export const ProjectSection = () => {
   return (
     <>
       <div className='relative mt-14 flex h-full w-full items-center justify-between'>
-        <h1 className='text-2xl font-medium tracking-wide text-[#505050]'>My 프로젝트</h1>
-        <h3 className='text-[#808080]'>+ My project 더보기</h3>
+        <h1 className='text-2xl font-medium tracking-wide text-[#505050]'>
+          {t('dashboard.project.title')}
+        </h1>
+        <h3 className='text-[#808080]'>+ {t('dashboard.project.more')}</h3>
       </div>
 
       <div className='mt-5 flex h-full w-full flex-wrap items-center justify-start gap-5'>
@@ -55,7 +59,7 @@ export const ProjectSection = () => {
             +
           </div>
           <p className='mb-4 mt-2 text-base text-[#808080] transition-all group-hover:text-[#3a7deb]'>
-            새 프로젝트 생성하기
+            {t('dashboard.project.create')}
           </p>
         </button>
 
@@ -100,7 +104,7 @@ export const ProjectSection = () => {
             </p>
 
             <p className='text-xs text-[#808080]'>
-              최종 수정: {formatUpdatedAt(project.updatedAt)}
+              {t('dashboard.project.lastModified')}: {formatUpdatedAt(project.updatedAt, t)}
             </p>
           </div>
         ))}

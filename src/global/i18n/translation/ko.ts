@@ -1,7 +1,89 @@
+import { fail } from 'assert';
+
 export default {
-  greeting: '안녕하세요',
-  login: {
-    title: '로그인',
-    button: '로그인하기',
+  loginPrompt1: '로그인을 통해',
+  loginPrompt2: '많은 기능과 플랜을 구경하세요!',
+  dashboard: {
+    title: {
+      top: 'AI 플랫폼의 탄생,',
+      middle: '파이피',
+      bottom: '와 함께해요!',
+    },
+    profile: {
+      first: '안녕하세요',
+      second: '님',
+      last: '오늘은 어떤 플로우를 만드시나요?',
+      myPage: '마이페이지',
+      login: '로그인하기',
+    },
+    project: {
+      title: 'My 프로젝트',
+      more: 'My project 더보기',
+      create: '새 프로젝트 생성하기',
+      lastModified: '최종 수정',
+      minitesAgo: '분 전',
+      hoursAgo: '시간 전',
+      yearsAgo: '년 전',
+      am: '오전',
+      pm: '오후',
+      year: '년',
+      month: '월',
+      day: '일',
+      unknown: '알 수 없음',
+      justNow: '방금 전',
+    },
+    model: {
+      textBased: '텍스트 중심 AI 모델',
+      imageBased: '이미지 중심 AI 모델',
+      videoBased: '비디오 중심 AI 모델',
+      audioBased: '오디오 중심 AI 모델',
+      explore: '구경하기',
+      more: '더보기',
+    },
+  },
+  sideMenu: {
+    textSerach: '텍스트 AI 모델 검색',
+    imageSerach: '이미지 AI 모델 검색',
+    videoSerach: '비디오 AI 모델 검색',
+    audioSerach: '오디오 AI 모델 검색',
+    textNode: '텍스트 입력용 노드',
+    textAINode: '텍스트 AI 모델 노드',
+    imageNode: '이미지 AI 모델 노드',
+    imageAINode: '이미지 AI 모델 노드',
+  },
+  sideButton: {
+    text: '텍스트',
+    image: '이미지',
+    video: '비디오',
+    audio: '오디오',
+  },
+  node: {
+    textPlaceholder: '텍스트를 입력해 주세요',
+    convertButton: '카테고리로 변환',
+    imagePlaceholder: '파일 가져오기',
+  },
+  toast: {
+    notYetTitle: '지원 예정인 모델입니다✨',
+    notYetTitle2: '준비 중입니다✨',
+    notYetContent: '곧 사용 가능한 노드가 추가될 예정이에요',
+    notYetContent2: '노드는 아직 사용하실 수 없어요.',
+    notYetContent3: '“gemini-2.0-flash” 모델만 드롭 가능합니다.',
+    notYetContent4: '해당 기능은 현재 준비 중입니다.',
+    failTitle: '카테고리 변환에 실패했습니다.',
+    failContent: '알 수 없는 오류가 발생했습니다.',
+  },
+  modal: {
+    createProject: {
+      title: '새 프로젝트 생성',
+      description: '프로젝트의 이름을 입력해주세요.',
+      create: '생성하기',
+    },
+    deleteProject: {
+      title: '프로젝트 삭제',
+      description: '해당 프로젝트를 삭제하시겠습니까?',
+      description2: '삭제를 하면 프로젝트를 복구할 수 없습니다.',
+      cancel: '취소하기',
+      delete: '삭제하기',
+    },
   },
 };
