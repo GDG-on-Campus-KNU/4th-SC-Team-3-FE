@@ -3,8 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import ProfilePiper from '@/assets/dashboard/img-profile-piper.png';
-import { fetchMember } from '@/dashboard/api/fetchMember';
-import useMemberStore from '@/dashboard/stores/MemberStore';
+import { MemberData } from '@/dashboard/api/fetchMember';
 import { useToast } from '@/global/hooks/use-toast';
 import { Button } from '@/global/ui';
 
@@ -12,12 +11,17 @@ const getLargerGoogleProfileImage = (url: string, size: number = 256): string =>
   return url.replace(/=s\d+-c$/, `=s${size}-c`);
 };
 
-export const ProfileSection = () => {
+export interface ProfileSectionProps {
+  isLoading: boolean;
+  member?: MemberData;
+}
+
+export const ProfileSection = ({ isLoading, member }: ProfileSectionProps) => {
   const { t } = useTranslation();
-  const { member } = useMemberStore();
   const { toast } = useToast();
   const navigate = useNavigate();
   const [profileImageError, setProfileImageError] = useState(false);
+
   const handleMyPageClick = () => {
     toast({
       duration: 2000,
@@ -26,6 +30,30 @@ export const ProfileSection = () => {
       variant: 'info',
     });
   };
+
+  if (isLoading) {
+    return (
+      <div className='w-full'>
+        <div className='relative flex h-full w-full items-center justify-between'>
+          {/* 원형 이미지 스켈레톤 */}
+          <div className='absolute -top-28 left-0 h-[230px] w-[230px] animate-pulse rounded-full bg-gray-200' />
+
+          {/* 텍스트 스켈레톤 */}
+          <div className='ml-[250px] mt-7 space-y-2'>
+            {/* 첫 줄 (큰 헤드라인 자리) */}
+            <div className='h-8 w-1/3 animate-pulse rounded bg-gray-200' />
+            {/* 두 줄째 자리 */}
+            <div className='h-6 w-1/4 animate-pulse rounded bg-gray-200' />
+            {/* 세 줄째 자리 */}
+            <div className='h-6 w-1/6 animate-pulse rounded bg-gray-200' />
+          </div>
+
+          {/* 버튼 스켈레톤 */}
+          <div className='mt-10 h-10 w-44 animate-pulse rounded bg-gray-200' />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className='w-full'>
@@ -54,9 +82,7 @@ export const ProfileSection = () => {
               , <span className='font-bold'>{member.name}</span>
               {t('dashboard.profile.second')}
             </>
-          ) : (
-            <></>
-          )}
+          ) : null}
           !<br />
           {t('dashboard.profile.last')}
         </h1>
