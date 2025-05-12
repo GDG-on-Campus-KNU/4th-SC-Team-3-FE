@@ -35,31 +35,33 @@ export default function TextEdge({
   return (
     <>
       <defs>
-        <filter id='edge-shadow' x='-50%' y='-50%' width='200%' height='200%'>
-          <feDropShadow
-            dx='0'
-            dy='0'
-            dur={'3s'}
-            stdDeviation='3'
-            floodColor='#333333'
-            floodOpacity='0.4'
-          />
-          <animate
-            xlinkHref='#shadow feDropShadow'
-            attributeName='stdDeviation'
-            dur={'3s ease-in-out'}
-            keyTimes='0; 0.5; 1'
-            keySplines='0.1 0.5 0.9 0.8'
-            repeatCount='1'
-          />
+        <filter id='edge-shadow' x='-100%' y='-100%' width='300%' height='300%'>
+          <feGaussianBlur in='SourceAlpha' stdDeviation='6' result='blur' />
+          <feOffset in='blur' dx='0' dy='0' result='offsetBlur' />
+          <feFlood floodColor='#333333' floodOpacity='0.6' result='color' />
+          <feComposite in='color' in2='offsetBlur' operator='in' result='shadow' />
+          <feMerge>
+            <feMergeNode in='shadow' />
+            <feMergeNode in='SourceGraphic' />
+          </feMerge>
         </filter>
       </defs>
-      <g
-        filter={hovered ? 'url(#edge-shadow)' : 'none'}
-        style={{ transition: 'filter 3s ease-in-out' }}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-      >
+      <g onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
+        {/* 그림자 path - 항상 렌더하고 투명도로 제어 */}
+        <path
+          d={edgePath}
+          fill='none'
+          stroke='#3A7DE8'
+          strokeWidth={18}
+          strokeOpacity={0.3}
+          filter='url(#edge-shadow)'
+          style={{
+            opacity: hovered ? 1 : 0,
+            transition: 'opacity 0.3s ease-in-out',
+          }}
+        />
+
+        {/* 실선 path */}
         <path d={edgePath} fill='none' stroke='#3A7DE8' strokeWidth={16} />
         <EdgeLabelRenderer>
           {labelX - sourceX > 56 &&
