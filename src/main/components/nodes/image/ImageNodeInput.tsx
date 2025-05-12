@@ -67,10 +67,10 @@ export function ImageNodeInput({
         className='relative m-[5px] flex h-[150px] w-[235px] flex-col justify-center overflow-hidden rounded-sm bg-[#FFF1D1] p-[5px] transition-all duration-300 group-hover:shadow-inner'
         style={{ cursor: 'pointer' }}
       >
-        {imageUrl ? (
+        {imageUrl || data.value ? (
           <>
             <img
-              src={imageUrl}
+              src={imageUrl ? imageUrl : data.value}
               alt='업로드된 이미지'
               className='h-[150px] w-[235px] rounded-sm object-cover transition-all duration-300 group-hover:shadow-inner'
               onError={(e) => {
