@@ -51,7 +51,10 @@ export const useImageGeneration = (id: string) => {
           return {
             contents: categories.map((cat: any) => ({
               key: cat.name,
-              value: cat.value,
+              value:
+                typeof cat.value === 'string'
+                  ? cat.value.split(',').map((item: string) => item.trim())
+                  : cat.value,
               type: 'category_prompt',
             })),
             type: 'group',
@@ -61,7 +64,10 @@ export const useImageGeneration = (id: string) => {
         if (node?.type === 'categoryItem') {
           return {
             key: node.data.name,
-            value: node.data.value,
+            value:
+              typeof node.data.value === 'string'
+                ? node.data.value.split(',').map((item: string) => item.trim())
+                : node.data.value,
             type: 'category_prompt',
           };
         }
