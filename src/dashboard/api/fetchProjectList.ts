@@ -29,8 +29,8 @@ export const fetchProjectList = async (): Promise<Project[]> => {
           ...project,
           thumbnail: local.thumbnail,
         };
-      } else if (local && local.timestamp > new Date(project.updatedAt).getTime()) {
-        console.log('로컬 썸네일 사용:', local.thumbnail);
+      } else if (local && local.timestamp > new Date(project.updatedAt).getTime() - 10 * 1000) {
+        // console.log('로컬 썸네일 사용:', local.thumbnail);
         return {
           ...project,
           thumbnail: local.thumbnail, // 최신이 로컬일 경우 덮어쓰기
