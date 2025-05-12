@@ -20,7 +20,7 @@ export default function DashBoardPage() {
         {/* 1440px 기준 양측 280px 여백 */}
         <ProfileSection isLoading={isLoading} member={member} />
         {/* 마이프로젝트 */}
-        {member ? <ProjectSection /> : <></>}
+        {member || isLoading ? <ProjectSection /> : <></>}
         {/* ai 모델 */}
         <ModelSection />
       </div>

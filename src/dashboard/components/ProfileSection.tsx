@@ -6,6 +6,7 @@ import ProfilePiper from '@/assets/dashboard/img-profile-piper.png';
 import { MemberData } from '@/dashboard/api/fetchMember';
 import { useToast } from '@/global/hooks/use-toast';
 import { Button } from '@/global/ui';
+import { Skeleton } from '@/global/ui/skeleton';
 
 const getLargerGoogleProfileImage = (url: string, size: number = 256): string => {
   return url.replace(/=s\d+-c$/, `=s${size}-c`);
@@ -34,22 +35,17 @@ export const ProfileSection = ({ isLoading, member }: ProfileSectionProps) => {
   if (isLoading) {
     return (
       <div className='w-full'>
+        {/* Profile Section */}
         <div className='relative flex h-full w-full items-center justify-between'>
-          {/* 원형 이미지 스켈레톤 */}
-          <div className='absolute -top-28 left-0 h-[230px] w-[230px] animate-pulse rounded-full bg-gray-200' />
-
-          {/* 텍스트 스켈레톤 */}
-          <div className='ml-[250px] mt-7 space-y-2'>
-            {/* 첫 줄 (큰 헤드라인 자리) */}
-            <div className='h-8 w-1/3 animate-pulse rounded bg-gray-200' />
-            {/* 두 줄째 자리 */}
-            <div className='h-6 w-1/4 animate-pulse rounded bg-gray-200' />
-            {/* 세 줄째 자리 */}
-            <div className='h-6 w-1/6 animate-pulse rounded bg-gray-200' />
+          <div className='absolute -top-28 left-0 h-[230px] w-[230px] overflow-hidden rounded-full border-[16px] border-white'>
+            <Skeleton className='absolute inset-0 rounded-full' />
           </div>
-
-          {/* 버튼 스켈레톤 */}
-          <div className='mt-10 h-10 w-44 animate-pulse rounded bg-gray-200' />
+          <h1 className='ml-[250px] mt-7 text-3xl font-medium tracking-wide text-[#5B5B5B]'>
+            {t('dashboard.profile.first') + ' '}
+            <br />
+            {t('dashboard.profile.last')}
+          </h1>
+          <Skeleton className='mt-10 h-10 w-44' />
         </div>
       </div>
     );
@@ -76,10 +72,10 @@ export const ProfileSection = ({ isLoading, member }: ProfileSectionProps) => {
           )}
         </div>
         <h1 className='ml-[250px] mt-7 text-3xl font-medium tracking-wide text-[#5B5B5B]'>
-          {t('dashboard.profile.first')}
+          {t('dashboard.profile.first')}{' '}
           {member ? (
             <>
-              , <span className='font-bold'>{member.name}</span>
+              <span className='font-bold'>{member.name}</span>
               {t('dashboard.profile.second')}
             </>
           ) : null}
