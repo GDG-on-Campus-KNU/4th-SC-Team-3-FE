@@ -39,7 +39,7 @@ export const useImageGeneration = (id: string) => {
       .map((edge) => nodes.find((node) => node.id === edge.source))
       .filter(Boolean)
       .map((node) => {
-        if (node?.type === 'text') {
+        if (node?.type === 'textPrompt') {
           return {
             content: node.data.value,
             type: 'text_prompt',
@@ -117,7 +117,7 @@ export const useImageGeneration = (id: string) => {
           const text = part.replace(/^data:\s*/, '').trim();
           if (!text) continue;
 
-          let evt: { event: string; data?: { url: string }, message?: string };
+          let evt: { event: string; data?: { url: string }; message?: string };
           try {
             evt = JSON.parse(text);
           } catch {
