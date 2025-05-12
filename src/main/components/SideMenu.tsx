@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Search } from 'lucide-react';
@@ -20,6 +21,8 @@ export default function SideMenu(props: { selectedType: string | null }) {
   const { t } = useTranslation();
   const { setNodeType, setModelName } = useDnDStore();
   const { toast } = useToast();
+
+  const [searchTerm, setSearchTerm] = useState('');
 
   const searchType =
     props.selectedType === 'text'
@@ -75,6 +78,10 @@ export default function SideMenu(props: { selectedType: string | null }) {
     event.dataTransfer.effectAllowed = 'move';
   };
 
+  const filteredModels = models
+    .find((model) => model.type === props.selectedType)
+    ?.models.filter((modelName) => modelName.toLowerCase().includes(searchTerm.toLowerCase()));
+
   return (
     <aside
       className={`${
@@ -89,14 +96,17 @@ export default function SideMenu(props: { selectedType: string | null }) {
             name='searchAIModel'
             placeholder={searchType}
             className='font-[Noto Sans] h-[30px] w-[180px] self-center bg-transparent text-left text-[16px] font-medium placeholder-[#666666] focus-visible:outline-none'
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
       </div>
+
       <div
         className={`flex h-[calc(100%-130px)] flex-col items-center self-center overflow-x-hidden overflow-y-scroll scroll-smooth p-4`}
       >
         {props.selectedType === 'image' && (
-          <div>
+          <>
             <p className='flex items-start px-4 text-center text-sm font-semibold text-[#666666]'>
               {t('sideMenu.imageNode')}
             </p>
@@ -112,10 +122,11 @@ export default function SideMenu(props: { selectedType: string | null }) {
             <p className='flex items-start px-4 pt-4 text-center text-sm font-semibold text-[#666666]'>
               {t('sideMenu.imageAINode')}
             </p>
-          </div>
+          </>
         )}
+
         {props.selectedType === 'text' && (
-          <div>
+          <>
             <p className='flex items-start px-4 text-center text-sm font-semibold text-[#666666]'>
               {t('sideMenu.textNode')}
             </p>
@@ -131,34 +142,33 @@ export default function SideMenu(props: { selectedType: string | null }) {
             <p className='flex items-start px-4 pt-4 text-center text-sm font-semibold text-[#666666]'>
               {t('sideMenu.textAINode')}
             </p>
-          </div>
+          </>
         )}
-        {models
-          .find((model) => model.type === props.selectedType)
-          ?.models.map((modelName, index) => (
-            <div
-              key={index}
-              id={modelName}
-              className='m-3 h-[200px] text-black'
-              draggable
-              onDragStart={(event) =>
-                onDragStart(event, props.selectedType ? props.selectedType : '', modelName)
-              }
-            >
-              {props.selectedType === 'text' && (
-                <TextNodeInput id={modelName} data={{ model: modelName }} />
-              )}
-              {props.selectedType === 'image' && (
-                <ImageNodeInput id={modelName} data={{ model: modelName }} />
-              )}
-              {props.selectedType === 'video' && (
-                <VideoNodeInput id={modelName} data={{ model: modelName }} />
-              )}
-              {props.selectedType === 'audio' && (
-                <AudioNodeInput id={modelName} data={{ model: modelName }} />
-              )}
-            </div>
-          ))}
+
+        {filteredModels?.map((modelName, index) => (
+          <div
+            key={index}
+            id={modelName}
+            className='m-3 h-[200px] text-black'
+            draggable
+            onDragStart={(event) =>
+              onDragStart(event, props.selectedType ? props.selectedType : '', modelName)
+            }
+          >
+            {props.selectedType === 'text' && (
+              <TextNodeInput id={modelName} data={{ model: modelName }} />
+            )}
+            {props.selectedType === 'image' && (
+              <ImageNodeInput id={modelName} data={{ model: modelName }} />
+            )}
+            {props.selectedType === 'video' && (
+              <VideoNodeInput id={modelName} data={{ model: modelName }} />
+            )}
+            {props.selectedType === 'audio' && (
+              <AudioNodeInput id={modelName} data={{ model: modelName }} />
+            )}
+          </div>
+        ))}
       </div>
     </aside>
   );
