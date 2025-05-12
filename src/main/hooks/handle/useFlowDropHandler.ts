@@ -88,7 +88,7 @@ export const useFlowDropHandler = (
       }
 
       const newNode: Node = {
-        id: `${nodeType}_node_${1 + nodeLength++}`,
+        id: `${nodeType}_node_${crypto.randomUUID()}`,
         type: nodeType,
         position,
         data: { model: modelName, data: null },
