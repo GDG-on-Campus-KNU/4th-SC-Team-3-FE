@@ -103,8 +103,8 @@ export function ImageNodeInput({
         </button>
       </div>
 
-      {isModalOpen && imageUrl && (
-        <ImageExpandModal url={imageUrl} onClose={() => setModalOpen(false)} />
+      {isModalOpen && (imageUrl || data.value) && (
+        <ImageExpandModal url={data.value || imageUrl || ''} onClose={() => setModalOpen(false)} />
       )}
 
       <Transition appear show={isResultOpen} as={Fragment}>
