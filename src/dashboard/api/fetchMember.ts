@@ -1,6 +1,6 @@
 import { axiosClient } from '@/global/api/axios';
 
-interface MemberData {
+export interface MemberData {
   memberId: number;
   name: string;
   picture: string | null;

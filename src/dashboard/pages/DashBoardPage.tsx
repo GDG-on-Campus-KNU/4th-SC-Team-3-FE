@@ -1,5 +1,3 @@
-import { useEffect } from 'react';
-
 import { DashBoardHeader } from '../components/DashBoardHeader';
 import { ModelSection } from '../components/ModelSection';
 import { ProfileSection } from '../components/ProfileSection';
