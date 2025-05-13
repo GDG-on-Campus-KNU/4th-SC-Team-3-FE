@@ -71,6 +71,8 @@ export default {
     notYetContent4: '해당 기능은 현재 준비 중입니다.',
     failTitle: '카테고리 변환에 실패했습니다.',
     failContent: '알 수 없는 오류가 발생했습니다.',
+    loginNotice: '로그인이 필요합니다✨',
+    loginNoticeContent: '이 기능은 로그인 후 사용 가능합니다.',
   },
   modal: {
     createProject: {

@@ -70,6 +70,8 @@ export default {
     notYetContent4: 'This feature is currently under preparation.',
     failTitle: 'Failed to convert to category',
     failContent: 'An unknown error has occurred.',
+    loginNotice: 'Login Required✨',
+    loginNoticeContent: 'Please log in to access this feature.',
   },
   modal: {
     createProject: {

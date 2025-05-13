@@ -12,7 +12,7 @@ import { CreateProjectModal } from './modals/CreateProjectModal';
 import { DeleteConfirmModal } from './modals/DeleteConfirmModal';
 import { useToast } from '@/global/hooks/use-toast';
 
-export const ProjectSection = () => {
+export const ProjectSection = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   const { t } = useTranslation();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -50,6 +50,21 @@ export const ProjectSection = () => {
     setNewProjectName('');
   };
 
+  const handleCreateProjectModal = async () => {
+    if (!isLoggedIn) {
+      toast({
+        variant: 'login',
+        duration: 1600,
+        title: t('toast.loginNotice'),
+        description: t('toast.loginNoticeContent'),
+      });
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      navigate('/signin');
+      return;
+    }
+    setIsCreateModalOpen(true);
+  };
+
   return (
     <>
       <div className='relative mt-14 flex h-full w-full items-center justify-between'>
@@ -65,7 +80,7 @@ export const ProjectSection = () => {
         {/* 새 프로젝트 생성 카드 */}
         <button
           className='group flex h-full w-[200px] flex-col transition-all duration-300 hover:scale-[1.02]'
-          onClick={() => setIsCreateModalOpen(true)}
+          onClick={handleCreateProjectModal}
         >
           <div className='flex h-[200px] items-center justify-center rounded-lg border-2 border-dashed border-[#D9D9D9] bg-[#EDEDED] text-5xl text-[#D9D9D9] transition-all group-hover:border-[#3a7deb] group-hover:text-[#3a7deb]'>
             +

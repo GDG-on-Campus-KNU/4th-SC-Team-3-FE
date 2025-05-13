@@ -14,10 +14,12 @@ const getLargerGoogleProfileImage = (url: string, size: number = 256): string =>
 
 export interface ProfileSectionProps {
   isLoading: boolean;
-  member?: MemberData;
+  isFetching?: boolean;
+  isError?: boolean;
+  member?: MemberData | null;
 }
 
-export const ProfileSection = ({ isLoading, member }: ProfileSectionProps) => {
+export const ProfileSection = ({ isLoading, isFetching, isError, member }: ProfileSectionProps) => {
   const { t } = useTranslation();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -32,7 +34,7 @@ export const ProfileSection = ({ isLoading, member }: ProfileSectionProps) => {
     });
   };
 
-  if (isLoading) {
+  if (isLoading || isFetching) {
     return (
       <div className='w-full'>
         {/* Profile Section */}
@@ -42,7 +44,7 @@ export const ProfileSection = ({ isLoading, member }: ProfileSectionProps) => {
           </div>
           <h1 className='ml-[250px] mt-7 text-3xl font-medium tracking-wide text-[#5B5B5B]'>
             {t('dashboard.profile.first') + ' '}
-            <br />
+            !<br />
             {t('dashboard.profile.last')}
           </h1>
           <Skeleton className='mt-10 h-10 w-44' />

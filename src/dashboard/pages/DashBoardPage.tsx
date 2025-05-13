@@ -1,3 +1,8 @@
+import { useEffect } from 'react';
+
+import { use } from 'i18next';
+
+import { fetchMember } from '../api/fetchMember';
 import { DashBoardHeader } from '../components/DashBoardHeader';
 import { ModelSection } from '../components/ModelSection';
 import { ProfileSection } from '../components/ProfileSection';
@@ -8,7 +13,9 @@ import ImageBottomPiper from '@/assets/dashboard/img-bottom-piper.png';
 // import useMemberStore from '@/dashboard/stores/MemberStore';
 
 export default function DashBoardPage() {
-  const { isLoading, member } = useFetchMember();
+  const { isFirstLoading, isFetching, isError, member } = useFetchMember();
+  const isLoggedIn = member !== null || member !== undefined;
+  const isProjectIn = member !== null;
 
   return (
     <div className='fixed h-screen w-screen overflow-x-hidden overflow-y-scroll bg-white'>
@@ -16,9 +23,15 @@ export default function DashBoardPage() {
 
       <div className='mx-[12%]'>
         {/* 1440px 기준 양측 280px 여백 */}
-        <ProfileSection isLoading={isLoading} member={member} />
+        <ProfileSection
+          isLoading={isFirstLoading && isLoggedIn}
+          isFetching={isFetching && isLoggedIn}
+          isError={isError}
+          member={member}
+        />
         {/* 마이프로젝트 */}
-        {member || isLoading ? <ProjectSection /> : <></>}
+        {/* {isProjectIn ? <ProjectSection /> : <></>} */}
+        <ProjectSection isLoggedIn={isProjectIn} />
         {/* ai 모델 */}
         <ModelSection />
       </div>
