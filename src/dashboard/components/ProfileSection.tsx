@@ -28,7 +28,7 @@ export const ProfileSection = ({ isLoading, isFetching, isError, member }: Profi
   const handleMyPageClick = () => {
     toast({
       duration: 2000,
-      title: t('toast.notYetTitle'),
+      title: t('toast.notYetTitle2'),
       description: t('toast.notYetContent4'),
       variant: 'info',
     });

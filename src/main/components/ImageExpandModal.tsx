@@ -34,7 +34,7 @@ function ImageExpandModal({ url, onClose }: ImageExpandModalProps) {
         }}
         className='overflow-hidden rounded bg-white p-2'
       >
-        <img src={url} alt='원본' className='h-full w-full object-contain' />
+        <img src={url} alt='original image' className='h-full w-full object-contain' />
       </div>
     </div>,
     document.body,

@@ -39,7 +39,7 @@ export function ImageNodeInput({
             generateImage();
           }}
           disabled={!hasLeftConnection}
-          title={hasLeftConnection ? '실행' : '왼쪽 노드가 연결되어야 실행할 수 있습니다'}
+          title={hasLeftConnection ? 'execute' : 'A left node must be connected to execute.'}
           className={`flex h-6 w-6 items-center justify-center rounded-full transition-all duration-200 ${
             hasLeftConnection
               ? 'cursor-pointer text-[#0a0702] hover:scale-125 hover:text-[#FFC845]'
@@ -71,7 +71,7 @@ export function ImageNodeInput({
           <>
             <img
               src={imageUrl ? imageUrl : data.value}
-              alt='업로드된 이미지'
+              alt='uploaded image'
               className='absolute inset-0 h-[150px] w-[235px] rounded-sm object-cover transition-all duration-300 group-hover:shadow-inner'
               onError={(e) => {
                 (e.target as HTMLImageElement).src = testImg;
@@ -79,7 +79,7 @@ export function ImageNodeInput({
             />
             <button
               className='absolute right-2 top-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/50 text-white opacity-0 transition-opacity duration-200 hover:bg-black/70 group-hover:opacity-100'
-              title='원본 크기로 보기'
+              title='see original size'
               onClick={() => setModalOpen(true)}
             >
               <Expand size={16} />
@@ -90,13 +90,13 @@ export function ImageNodeInput({
         )}
         {isLoading && (
           <div className='absolute inset-0 flex flex-col items-center justify-center bg-black/50'>
-            <img src={pipeSpinner} alt='로딩중...' className='h-10 w-10' />
+            <img src={pipeSpinner} alt='loading...' className='h-10 w-10' />
             <p className='text-white'>Loading...</p>
           </div>
         )}
         <button
           className='absolute right-2 top-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/50 text-white opacity-0 transition-opacity duration-200 hover:bg-black/70 group-hover:opacity-100'
-          title='원본 크기로 보기'
+          title='see original size'
           onClick={() => setModalOpen(true)}
         >
           <Expand size={16} />

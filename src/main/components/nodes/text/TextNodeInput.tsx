@@ -59,7 +59,7 @@ export function TextNodeInput({
         <button
           onClick={onPlayClick}
           disabled={hasRightConnection}
-          title={!hasRightConnection ? '실행' : '왼쪽 노드가 연결되어야 실행할 수 있습니다'}
+          title={!hasRightConnection ? 'execute' : 'A left node must be connected to execute.'}
           className={`flex h-6 w-6 items-center justify-center rounded-full transition-all duration-200 ${
             !hasRightConnection
               ? 'cursor-pointer text-[#0a0702] hover:scale-125'
