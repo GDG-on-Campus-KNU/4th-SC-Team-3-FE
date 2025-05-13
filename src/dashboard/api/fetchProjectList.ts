@@ -13,8 +13,6 @@ export const fetchProjectList = async (): Promise<Project[]> => {
     const response = await axiosClient.get<Project[]>('/projects');
     const serverProjects = response.data;
 
-    console.log('서버 프로젝트 목록:', serverProjects);
-
     const localData = localStorage.getItem('flow-thumbnails');
     const localThumbnails: {
       projectId: string;
@@ -30,20 +28,18 @@ export const fetchProjectList = async (): Promise<Project[]> => {
           thumbnail: local.thumbnail,
         };
       } else if (local && local.timestamp > new Date(project.updatedAt).getTime() - 10 * 1000) {
-        // console.log('로컬 썸네일 사용:', local.thumbnail);
         return {
           ...project,
           thumbnail: local.thumbnail, // 최신이 로컬일 경우 덮어쓰기
         };
       }
 
-      // console.log(project);
       return project;
     });
 
     return mergedProjects;
   } catch (error) {
-    console.error('프로젝트 목록 조회 실패:', error);
+    console.error('failed to load projects: ', error);
     return [];
   }
 };

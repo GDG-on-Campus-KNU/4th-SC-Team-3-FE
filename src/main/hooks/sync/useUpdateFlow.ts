@@ -55,7 +55,7 @@ export const useUpdateFlow = (
         );
         localStorage.setItem(LOCAL_CHANGE_TIMESTAMP_KEY, now.toISOString());
       } catch (err) {
-        console.error('❌ 서버 전송 실패:', err);
+        console.error('failed to send data to server:', err);
       }
     }, 1000);
 
@@ -88,9 +88,8 @@ export const useUpdateFlow = (
           const formData = new FormData();
           formData.append('thumbnail', file);
           await axiosClient.put(`/projects/${localData.pid}/thumbnail`, formData);
-          console.log('✅ 언마운트 시 썸네일 업로드 성공');
         } catch {
-          console.warn('❌ 언마운트 시 썸네일 업로드 실패');
+          console.warn('failed to upload thumbnail');
         }
       })();
     };
@@ -102,9 +101,8 @@ export const useUpdateFlow = (
         if (projectName && pid) {
           try {
             await updateProjectName(pid, projectName);
-            console.log('✅ 프로젝트 이름 업데이트 성공');
           } catch (err) {
-            console.warn('❌ 프로젝트 이름 업데이트 실패:', err);
+            console.warn('failed to edit project name:', err);
           }
         }
       })();

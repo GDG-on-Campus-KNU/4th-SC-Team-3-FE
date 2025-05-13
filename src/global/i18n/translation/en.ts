@@ -72,6 +72,11 @@ export default {
     failContent: 'An unknown error has occurred.',
     loginNotice: 'Login Required✨',
     loginNoticeContent: 'Please log in to access this feature.',
+    imageGenerationSuccessTitle: 'Image Generated',
+    imageGenerationSuccessDescription: 'The image has been successfully generated.',
+    imageGenerationErrorTitle: 'Image Generation Failed',
+    imageGenerationErrorDescription: 'An error occurred while generating the image.',
+    unknownError: 'An unknown error occurred.',
   },
   modal: {
     createProject: {

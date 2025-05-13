@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
 import { useToast } from '@/global/hooks/use-toast';
 import { useQueryClient } from '@tanstack/react-query';
-import { useReactFlow, useStore, Position } from '@xyflow/react';
+import { useReactFlow, useStore } from '@xyflow/react';
 
 export const useImageGeneration = (id: string) => {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
@@ -12,10 +13,12 @@ export const useImageGeneration = (id: string) => {
 
   const abortCtrlRef = useRef<AbortController>();
   const queryClient = useQueryClient();
-  const { getEdges, getNodes, setNodes } = useReactFlow();
+  const { setNodes } = useReactFlow();
   const { pid } = useParams<{ pid: string }>();
 
   const { toast } = useToast(); // useToast 훅 사용
+  const { t } = useTranslation();
+
   const edges = useStore((state) => state.edges);
   const nodes = useStore((state) => state.nodes);
   // 왼쪽 연결 확인
@@ -103,10 +106,10 @@ export const useImageGeneration = (id: string) => {
       // 상태 코드가 200이 아닌 경우 오류 처리
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.message || `서버 오류 발생 (${res.status} ${res.statusText})`);
+        throw new Error(errorData.message || `server error: (${res.status} ${res.statusText})`);
       }
 
-      if (!res.body) throw new Error('응답 데이터가 없습니다');
+      if (!res.body) throw new Error('no response body');
 
       reader = res.body.getReader();
       const decoder = new TextDecoder();
@@ -127,7 +130,7 @@ export const useImageGeneration = (id: string) => {
           try {
             evt = JSON.parse(text);
           } catch {
-            console.warn('불완전한 JSON, 다음 청크 대기…');
+            console.warn('incomplete JSON, waiting for more data');
             continue;
           }
 
@@ -151,11 +154,11 @@ export const useImageGeneration = (id: string) => {
             return;
           }
           if (evt.event === 'error') {
-            const message = evt.message || '알 수 없는 오류가 발생했습니다.';
+            // const message = evt.message || '알 수 없는 오류가 발생했습니다.';
             toast({
-              title: '사진 생성에 실패했습니다.',
-              description: message,
-              variant: 'destructive',
+              title: t('toast.imageGenerationSuccessTitle'),
+              description: t('toast.imageGenerationSuccessDescription'),
+              variant: 'default',
               duration: 3000,
             });
           }
@@ -165,8 +168,8 @@ export const useImageGeneration = (id: string) => {
       if (err.name !== 'AbortError') {
         console.error(err);
         toast({
-          title: '사진 생성에 실패했습니다.',
-          description: '알 수 없는 오류가 발생했습니다.',
+          title: t('toast.imageGenerationErrorTitle'),
+          description: t('toast.imageGenerationErrorDescription'),
           variant: 'destructive',
           duration: 3000,
         });

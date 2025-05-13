@@ -20,7 +20,7 @@ export const uploadFlowToServer = async (data: FlowSnapshot): Promise<void> => {
 export function deduplicateById(nodes: Node[], edges: Edge[]) {
   const nodeIds = new Set(nodes.map((n) => n.id));
   const filteredEdges = edges.filter((e) => !nodeIds.has(e.id)); // 중복 edge 제거
-  console.log;
+
   return {
     nodes: nodes,
     edges: filteredEdges,
@@ -59,7 +59,7 @@ export const useSyncFlow = (
           }
         }
       } catch (e) {
-        console.warn('로컬 로딩 실패:', e);
+        console.warn('failed to load local:', e);
       }
 
       try {
@@ -73,14 +73,12 @@ export const useSyncFlow = (
           timestamp: serverData.updatedAt,
           snapshot: JSON.parse(serverData.canvas),
         } as FlowSnapshot;
-        console.log('server:', serverSnapshot);
       } catch (e) {
-        console.warn('서버 로딩 실패:', e);
+        console.warn('failed to load server:', e);
       }
 
       // 아무 것도 없으면 기본값
       if (!localSnapshot && !serverSnapshot) {
-        console.log('신규 Flow. 기본값 사용');
         localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(DEFAULT_FLOW_SNAPSHOT));
         applySnapshot(DEFAULT_FLOW_SNAPSHOT);
         await uploadFlowToServer(DEFAULT_FLOW_SNAPSHOT);
@@ -93,7 +91,6 @@ export const useSyncFlow = (
         (localSnapshot && new Date(localSnapshot.timestamp) > new Date(serverSnapshot.timestamp))
           ? localSnapshot!
           : serverSnapshot;
-      console.log(latestSnapshot);
       applySnapshot(latestSnapshot);
 
       // 오래된 쪽 덮어쓰기

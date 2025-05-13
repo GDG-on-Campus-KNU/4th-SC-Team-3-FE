@@ -39,7 +39,7 @@ export function TextNodeInput({
   const onPlayClick = useCallback(() => {
     if (hasRightConnection) return;
     // TODO: 실행 로직
-    console.log('▶ play!');
+    // console.log('▶ play!');
     setIsLoading(true);
     setTimeout(() => {
       setImageUrl('https://example.com/new-image.png'); // 예시 URL

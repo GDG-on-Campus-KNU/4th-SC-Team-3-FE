@@ -73,6 +73,11 @@ export default {
     failContent: '알 수 없는 오류가 발생했습니다.',
     loginNotice: '로그인이 필요합니다✨',
     loginNoticeContent: '이 기능은 로그인 후 사용 가능합니다.',
+    imageGenerationSuccessTitle: '사진 생성 완료',
+    imageGenerationSuccessDescription: '이미지가 성공적으로 생성되었습니다.',
+    imageGenerationErrorTitle: '사진 생성 실패',
+    imageGenerationErrorDescription: '이미지 생성 중 오류가 발생했습니다.',
+    unknownError: '알 수 없는 오류가 발생했습니다.',
   },
   modal: {
     createProject: {
