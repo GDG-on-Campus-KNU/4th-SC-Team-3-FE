@@ -16,7 +16,7 @@ export interface ProfileSectionProps {
   isLoading: boolean;
   isFetching?: boolean;
   isError?: boolean;
-  member?: MemberData;
+  member?: MemberData | null;
 }
 
 export const ProfileSection = ({ isLoading, isFetching, isError, member }: ProfileSectionProps) => {
@@ -34,7 +34,7 @@ export const ProfileSection = ({ isLoading, isFetching, isError, member }: Profi
     });
   };
 
-  if (!isLoading && isFetching && !isError) {
+  if (isLoading || isFetching) {
     return (
       <div className='w-full'>
         {/* Profile Section */}
@@ -47,7 +47,9 @@ export const ProfileSection = ({ isLoading, isFetching, isError, member }: Profi
             <br />
             {t('dashboard.profile.last')}
           </h1>
-          <Skeleton className='mt-10 h-10 w-44' />
+          <Button className='mt-10 h-10 w-44 bg-[#5B5B5B] text-white' onClick={handleMyPageClick}>
+            {t('dashboard.profile.myPage')}
+          </Button>
         </div>
       </div>
     );

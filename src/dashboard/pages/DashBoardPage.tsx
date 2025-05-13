@@ -1,3 +1,8 @@
+import { useEffect } from 'react';
+
+import { use } from 'i18next';
+
+import { fetchMember } from '../api/fetchMember';
 import { DashBoardHeader } from '../components/DashBoardHeader';
 import { ModelSection } from '../components/ModelSection';
 import { ProfileSection } from '../components/ProfileSection';
@@ -9,6 +14,7 @@ import ImageBottomPiper from '@/assets/dashboard/img-bottom-piper.png';
 
 export default function DashBoardPage() {
   const { isFirstLoading, isFetching, isError, member } = useFetchMember();
+  const isLoggedIn = member !== null || member !== undefined; // 명시적인 로그인 상태 확인
 
   return (
     <div className='fixed h-screen w-screen overflow-x-hidden overflow-y-scroll bg-white'>
@@ -17,13 +23,13 @@ export default function DashBoardPage() {
       <div className='mx-[12%]'>
         {/* 1440px 기준 양측 280px 여백 */}
         <ProfileSection
-          isLoading={isFirstLoading}
-          isFetching={isFetching}
+          isLoading={isFirstLoading && isLoggedIn} // 로그인된 경우에만 로딩 상태 전달
+          isFetching={isFetching && isLoggedIn}
           isError={isError}
           member={member}
         />
         {/* 마이프로젝트 */}
-        {(member && !isError) || (isFetching && !isFirstLoading) ? <ProjectSection /> : <></>}
+        {isLoggedIn ? <ProjectSection /> : <></>}
         {/* ai 모델 */}
         <ModelSection />
       </div>
