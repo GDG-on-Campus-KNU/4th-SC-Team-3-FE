@@ -19,7 +19,7 @@ export function ImageUploadNodeInput({ id, data }: { id: string; data: { value?:
       if (!file) return;
 
       if (!file.type.startsWith('image/')) {
-        alert('이미지 파일만 업로드 가능합니다.');
+        alert('Please upload a valid image file.');
         return;
       }
 
@@ -75,7 +75,7 @@ export function ImageUploadNodeInput({ id, data }: { id: string; data: { value?:
             <button
               onClick={() => setModalOpen(true)}
               className='absolute right-2 top-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/50 text-white opacity-0 transition-opacity duration-200 hover:bg-black/70 group-hover:opacity-100'
-              title='원본 크기로 보기'
+              title='See original size'
             >
               <Expand size={16} />
             </button>
