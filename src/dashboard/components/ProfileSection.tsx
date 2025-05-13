@@ -14,10 +14,12 @@ const getLargerGoogleProfileImage = (url: string, size: number = 256): string =>
 
 export interface ProfileSectionProps {
   isLoading: boolean;
+  isFetching?: boolean;
+  isError?: boolean;
   member?: MemberData;
 }
 
-export const ProfileSection = ({ isLoading, member }: ProfileSectionProps) => {
+export const ProfileSection = ({ isLoading, isFetching, isError, member }: ProfileSectionProps) => {
   const { t } = useTranslation();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -32,7 +34,7 @@ export const ProfileSection = ({ isLoading, member }: ProfileSectionProps) => {
     });
   };
 
-  if (isLoading) {
+  if (!isLoading && isFetching && !isError) {
     return (
       <div className='w-full'>
         {/* Profile Section */}

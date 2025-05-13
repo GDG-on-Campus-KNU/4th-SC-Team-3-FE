@@ -8,7 +8,7 @@ import ImageBottomPiper from '@/assets/dashboard/img-bottom-piper.png';
 // import useMemberStore from '@/dashboard/stores/MemberStore';
 
 export default function DashBoardPage() {
-  const { isLoading, member } = useFetchMember();
+  const { isFirstLoading, isFetching, isError, member } = useFetchMember();
 
   return (
     <div className='fixed h-screen w-screen overflow-x-hidden overflow-y-scroll bg-white'>
@@ -16,9 +16,14 @@ export default function DashBoardPage() {
 
       <div className='mx-[12%]'>
         {/* 1440px 기준 양측 280px 여백 */}
-        <ProfileSection isLoading={isLoading} member={member} />
+        <ProfileSection
+          isLoading={isFirstLoading}
+          isFetching={isFetching}
+          isError={isError}
+          member={member}
+        />
         {/* 마이프로젝트 */}
-        {member || isLoading ? <ProjectSection /> : <></>}
+        {(member && !isError) || (isFetching && !isFirstLoading) ? <ProjectSection /> : <></>}
         {/* ai 모델 */}
         <ModelSection />
       </div>
