@@ -72,7 +72,7 @@ export function ImageNodeInput({
             <img
               src={imageUrl ? imageUrl : data.value}
               alt='업로드된 이미지'
-              className='h-[150px] w-[235px] rounded-sm object-cover transition-all duration-300 group-hover:shadow-inner'
+              className='absolute inset-0 h-[150px] w-[235px] rounded-sm object-cover transition-all duration-300 group-hover:shadow-inner'
               onError={(e) => {
                 (e.target as HTMLImageElement).src = testImg;
               }}
