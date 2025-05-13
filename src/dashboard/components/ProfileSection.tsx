@@ -44,12 +44,10 @@ export const ProfileSection = ({ isLoading, isFetching, isError, member }: Profi
           </div>
           <h1 className='ml-[250px] mt-7 text-3xl font-medium tracking-wide text-[#5B5B5B]'>
             {t('dashboard.profile.first') + ' '}
-            <br />
+            !<br />
             {t('dashboard.profile.last')}
           </h1>
-          <Button className='mt-10 h-10 w-44 bg-[#5B5B5B] text-white' onClick={handleMyPageClick}>
-            {t('dashboard.profile.myPage')}
-          </Button>
+          <Skeleton className='mt-10 h-10 w-44' />
         </div>
       </div>
     );
